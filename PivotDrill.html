@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PivotDrill</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/pivotdrill.css">
+    <link rel="icon" href="img/favicon.png">
+    <script src="js/ui.js"></script>
+</head>
+<body class="workspace">
+
+<!-- Banner -->
+<nav class="navbar navbar-expand-sm" id="navbar-header" style="padding:10px;">
+    <a class="navbar-brand" href="https://github.com/sjb-ch1mp/PivotDrill/blob/master/README.md" target="_blank"><img src="img/pivotdrill-logo.png" alt="PivotDrill" width="150" class="d-inline-block align-top"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-sm-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active h4" href="#">&#9881;</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Query Input -->
+<nav class="navbar navbar-expand-sm" id="navbar-query">
+    <div class="container">
+        <div class="input-group sm-3">
+            <input id="input-query" type="text" autocomplete="off" placeholder="Enter query..." class="form-control form-control-sm">
+            <button class="btn btn-warning" type="button" id="button-query">Send</button>
+        </div>
+    </div>
+</nav>
+
+<!-- Chatter Box -->
+<div class="alert hidden" id="chatter-box">
+    <button type="button" class="btn-close text-end" onclick="dismissChatterBox()"></button>
+    <span id="chatter-box-msg"></span>
+</div>
+
+<!-- Workspace -->
+
+
+
+<!-- Footer -->
+<nav class="navbar fixed-bottom" id="navbar-footer">
+    <div class="container">
+        <div class="row align-items-start">
+            <a class="text-warning nounderline" onclick="changeServer()">CURRENT SERVER :: <span id="current-server" class="text-light">no server</span></a>
+        </div>
+        <div class="row align-items-center">
+            <span class="text-danger">|</span>
+        </div>
+        <div class="row align-items-end">
+            <span class="text-warning">PIVOTDRILL VERSION :: <span class="text-light">0.0.1</span></span>
+        </div>
+        <div class="row align-items-center">
+            <span class="text-danger">|</span>
+        </div>
+        <div class="row align-items-center">
+            <a class="text-warning nounderline" href="https://github.com/sjb-ch1mp" target="_blank">AUTHOR :: <span class="text-light">ch1mp</span></a>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

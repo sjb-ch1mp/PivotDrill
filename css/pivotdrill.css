@@ -1,0 +1,19 @@
+/* BY IDENTIFIER */
+#navbar-header, #navbar-footer{
+    background-color: #010822;
+}
+#navbar-query{
+    background-color:  #232b49;
+}
+
+/* CLASSES */
+.workspace{
+    background-color:  #979db3;
+}
+.hidden{
+    display: none;
+}
+.nounderline {
+    text-decoration: none !important;
+    cursor: pointer; !important;
+}

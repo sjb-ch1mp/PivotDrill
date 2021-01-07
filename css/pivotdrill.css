@@ -1,19 +1,57 @@
 /* BY IDENTIFIER */
-#navbar-header, #navbar-footer{
+#header{
+    background-color: #010822;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    left: 0px;
+    right: 0px;
+    padding-top: 10px;
+}
+#footer{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: #010822;
+    color: antiquewhite;
+    width: 100%;
+    alignment: center;
     background-color: #010822;
 }
-#navbar-query{
-    background-color:  #232b49;
+#workspace{
+    background-color:  #979db3;
+}
+#pivotdrill-logo{
+    height: 50px;
+    width: 150px;
+}
+#chatter-box{
+    background-color: #FFC000;
+    padding: 5px;
+    height: 25px;
 }
 
 /* CLASSES */
-.workspace{
-    background-color:  #979db3;
-}
 .hidden{
     display: none;
 }
 .nounderline {
     text-decoration: none !important;
-    cursor: pointer; !important;
+    cursor: pointer !important;
 }
+.pivotdrill-heading{
+    font-family: "Yu Gothic Light";
+    padding: 5px;
+}
+.centered{
+    text-align: center;
+}
+.red-text{
+    color: #AA3630;
+}
+.orange-text{
+    color: #FFC000;
+}
+
+/* ELEMENTS */

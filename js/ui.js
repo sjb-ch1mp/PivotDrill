@@ -1,14 +1,12 @@
-function summonChatterBox(message, alertType){
-    document.getElementById('chatter-box-msg').innerText = message;
+function summonChatterBox(message){
     let chatterBox = document.getElementById('chatter-box');
-    chatterBox.classList.add(alertType);
-    chatterBox.classList.add('show');
-    chatterBox.classList.remove('hidden');
+    chatterBox.innerText = message;
 }
 
 function dismissChatterBox(){
     let chatterBox = document.getElementById("chatter-box");
-    document.getElementById('chatter-box-msg').innerText = '';
-    chatterBox.classList.remove('show');
-    chatterBox.classList.add('hidden');
+    chatterBox.innerText = '';
+}
+
+function setUpWorkspace(){
 }

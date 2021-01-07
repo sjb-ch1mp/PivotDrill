@@ -17,22 +17,40 @@
     color: antiquewhite;
     width: 100%;
     alignment: center;
-    background-color: #010822;
-}
-#workspace{
-    background-color:  #979db3;
 }
 #pivotdrill-logo{
     height: 50px;
     width: 150px;
 }
 #chatter-box{
-    background-color: #FFC000;
     padding: 5px;
     height: 25px;
 }
+#fields{
+    background-color:#F8E5E4;
+}
+#pivot{
+    background-color:#E6EBFE;
+}
+#drill{
+    background-color:#CFD9FD;
+}
+#detail{
+    background-color:#E6EBFE;
+}
 
 /* CLASSES */
+.workspace{
+    position: absolute;
+}
+.sidebar{
+    background-color: red;
+    position: absolute;
+}
+.panel{
+    background-color: blue;
+    position: absolute;
+}
 .hidden{
     display: none;
 }
@@ -47,11 +65,24 @@
 .centered{
     text-align: center;
 }
-.red-text{
+.text-red{
     color: #AA3630;
+    font-weight: bold;
 }
-.orange-text{
+.text-orange{
     color: #FFC000;
+    font-weight: bold;
 }
-
-/* ELEMENTS */
+.bg-error{
+    background-color: #AA3630;
+    font-weight: bold;
+}
+.bg-normal{
+    background-color: #FFC000;
+}
+.panel-header{
+    font-family: "Yu Gothic UI";
+    font-weight: bolder;
+    position: absolute;
+    background-color: #FFC000;
+}

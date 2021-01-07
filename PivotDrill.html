@@ -8,33 +8,54 @@
     <script src="js/ui.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/net.js"></script>
+    <script src="js/state.js"></script>
 </head>
 <body>
+
+
+
+<!-- Workspace -->
+<div id="workspace" class="workspace">
+    <div id="fields" class="sidebar">
+        <div id="fields-container">test fields</div>
+        <div id="fields-heading" class="pivotdrill-heading panel-header centered">Fields</div>
+    </div>
+    <div id="pivot" class="panel">
+        <div id="pivot-container">test pivot</div>
+        <div id="pivot-heading" class="pivotdrill-heading panel-header centered">Pivot</div>
+    </div>
+    <div id="drill" class="panel">
+        <div id="drill-container">test drill</div>
+        <div id="drill-heading" class="pivotdrill-heading panel-header centered">Drill</div>
+    </div>
+    <div id="detail" class="panel">
+        <div id="detail-container">test detail</div>
+        <div id="detail-heading" class="pivotdrill-heading panel-header centered">Detail</div>
+    </div>
+</div>
+
+<!-- Settings -->
 
 <!-- Banner -->
 <div class="centered" id="header">
     <a href="https://github.com/sjb-ch1mp/PivotDrill/blob/master/README.md" target="_blank"><img id="pivotdrill-logo" src="img/pivotdrill-logo.png" alt="PivotDrill"></a>
     <div class="pivotdrill-heading" style="padding: 10px">
-        <input size="80" class="pivotdrill-heading" type="text" onchange="sendQuery(document.getElementById('input-query').value)" placeholder="ENTER A QUERY AND PRESS ENTER" id="input-query">
+        <input class="pivotdrill-heading" type="text" onchange="sendQuery(document.getElementById('input-query').value)" placeholder="ENTER A QUERY AND PRESS ENTER" id="input-query">
     </div>
-    <div class="pivotdrill-heading" id="chatter-box">
-
+    <div class="pivotdrill-heading bg-normal" id="chatter-box">
+        Welcome to <b>pivotdrill</b>!
     </div>
 </div>
 
-<!-- Workspace -->
-
-<!-- Settings -->
-
 <!-- Footer -->
 <div class="pivotdrill-heading centered" id="footer">
-    <a class="orange-text nounderline" onclick="openSettings()">settings</a>
-    <span class="red-text">||</span>
-    <a class="orange-text nounderline" onclick="changeServer()">current server: </a><span id="current-server">no server</span>
-    <span class="red-text">||</span>
-    <span class="orange-text">version: </span><span class="text-light">0.0.1</span>
-    <span class="red-text">||</span>
-    <a class="orange-text nounderline" href="https://github.com/sjb-ch1mp" target="_blank">ch1mp</a>
+    <a class="text-orange nounderline" onclick="openSettings()">settings</a>
+    <span class="text-red">||</span>
+    <a class="text-orange nounderline" onclick="changeServer()">current server: </a><span id="current-server"></span>
+    <span class="text-red">||</span>
+    <span class="text-orange">version: </span><span class="text-light">0.0.1</span>
+    <span class="text-red">||</span>
+    <a class="text-orange nounderline" href="https://github.com/sjb-ch1mp" target="_blank">ch1mp</a>
 </div>
 </body>
 <script>

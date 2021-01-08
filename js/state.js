@@ -1,5 +1,5 @@
 let server = null;
-let panelNames = ['fields','pivot','drill','detail'];
+let panelNames = ['fields','pivot','drill','detail','settings'];
 
 class Panel{
     constructor(name){
@@ -17,6 +17,7 @@ let fieldsPanel = new Panel('fields');
 let pivotPanel = new Panel('pivot');
 let drillPanel = new Panel('drill');
 let detailPanel = new Panel('detail');
+let settingsPanel = new Panel('settings');
 
 function getPanel(panelName){
     switch(panelName){
@@ -28,6 +29,8 @@ function getPanel(panelName){
             return drillPanel;
         case 'detail':
             return detailPanel;
+        case 'settings':
+            return settingsPanel;
     }
 }
 

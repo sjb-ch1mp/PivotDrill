@@ -31,6 +31,17 @@
 #input-query{
     border-radius: 10px 10px 10px 10px;
 }
+#settings-heading{
+    font-family: "Yu Gothic UI";
+    font-weight: bolder;
+    position: absolute;
+    background-color:#AA3630;
+    width: 50px;
+    border-radius: 0px 5px 0px 5px;
+}
+#settings-container{
+    background-color: antiquewhite;
+}
 
 /* CLASSES */
 .workspace{
@@ -78,7 +89,6 @@
     width: 100px;
     border-radius: 0px 10px 0px 0px;
     color: white;
-    cursor: pointer !important;
 }
 .panel-container{
     background-color:white;

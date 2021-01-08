@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>PivotDrill</title>
@@ -10,31 +11,34 @@
     <script src="js/settings.js"></script>
     <script src="js/net.js"></script>
 </head>
+
 <body>
-
-
 
 <!-- Workspace -->
 <div id="workspace" class="workspace">
     <div id="fields" class="panel">
         <div id="fields-container" class="panel-container"></div>
-        <div id="fields-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())">Fields</a></div>
+        <div id="fields-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline">Fields</a></div>
     </div>
     <div id="pivot" class="panel">
         <div id="pivot-container" class="panel-container"></div>
-        <div id="pivot-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())">Pivot</a></div>
+        <div id="pivot-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline">Pivot</a></div>
     </div>
     <div id="drill" class="panel">
         <div id="drill-container" class="panel-container"></div>
-        <div id="drill-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())">Drill</a></div>
+        <div id="drill-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline">Drill</a></div>
     </div>
     <div id="detail" class="panel">
         <div id="detail-container" class="panel-container"></div>
-        <div id="detail-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())">Detail</a></div>
+        <div id="detail-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline">Detail</a></div>
+    </div>
+
+    <!-- Settings -->
+    <div id="settings" class="panel hidden">
+        <div id="settings-container" class="panel-container"></div>
+        <a onclick="togglePanel('settings')" class="nounderline"><div id="settings-heading" class="pivotdrill-heading centered">Close</div></a>
     </div>
 </div>
-
-<!-- Settings -->
 
 <!-- Banner -->
 <div class="centered" id="header">
@@ -49,7 +53,7 @@
 
 <!-- Footer -->
 <div class="pivotdrill-heading centered" id="footer">
-    <a class="text-orange nounderline" onclick="openSettings()">settings</a>
+    <a class="text-orange nounderline" onclick="togglePanel('settings')">settings</a>
     <span class="text-red">||</span>
     <a class="text-orange nounderline" onclick="changeServer()">current server: </a><span id="current-server"></span>
     <span class="text-red">||</span>
@@ -57,16 +61,19 @@
     <span class="text-red">||</span>
     <a class="text-orange nounderline" href="https://github.com/sjb-ch1mp" target="_blank">ch1mp</a>
 </div>
-</body>
-<script>
-    //FIXME: detect clicks that aren't on the alert dismiss button. If the alert is visible - dismiss it.
 
+</body>
+
+<script>
+    window.onmousedown = function(){
+        summonChatterBox('', 'normal');
+    };
     window.onresize = function(){
         setUpWorkspace();
     };
-
     window.onload = function(){
         setUpWorkspace();
     }
 </script>
+
 </html>

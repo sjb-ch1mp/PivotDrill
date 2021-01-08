@@ -12,17 +12,13 @@ function summonChatterBox(message, type){
     }
 }
 
-function dismissChatterBox(){
-    let chatterBox = document.getElementById("chatter-box");
-    chatterBox.innerText = '';
-}
-
 function setUpWorkspace(){
     let workspace = document.getElementById('workspace');
     let dim = getCurrentDimensions();
 
     let panelOpen = getOpenPanel();
     if(panelOpen !== null){
+        console.log(panelOpen.name);
         setUpWorkspaceContainer(workspace, dim);
         openPanel(panelOpen.name);
         return;
@@ -90,24 +86,38 @@ function openPanel(panelName){
     let container = document.getElementById(panelName + '-container');
     let allPanels = document.getElementsByClassName('panel');
     for(let i in allPanels){
-        if(allPanels[i].id && allPanels[i].id !== panelName){
+        if(allPanels[i].id && panelNames.includes(allPanels[i].id) && allPanels[i].id !== panelName){
             allPanels[i].classList.add('hidden');
         }
     }
 
+    panel.classList.remove('hidden');
+    if(panelName === 'settings'){
+        header.style.top = "5px";
+        header.style.left = (dim['WINDOW_WIDTH'] - (header.clientWidth + 5)) + "px";
+    }else{
+        header.style.top = (dim['WORKSPACE_HEIGHT'] - header.clientHeight) + "px";
+    }
     panel.style.height = dim['WORKSPACE_HEIGHT'] + "px";
     panel.style.width = dim['WINDOW_WIDTH'] + "px";
     panel.style.left = "0px";
     panel.style.top = "0px";
-    header.style.top = (dim['WORKSPACE_HEIGHT'] - header.clientHeight) + "px";
     container.style.height = (dim['WORKSPACE_HEIGHT'] - 20) + "px";
     container.style.width = (dim['WINDOW_WIDTH'] - 20) + "px";
     getPanel(panelName).state = PanelState.OPEN;
+
 }
 
 function closePanel(panelName){
+    if(panelName === 'settings'){
+        document.getElementById(panelName).classList.add('hidden');
+    }
     getPanel(panelName).state = PanelState.CLOSED;
     setUpWorkspace();
+}
+
+function openSettings(){
+    openPanel('settings');
 }
 
 function getCurrentDimensions(){

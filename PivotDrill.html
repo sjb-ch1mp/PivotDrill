@@ -10,33 +10,50 @@
     <script src="js/ui.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/net.js"></script>
+    <script src="js/pivotdrill.js"></script>
+    <script src="js/test.js"></script>
 </head>
 
 <body>
 
 <!-- Workspace -->
 <div id="workspace" class="workspace">
+
     <div id="fields" class="panel">
-        <div id="fields-container" class="panel-container"></div>
-        <div id="fields-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline">Fields</a></div>
+        <div id="fields-container" class="panel-container">
+            <!-- FIELD BUTTONS -->
+        </div>
+        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="fields-heading" class="pivotdrill-heading panel-header centered">Fields</div></a>
     </div>
+
     <div id="pivot" class="panel">
-        <div id="pivot-container" class="panel-container"></div>
-        <div id="pivot-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline">Pivot</a></div>
+        <div id="pivot-container" class="panel-container row pivotdrill-heading">
+            <!-- PIVOT TABLES -->
+        </div>
+        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="pivot-heading" class="pivotdrill-heading panel-header centered">Pivot</div></a>
     </div>
+
     <div id="drill" class="panel">
-        <div id="drill-container" class="panel-container"></div>
-        <div id="drill-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline">Drill</a></div>
+        <div id="drill-container" class="panel-container">
+            <div class="centered"><input disabled id="input-drill" type="text" class="pivotdrill-heading" placeholder="(user:brookess) AND (host:p56373 OR host:p36583)"></div>
+            <div id="drill-table-container">
+                <!-- DRILL TABLES -->
+            </div>
+        </div>
+        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="drill-heading" class="pivotdrill-heading panel-header centered">Drill</div></a>
     </div>
+
     <div id="detail" class="panel">
-        <div id="detail-container" class="panel-container"></div>
-        <div id="detail-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline">Detail</a></div>
+        <div id="detail-container" class="panel-container">
+            <!-- OBJECT DETAILS -->
+        </div>
+        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="detail-heading" class="pivotdrill-heading panel-header centered">Detail</div></a>
     </div>
 
     <!-- Settings -->
     <div id="settings" class="panel hidden">
         <div id="settings-container" class="panel-container"></div>
-        <a onclick="togglePanel('settings')" class="nounderline"><div id="settings-heading" class="pivotdrill-heading centered">Close</div></a>
+        <a onclick="togglePanel('settings')" class="nounderline"><div id="settings-heading" class="pivotdrill-heading centered">CLOSE</div></a>
     </div>
 </div>
 
@@ -44,9 +61,12 @@
 <div class="centered" id="header">
     <a href="https://github.com/sjb-ch1mp/PivotDrill/blob/master/README.md" target="_blank"><img id="pivotdrill-logo" src="img/pivotdrill-logo.png" alt="PivotDrill"></a>
     <div class="pivotdrill-heading" style="padding: 10px">
-        <input class="pivotdrill-heading" type="text" onchange="sendQuery(document.getElementById('input-query').value)" placeholder="ENTER A QUERY AND PRESS ENTER" id="input-query">
+        <form>
+            <input class="pivotdrill-heading" type="text" placeholder="ENTER A QUERY AND PRESS ENTER" id="input-query">
+            <button id="send-button" class="nounderline" onclick="sendQuery(document.getElementById('input-query').value)">SEND</button>
+        </form>
     </div>
-    <div class="pivotdrill-heading bg-normal" id="chatter-box">
+    <div class="pivotdrill-heading" id="chatter-box">
         Welcome to <b>pivotdrill</b>!
     </div>
 </div>

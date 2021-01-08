@@ -3,12 +3,12 @@ function summonChatterBox(message, type){
     chatterBox.innerText = message;
     switch(type){
         case "error":
-            chatterBox.classList.add('bg-error');
-            chatterBox.classList.remove('bg-normal');
+            chatterBox.classList.add('text-red');
+            chatterBox.classList.remove('text-orange');
             break;
         default:
-            chatterBox.classList.add('bg-normal');
-            chatterBox.classList.remove('bg-error');
+            chatterBox.classList.add('text-orange');
+            chatterBox.classList.remove('text-red');
     }
 }
 
@@ -18,7 +18,6 @@ function setUpWorkspace(){
 
     let panelOpen = getOpenPanel();
     if(panelOpen !== null){
-        console.log(panelOpen.name);
         setUpWorkspaceContainer(workspace, dim);
         openPanel(panelOpen.name);
         return;
@@ -65,7 +64,7 @@ function setUpWorkspace(){
 
     //Set up other remaining interface variables
     document.getElementById('current-server').innerText = (server !== null) ? server : "no server";
-    document.getElementById('input-query').style.width = (dim['WINDOW_WIDTH'] * 0.90) + "px";
+    document.getElementById('input-drill').style.width = (dim['PANEL_WIDTH'] * 0.80) + "px";
 }
 
 function setUpWorkspaceContainer(workspace, dim){
@@ -116,10 +115,6 @@ function closePanel(panelName){
     setUpWorkspace();
 }
 
-function openSettings(){
-    openPanel('settings');
-}
-
 function getCurrentDimensions(){
     let WINDOW_HEIGHT = window.innerHeight;
     let WINDOW_WIDTH = window.innerWidth;
@@ -139,4 +134,22 @@ function getCurrentDimensions(){
         'PANEL_HEIGHT':PANEL_HEIGHT,
         'PANEL_WIDTH':PANEL_WIDTH
     };
+}
+
+function toggleFieldButton(fieldName, buttonId){
+    let button = document.getElementById(buttonId);
+    if(button.classList.contains('field-button-active')){
+        removePivotTable(fieldName, buttonId);
+    }else{
+        addPivotTable(fieldName, buttonId);
+    }
+}
+
+function togglePivotValue(key, value, buttonId){
+    let button = document.getElementById(buttonId);
+    if(button.classList.contains('pivot-table-active')){
+        removeDrillValue(key, value, buttonId);
+    }else{
+        addDrillValue(key, value, buttonId);
+    }
 }

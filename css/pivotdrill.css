@@ -41,6 +41,7 @@
 }
 #settings-container{
     background-color: antiquewhite;
+    border-radius: 5px 5px 5px 5px;
 }
 
 /* CLASSES */

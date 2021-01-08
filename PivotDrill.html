@@ -5,10 +5,10 @@
     <title>PivotDrill</title>
     <link rel="stylesheet" href="css/pivotdrill.css">
     <link rel="icon" href="img/favicon.png">
+    <script src="js/state.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/net.js"></script>
-    <script src="js/state.js"></script>
 </head>
 <body>
 
@@ -16,21 +16,21 @@
 
 <!-- Workspace -->
 <div id="workspace" class="workspace">
-    <div id="fields" class="sidebar">
-        <div id="fields-container">test fields</div>
-        <div id="fields-heading" class="pivotdrill-heading panel-header centered">Fields</div>
+    <div id="fields" class="panel">
+        <div id="fields-container" class="panel-container"></div>
+        <div id="fields-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())">Fields</a></div>
     </div>
     <div id="pivot" class="panel">
-        <div id="pivot-container">test pivot</div>
-        <div id="pivot-heading" class="pivotdrill-heading panel-header centered">Pivot</div>
+        <div id="pivot-container" class="panel-container"></div>
+        <div id="pivot-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())">Pivot</a></div>
     </div>
     <div id="drill" class="panel">
-        <div id="drill-container">test drill</div>
-        <div id="drill-heading" class="pivotdrill-heading panel-header centered">Drill</div>
+        <div id="drill-container" class="panel-container"></div>
+        <div id="drill-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())">Drill</a></div>
     </div>
     <div id="detail" class="panel">
-        <div id="detail-container">test detail</div>
-        <div id="detail-heading" class="pivotdrill-heading panel-header centered">Detail</div>
+        <div id="detail-container" class="panel-container"></div>
+        <div id="detail-heading" class="pivotdrill-heading panel-header centered"><a onclick="togglePanel(this.innerText.toLowerCase())">Detail</a></div>
     </div>
 </div>
 

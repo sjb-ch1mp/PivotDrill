@@ -1,8 +1,8 @@
 function changeServer(){
     //open settings panel and go to #server anchor
-    summonChatterBox('Changing server...', 'alert-success');
+    summonChatterBox('Changing server...', 'normal');
 }
 
 function openSettings(){
-    summonChatterBox('Opening settings...', 'alert-success');
+    summonChatterBox('Opening settings...', 'normal');
 }

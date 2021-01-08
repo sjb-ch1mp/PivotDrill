@@ -25,30 +25,20 @@
 #chatter-box{
     padding: 5px;
     height: 25px;
+    border-radius: 10px 10px 10px 10px;
+    margin: 5px;
 }
-#fields{
-    background-color:#F8E5E4;
-}
-#pivot{
-    background-color:#E6EBFE;
-}
-#drill{
-    background-color:#CFD9FD;
-}
-#detail{
-    background-color:#E6EBFE;
+#input-query{
+    border-radius: 10px 10px 10px 10px;
 }
 
 /* CLASSES */
 .workspace{
-    position: absolute;
-}
-.sidebar{
-    background-color: red;
+    background-color:#010822;
     position: absolute;
 }
 .panel{
-    background-color: blue;
+    background-color:#010822;
     position: absolute;
 }
 .hidden{
@@ -84,5 +74,16 @@
     font-family: "Yu Gothic UI";
     font-weight: bolder;
     position: absolute;
-    background-color: #FFC000;
+    background-color:#010822;
+    width: 100px;
+    border-radius: 0px 10px 0px 0px;
+    color: white;
+    cursor: pointer !important;
+}
+.panel-container{
+    background-color:white;
+    position: absolute;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px 5px 5px 0px;
 }

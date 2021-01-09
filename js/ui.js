@@ -64,7 +64,6 @@ function setUpWorkspace(){
 
     //Set up other remaining interface variables
     document.getElementById('current-server').innerText = (server !== null) ? server : "no server";
-    document.getElementById('input-drill').style.width = (dim['PANEL_WIDTH'] * 0.80) + "px";
 }
 
 function setUpWorkspaceContainer(workspace, dim){
@@ -152,4 +151,25 @@ function togglePivotValue(key, value, buttonId){
     }else{
         addDrillValue(key, value, buttonId);
     }
+}
+
+function toggleDetailButton(buttonId, divId){
+    let button = document.getElementById(buttonId);
+    (button.classList.contains('detail-button-active') ? closeDetailButton(buttonId, divId) : expandDetailButton(buttonId, divId));
+}
+
+function expandDetailButton(buttonId, divId){
+    let button = document.getElementById(buttonId);
+    let div = document.getElementById(divId);
+    button.classList.remove('detail-button-inactive');
+    button.classList.add('detail-button-active');
+    div.classList.remove('hidden');
+}
+
+function closeDetailButton(buttonId, divId){
+    let button = document.getElementById(buttonId);
+    let div = document.getElementById(divId);
+    button.classList.remove('detail-button-active');
+    button.classList.add('detail-button-inactive');
+    div.classList.add('hidden');
 }

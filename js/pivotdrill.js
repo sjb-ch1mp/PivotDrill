@@ -1,15 +1,14 @@
 function addFields(fields){
     //create a button for in field in list 'fields' and add it to the fields panel
+    fields = dedupList(fields);
     fields.sort();
-    fields = weedOutDuplicates(fields);
-    let fieldButtons = '';
+    let fieldButtonsContainer = document.getElementById('fields-container');
     for(let i in fields){
         if(fields[i].trim().length > 0){
-            let field = new Field(fields[i]);
-            fieldButtons += field.print();
+            let field = new FieldButton(fields[i]);
+            fieldButtonsContainer.appendChild(field.print());
         }
     }
-    document.getElementById('fields-container').innerHTML = fieldButtons;
 }
 
 function addPivotTable(fieldName, buttonId){
@@ -17,45 +16,93 @@ function addPivotTable(fieldName, buttonId){
     let button = document.getElementById(buttonId);
     button.classList.remove('field-button-inactive');
     button.classList.add('field-button-active');
-    summonChatterBox('Button "' + buttonId + '" pressed. Adding pivot table for field "' + fieldName + '"');
 
     //go get all the unique values for that field
-    let pivotTable = new PivotTable(fieldName, getTestValues());
+    let pivotTable = new PivotTable(fieldName, getDummyList());
     let pivotContainer = document.getElementById('pivot-container');
-    pivotContainer.innerHTML += pivotTable.print();
+    pivotContainer.appendChild(pivotTable.print());
 }
 
 function removePivotTable(fieldName, buttonId){
     let button = document.getElementById(buttonId);
     button.classList.remove('field-button-active');
     button.classList.add('field-button-inactive');
-    summonChatterBox('Button "' + buttonId + '" pressed. Removing pivot table for field "' + fieldName + '"');
 
     let pivotContainer = document.getElementById('pivot-container');
     let pivotTable = document.getElementById('--pivot-table-' + fieldName);
     pivotContainer.removeChild(pivotTable);
+
+    if(fieldName in drillQuery.queryData){
+        clearDetailButtons();
+        drillQuery.remove(fieldName, null);
+        drillQuery.run();
+    }
+}
+
+function deactivatePivotTables(queryData){
+    for(let key in queryData){
+        let rows = document.getElementById("--pivot-table-" + key).childNodes;
+        for(let j in rows){
+            if(queryData[key].includes(rows[j].innerText)){
+                let td = rows[j].childNodes;
+                td[0].classList.remove('pivot-table-active');
+            }
+        }
+    }
 }
 
 function addDrillValue(key, value, buttonId){
     //search through data for all objects with this key:value pair
     let button = document.getElementById(buttonId);
-    button.classList.remove('pivot-table-inactive');
     button.classList.add('pivot-table-active');
-    summonChatterBox('Pivot value "' + key + ":" + value + '" pressed. Adding to drill query.');
+
+    if(drillQuery === null){
+        drillQuery = new DrillQuery();
+    }
+    drillQuery.add(key, value);
+    drillQuery.run();
 }
 
 function removeDrillValue(key, value, buttonId){
     let button = document.getElementById(buttonId);
     button.classList.remove('pivot-table-active');
-    button.classList.add('pivot-table-inactive');
-    summonChatterBox('Pivot value "' + key + ":" + value + '" pressed. Removing from drill query.');
+
+    drillQuery.remove(key, value);
+    drillQuery.run();
 }
 
-function addDetail(objectId){
+function clearDrillQuery(){
+    deactivatePivotTables(drillQuery.queryData);
+    drillQuery.queryData = {};
+    document.getElementById('input-drill').value = '';
+    clearDrillButtons();
+    clearDetailButtons();
+}
+
+function clearDrillButtons(){
+    let drillButtonContainer = document.getElementById('drill-button-container');
+    drillButtonContainer.innerHTML = '';
+}
+
+function addDetail(entityId, buttonId){
     //add the raw object identified by the objectId to the detail panel
+    let button = document.getElementById(buttonId);
+    button.classList.remove('drill-button-inactive');
+    button.classList.add('drill-button-active');
+
+    //fetch entity from entityBlob and add to detail pane
+
+    let detailButton = new DetailButton(new Entity(entityId, JSON.parse(getTestJSON())));
+    let detailContainer = document.getElementById('detail-container');
+    detailContainer.appendChild(detailButton.print());
 }
 
-function weedOutDuplicates(list){
+function clearDetailButtons(){
+    let detailContainer = document.getElementById('detail-container');
+    detailContainer.innerHTML = '';
+}
+
+function dedupList(list){
     let unique = [];
     for(let i in list){
         if(!(unique.includes(list[i]))){
@@ -65,15 +112,19 @@ function weedOutDuplicates(list){
     return unique;
 }
 
-class Field{
+class FieldButton{
     constructor(fieldName){
         this.fieldName = fieldName;
     }
 
     print(){
-        let toPrint = '<button id="--field-' + this.fieldName + '" class="field-button-inactive nounderline" '
-        toPrint += 'onclick="toggleFieldButton(this.innerText, this.id)">' + this.fieldName + '</button>';
-        return toPrint;
+        let button = document.createElement('button');
+        button.id = "--field-" + this.fieldName;
+        button.classList.add("field-button-inactive");
+        button.classList.add("nounderline");
+        button.onclick = function(){toggleFieldButton(this.innerText, this.id)};
+        button.textContent = this.fieldName;
+        return button;
     }
 }
 
@@ -84,26 +135,154 @@ class PivotTable{
     }
 
     print(){
-        let toPrint = '<table id="--pivot-table-' + this.key + '" class="pivot-table">';
-        toPrint += '<th class="pivot-table">' + this.key + '</th>';
+        let key = this.key;
+        let table = document.createElement('table');
+        table.id = "--pivot-table-" + this.key;
+        table.classList.add("pivot-table");
+        let th = document.createElement('th');
+        th.classList.add("pivot-table");
+        th.classList.add("nounderline");
+        th.onclick = function(){toggleFieldButton(key, "--field-" + key);};
+        th.textContent = this.key;
+        table.appendChild(th);
         let idx = 0;
         for(let i in this.values){
             idx++;
-            toPrint += '<tr><td class="pivot-table-inactive"><a class="nounderline" onclick="togglePivotValue(' + "'" + this.key + "'" + ',this.innerText,this.id)" id="--pivot-' + this.key + '-' + idx + '">' + this.values[i] + '</a></td></tr>'
+            let tr = document.createElement('tr');
+            let td = document.createElement('td');
+            td.classList.add("nounderline");
+            td.onclick = function(){togglePivotValue(key, this.innerText, this.id)};
+            td.id = "--pivot-" + this.key + "-" + idx;
+            td.textContent = this.values[i];
+            tr.appendChild(td);
+            table.appendChild(tr);
         }
-        return toPrint + '</table>';
+        return table;
     }
 }
 
-class DrillTable{
+class DrillButton{
+    constructor(entityId){
+        this.entityId = entityId;
+    }
 
+    print(){
+        let drillButton = document.createElement('button');
+        drillButton.classList.add("drill-button-inactive");
+        drillButton.classList.add("nounderline");
+        drillButton.id = "--drill-" + this.entityId;
+        drillButton.onclick = function(){addDetail(this.innerText, this.id);};
+        drillButton.textContent = this.entityId;
+        return drillButton;
+    }
 }
 
 class DrillQuery{
+    constructor(){
+        this.queryData = {}; //{key:[value, value, value],key:[value,value, value]}
+    }
 
+    remove(key, value){
+        if(value === null){
+            delete this.queryData[key];
+            return;
+        }
+        if(key in this.queryData && this.queryData[key].includes(value)){
+            let hold = [];
+            for(let i in this.queryData[key]){
+                if(this.queryData[key][i] !== value){
+                    hold.push(this.queryData[key][i]);
+                }
+            }
+            if(hold.length > 0){
+                this.queryData[key] = hold;
+            }else{
+                delete this.queryData[key];
+            }
+        }
+    }
+
+    add(key, value){
+        if(!(key in this.queryData)){
+            this.queryData[key] = [value];
+        }else{
+            if(!(this.queryData[key].includes(value))){
+                this.queryData[key].push(value);
+            }
+        }
+    }
+
+    print(){
+        if(this.queryData.length === 0){
+            return '';
+        }
+
+        let orStatements = [];
+        for(let key in this.queryData){
+            let elements = [];
+            for(let i in this.queryData[key]){
+                elements.push(key + ":" + this.queryData[key][i]);
+            }
+            orStatements.push('(' +  elements.join(' OR ') + ')');
+        }
+        return orStatements.join(' AND ');
+    }
+
+    hasQuery(){
+        return Object.keys(this.queryData).length > 0;
+    }
+
+    run(){
+        clearDrillButtons();
+        document.getElementById('input-drill').value = this.print();
+        if(this.hasQuery()){
+
+            //FIXME: Run query and post resulting drill table
+            let data = getDummyList();
+
+            let drillButtonContainer = document.getElementById('drill-button-container');
+            for(let i in data){
+                let drillButton = new DrillButton(data[i]);
+                drillButtonContainer.appendChild(drillButton.print());
+            }
+        }
+    }
+}
+
+class DetailButton{
+    //Container class for each individual entity in a data stream
+    constructor(entity){
+        this.entity = entity;
+    }
+    print(){
+        let buttonId = '--detail-button-' + this.entity.entityId;
+        let divId = '--details-' + this.entity.entityId;
+        let container = document.createElement('div');
+        let button = document.createElement('button');
+        button.classList.add('detail-button-inactive');
+        button.classList.add('nounderline');
+        button.id = buttonId;
+        button.onclick = function(){toggleDetailButton(buttonId, divId);};
+        button.textContent = this.entity.entityId;
+        let details = document.createElement('div');
+        details.classList.add('hidden');
+        details.classList.add('detail-container');
+        details.id = divId;
+        details.innerHTML = prettyPrintJson.toHtml(this.entity.data);
+        container.appendChild(button);
+        container.appendChild(details);
+        return container;
+    }
 }
 
 class Entity{
-    //Container class for each individual entity in a data stream
+    constructor(entityId, data){
+        this.entityId = entityId;
+        this.data = data;
+    }
+}
+
+class EntityBlob{
+    //Container class for all entities returned as the result of a query
 
 }

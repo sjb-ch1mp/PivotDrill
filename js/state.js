@@ -1,5 +1,6 @@
 let server = null;
 let panelNames = ['fields','pivot','drill','detail','settings'];
+let drillQuery = null;
 
 class Panel{
     constructor(name){

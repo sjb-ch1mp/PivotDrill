@@ -25,7 +25,7 @@
 #chatter-box{
     height: 25px;
 }
-#input-query{
+#input-query,#input-drill{
     flex-grow: 2;
     border: none;
 }
@@ -42,14 +42,6 @@
     background-color: antiquewhite;
     border-radius: 5px 5px 5px 5px;
 }
-#input-drill{
-    border-radius: 5px 5px 5px 5px;
-    text-align: center;
-    height: 10px;
-    color: #010822;
-    font-weight: bold;
-    background-color: azure;
-}
 #send-button{
     background-color: #AA3630;
     color: white;
@@ -59,6 +51,23 @@
     font-weight: bold;
     padding: 5px;
     width: 100px;
+}
+#clear-button{
+    background-color: #010822;
+    color: white;
+    border: none;
+    font-family: "Yu Gothic UI";
+    font-size: medium;
+    font-weight: bold;
+    padding: 5px;
+    width: 80px;
+}
+#form-query{
+    border: 3px solid #AA3630;
+}
+#form-drill{
+    border: 3px solid #010822;
+    margin-bottom: 10px;
 }
 
 /* CLASSES */
@@ -118,9 +127,9 @@
     overflow-y: scroll;
 }
 .field-button-inactive{
-    background-color: #E29D9A;
-    color: black;
-    border: 2px #AA3630 solid;
+    background-color:  #fcb5b5;
+    color: #782622;
+    border: 2px #782622 solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: medium;
@@ -129,8 +138,8 @@
 }
 .field-button-active{
     background-color: #010822;
-    color: #AA3630;
-    border: 2px #AA3630 solid;
+    color: #fcb5b5;
+    border: 2px #fcb5b5 solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: medium;
@@ -142,7 +151,7 @@
 }
 table.pivot-table{
     color: black;
-    border: 2px #AA3630 solid;
+    border: 2px  #15920d  solid;
     font-family: "Yu Gothic UI";
     font-size: medium;
     border-radius: 5px;
@@ -154,9 +163,9 @@ table.center{
     margin-right:auto;
 }
 th.pivot-table{
-    background-color: #E29D9A;
-    color: black;
-    border: 2px #AA3630 solid;
+    background-color:  #a2fd9c;
+    color:  #15920d;
+    border: 2px  #15920d  solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: medium;
@@ -165,23 +174,66 @@ th.pivot-table{
 }
 td.pivot-table-active{
     background-color: #010822;
-    color: #AA3630;
-    border: 2px #AA3630 solid;
+    color: #a2fd9c;
+    border: 2px #a2fd9c solid;
+    font-family: "Yu Gothic UI";
+    font-size: smaller;
+    border-radius: 5px;
+}
+.drill-button-inactive{
+    background-color: #baf8fe;
+    color:  #008693;
+    border: 2px  #008693 solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: medium;
     border-radius: 5px;
     margin: 1px;
 }
+.drill-button-active{
+    background-color: #010822;
+    color:  #baf8fe;
+    border: 2px  #baf8fe solid;
+    padding: 5px;
+    font-family: "Yu Gothic UI";
+    font-size: medium;
+    border-radius: 5px;
+    margin: 1px;
+}
+.detail-button-inactive{
+    background-color: #e1d1fd;
+    color: #6f17ff;
+    border: 2px #6f17ff solid;
+    padding: 5px;
+    font-family: "Yu Gothic UI";
+    font-size: medium;
+    border-radius: 5px;
+    margin: 1px;
+    width: 100%;
+}
+.detail-button-active{
+    background-color: #010822;
+    color: #e1d1fd;
+    border: 2px #e1d1fd solid;
+    padding: 5px;
+    font-family: "Yu Gothic UI";
+    font-size: medium;
+    border-radius: 5px;
+    margin: 1px;
+    width: 100%;
+}
+.detail-container{
+    padding: 20px;
+    border: 1px #010822 solid;
+    border-radius: 5px;
+}
 
 /* BY ELEMENT */
 form{
     display: flex;
     flex-direction: row;
-    border: 3px solid #AA3630;
     background-color: white;
 }
-
 input:focus{
     outline: none;
 }

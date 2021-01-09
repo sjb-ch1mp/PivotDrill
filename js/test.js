@@ -97,10 +97,13 @@ function getTestJSON(){
     return JSON.stringify(process);
 }
 
-function getTestValues(){
-    let values = [];
-    for(let i=0; i<30; i++){
-        values.push('test-value-' + i);
+function getDummyList(){
+    let data = [];
+    let mod = 1 + Math.floor(Math.random() * 11);
+    for(let i=1; i<101; i++){
+        if(i%mod===0){
+            data.push(i);
+        }
     }
-    return values;
+    return data;
 }

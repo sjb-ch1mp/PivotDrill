@@ -6,6 +6,12 @@
     <title>PivotDrill</title>
     <link rel="stylesheet" href="css/pivotdrill.css">
     <link rel="icon" href="img/favicon.png">
+
+    <!-- Pretty-Print-JSON Modules (https://github.com/center-key/pretty-print-json) -->
+    <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/pretty-print-json@0.4/dist/pretty-print-json.css>
+    <script src=https://cdn.jsdelivr.net/npm/pretty-print-json@0.4/dist/pretty-print-json.min.js></script>
+    <!-- Pretty-Print-JSON Modules (https://github.com/center-key/pretty-print-json) -->
+
     <script src="js/state.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/settings.js"></script>
@@ -35,9 +41,14 @@
 
     <div id="drill" class="panel">
         <div id="drill-container" class="panel-container">
-            <div class="centered"><input disabled id="input-drill" type="text" class="pivotdrill-heading" placeholder="(user:brookess) AND (host:p56373 OR host:p36583)"></div>
-            <div id="drill-table-container">
-                <!-- DRILL TABLES -->
+            <div class="centered">
+                <form id="form-drill">
+                    <input id="input-drill" type="text" class="pivotdrill-heading" placeholder="" style="font-size: small;pointer-events: none">
+                    <button id="clear-button" class="nounderline" onclick="clearDrillQuery()">CLEAR</button>
+                </form>
+            </div>
+            <div id="drill-button-container">
+                <!-- DRILL BUTTONS -->
             </div>
         </div>
         <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="drill-heading" class="pivotdrill-heading panel-header centered">Drill</div></a>
@@ -57,11 +68,11 @@
     </div>
 </div>
 
-<!-- Banner -->
+<!-- Header -->
 <div class="centered" id="header">
     <a href="https://github.com/sjb-ch1mp/PivotDrill/blob/master/README.md" target="_blank"><img id="pivotdrill-logo" src="img/pivotdrill-logo.png" alt="PivotDrill"></a>
     <div class="pivotdrill-heading" style="padding: 10px">
-        <form>
+        <form id="form-query">
             <input class="pivotdrill-heading" type="text" placeholder="ENTER A QUERY AND PRESS ENTER" id="input-query">
             <button id="send-button" class="nounderline" onclick="sendQuery(document.getElementById('input-query').value)">SEND</button>
         </form>
@@ -92,6 +103,7 @@
         setUpWorkspace();
     };
     window.onload = function(){
+        document.getElementById('input-drill').value = '';
         setUpWorkspace();
     }
 </script>

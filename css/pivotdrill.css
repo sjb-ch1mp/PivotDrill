@@ -29,18 +29,8 @@
     flex-grow: 2;
     border: none;
 }
-#settings-heading{
-    font-family: "Yu Gothic UI";
-    font-weight: bolder;
-    position: absolute;
-    background-color:#AA3630;
-    color: white;
-    width: 100px;
-    border-radius: 0px 0px 0px 5px;
-}
 #settings-container{
     background-color: antiquewhite;
-    border-radius: 5px 5px 5px 5px;
 }
 #send-button{
     background-color: #AA3630;
@@ -108,15 +98,15 @@
 .bg-normal{
     background-color: #FFC000;
 }
-.panel-header{
+.panel-menu{
+    color: white;
+    background-color: #AA3630;
     font-family: "Yu Gothic UI";
     font-weight: bolder;
     position: absolute;
-    background-color:#010822;
-    width: 100px;
     height: 25px;
-    border-radius: 0px 10px 0px 0px;
-    color: white;
+    border-radius: 0px 0px 10px 10px;
+    text-align: left;
 }
 .panel-container{
     background-color:white;

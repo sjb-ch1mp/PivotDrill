@@ -47,12 +47,14 @@ function removePivotTable(fieldName, buttonId){
 }
 
 function deactivatePivotTables(queryData){
-    for(let key in queryData){
-        let rows = document.getElementById("--pivot-table-" + key).childNodes;
-        for(let j in rows){
-            if(queryData[key].includes(rows[j].innerText)){
-                let td = rows[j].childNodes;
-                td[0].classList.remove('pivot-table-active');
+    if(document.getElementById('pivot-container').innerHTML.trim().length > 0){ //check if pivot tables exist
+        for(let key in queryData){
+            let rows = document.getElementById("--pivot-table-" + key).childNodes;
+            for(let j in rows){
+                if(queryData[key].includes(rows[j].innerText)){
+                    let td = rows[j].childNodes;
+                    td[0].classList.remove('pivot-table-active');
+                }
             }
         }
     }
@@ -83,7 +85,8 @@ function clearDrillQuery(){
         deactivatePivotTables(drillQuery.queryData);
         drillQuery.queryData = {};
     }
-    document.getElementById('input-drill').value = '';
+    let drillInput = document.getElementById('input-drill');
+    drillInput.value = '';
     clearDrillButtons();
     clearDetailButtons();
 }

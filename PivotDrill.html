@@ -29,14 +29,14 @@
         <div id="fields-container" class="panel-container">
             <!-- FIELD BUTTONS -->
         </div>
-        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="fields-heading" class="pivotdrill-heading panel-header centered">Fields</div></a>
+        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="fields-menu" class="pivotdrill-heading panel-menu centered">FIELDS</div></a>
     </div>
 
     <div id="pivot" class="panel">
         <div id="pivot-container" class="panel-container row pivotdrill-heading">
             <!-- PIVOT TABLES -->
         </div>
-        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="pivot-heading" class="pivotdrill-heading panel-header centered">Pivot</div></a>
+        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="pivot-menu" class="pivotdrill-heading panel-menu centered">PIVOT</div></a>
     </div>
 
     <div id="drill" class="panel">
@@ -51,20 +51,20 @@
                 <!-- DRILL BUTTONS -->
             </div>
         </div>
-        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="drill-heading" class="pivotdrill-heading panel-header centered">Drill</div></a>
+        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="drill-menu" class="pivotdrill-heading panel-menu centered">DRILL</div></a>
     </div>
 
     <div id="detail" class="panel">
         <div id="detail-container" class="panel-container">
             <!-- OBJECT DETAILS -->
         </div>
-        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="detail-heading" class="pivotdrill-heading panel-header centered">Detail</div></a>
+        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="detail-menu" class="pivotdrill-heading panel-menu centered">DETAIL</div></a>
     </div>
 
     <!-- Settings -->
     <div id="settings" class="panel hidden">
         <div id="settings-container" class="panel-container"></div>
-        <a onclick="togglePanel('settings')" class="nounderline"><div id="settings-heading" class="pivotdrill-heading centered">CLOSE</div></a>
+        <a onclick="togglePanel('settings')" class="nounderline"><div id="settings-menu" class="pivotdrill-heading panel-menu centered">SETTINGS</div></a>
     </div>
 </div>
 
@@ -84,6 +84,8 @@
 
 <!-- Footer -->
 <div class="pivotdrill-heading centered" id="footer">
+    <a class="text-orange nounderline" onclick="resetWorkspace()">reset workspace</a>
+    <span class="text-red">||</span>
     <a class="text-orange nounderline" onclick="togglePanel('settings')">settings</a>
     <span class="text-red">||</span>
     <span class="text-orange">current server :: </span><span id="current-server"></span>

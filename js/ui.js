@@ -28,13 +28,15 @@ function setUpWorkspace(){
 
     //Set up sidebar
     let sidebar = document.getElementById('fields');
+    let panelMenu = document.getElementById('fields-menu');
+    let panelContainer = document.getElementById('fields-container');
     sidebar.classList.remove('hidden');
     sidebar.style.height = dim['WORKSPACE_HEIGHT'] + "px";
     sidebar.style.width = dim['SIDEBAR_WIDTH'] + "px";
-    let panelHeader = document.getElementById('fields-heading');
-    panelHeader.style.top = (dim['WORKSPACE_HEIGHT'] - panelHeader.clientHeight) + "px";
-    let panelContainer = document.getElementById('fields-container');
-    panelContainer.style.height = (dim['WORKSPACE_HEIGHT'] - 20) + "px";
+    panelMenu.style.top = (dim['WORKSPACE_HEIGHT'] - panelMenu.clientHeight) + "px";
+    panelMenu.style.width = (dim['SIDEBAR_WIDTH'] - 20) + "px";
+    panelMenu.style.left = "5px";
+    panelContainer.style.height = (dim['WORKSPACE_HEIGHT'] - (panelMenu.clientHeight + 15)) + "px";
     panelContainer.style.width = (dim['SIDEBAR_WIDTH'] - 20) + "px";
 
     //Set up panels
@@ -42,14 +44,16 @@ function setUpWorkspace(){
     for(let i in allPanels){
         if(allPanels[i].id && ['pivot','drill','detail'].includes(allPanels[i].id)){
             let panel = allPanels[i];
+            panelMenu = document.getElementById(panel.id + '-menu');
+            panelContainer = document.getElementById(panel.id + '-container');
             panel.classList.remove('hidden');
             panel.style.height = dim['PANEL_HEIGHT'] + "px";
             panel.style.width = dim['PANEL_WIDTH'] + "px";
             panel.style.left = dim['SIDEBAR_WIDTH'] + "px";
-            panelHeader = document.getElementById(panel.id + '-heading');
-            panelHeader.style.top = (dim['PANEL_HEIGHT'] - panelHeader.clientHeight) + "px";
-            panelContainer = document.getElementById(panel.id + '-container');
-            panelContainer.style.height = (dim['PANEL_HEIGHT'] - 20) + "px";
+            panelMenu.style.top = (dim['PANEL_HEIGHT'] - panelMenu.clientHeight) + "px";
+            panelMenu.style.width = (dim['PANEL_WIDTH'] - 20) + "px";
+            panelMenu.style.left = "5px";
+            panelContainer.style.height = (dim['PANEL_HEIGHT'] - (panelMenu.clientHeight + 15)) + "px";
             panelContainer.style.width = (dim['PANEL_WIDTH'] - 20) + "px";
 
             switch(panel.id){
@@ -80,7 +84,7 @@ function togglePanel(panelName){
 function openPanel(panelName){
     let dim = getCurrentDimensions();
     let panel = document.getElementById(panelName);
-    let header = document.getElementById(panelName + '-heading');
+    let menu = document.getElementById(panelName + '-menu');
     let container = document.getElementById(panelName + '-container');
     let allPanels = document.getElementsByClassName('panel');
     for(let i in allPanels){
@@ -90,20 +94,16 @@ function openPanel(panelName){
     }
 
     panel.classList.remove('hidden');
-    if(panelName === 'settings'){
-        header.style.top = "5px";
-        header.style.left = (dim['WINDOW_WIDTH'] - (header.clientWidth + 5)) + "px";
-    }else{
-        header.style.top = (dim['WORKSPACE_HEIGHT'] - header.clientHeight) + "px";
-    }
+    menu.style.top = (dim['WORKSPACE_HEIGHT'] - menu.clientHeight) + "px";
+    menu.style.left = "5px";
+    menu.style.width = (dim['WINDOW_WIDTH'] - 20) + 'px';
     panel.style.height = dim['WORKSPACE_HEIGHT'] + "px";
     panel.style.width = dim['WINDOW_WIDTH'] + "px";
     panel.style.left = "0px";
     panel.style.top = "0px";
-    container.style.height = (dim['WORKSPACE_HEIGHT'] - 20) + "px";
+    container.style.height = (dim['WORKSPACE_HEIGHT'] - (menu.clientHeight + 15)) + "px";
     container.style.width = (dim['WINDOW_WIDTH'] - 20) + "px";
     getPanel(panelName).state = PanelState.OPEN;
-
 }
 
 function closePanel(panelName){

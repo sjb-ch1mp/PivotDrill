@@ -153,6 +153,11 @@ function togglePivotValue(key, value, buttonId){
     }
 }
 
+function toggleDrillbutton(entityId, buttonId){
+    let button = document.getElementById(buttonId);
+    (button.classList.contains('drill-button-active')) ? removeDetail(entityId, buttonId) : addDetail(entityId, buttonId);
+}
+
 function toggleDetailButton(buttonId, divId){
     let button = document.getElementById(buttonId);
     (button.classList.contains('detail-button-active') ? closeDetailButton(buttonId, divId) : expandDetailButton(buttonId, divId));

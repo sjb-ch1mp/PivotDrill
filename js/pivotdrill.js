@@ -33,7 +33,6 @@ function removePivotTable(fieldName, buttonId){
     pivotContainer.removeChild(pivotTable);
 
     if(fieldName in drillQuery.queryData){
-        clearDetailButtons();
         drillQuery.remove(fieldName, null);
         drillQuery.run();
     }
@@ -95,6 +94,19 @@ function addDetail(entityId, buttonId){
     let detailButton = new DetailButton(new Entity(entityId, JSON.parse(getTestJSON())));
     let detailContainer = document.getElementById('detail-container');
     detailContainer.appendChild(detailButton.print());
+}
+
+function removeDetail(entityId, buttonId){
+    //add the raw object identified by the objectId to the detail panel
+    let button = document.getElementById(buttonId);
+    button.classList.remove('drill-button-active');
+    button.classList.add('drill-button-inactive');
+
+    //fetch entity from entityBlob and add to detail pane
+
+    let detailContainer = document.getElementById('detail-container');
+    let detailButton = document.getElementById('--detail-container-' + entityId);
+    detailContainer.removeChild(detailButton);
 }
 
 function clearDetailButtons(){
@@ -171,7 +183,7 @@ class DrillButton{
         drillButton.classList.add("drill-button-inactive");
         drillButton.classList.add("nounderline");
         drillButton.id = "--drill-" + this.entityId;
-        drillButton.onclick = function(){addDetail(this.innerText, this.id);};
+        drillButton.onclick = function(){toggleDrillbutton(this.innerText, this.id);};
         drillButton.textContent = this.entityId;
         return drillButton;
     }
@@ -234,6 +246,7 @@ class DrillQuery{
 
     run(){
         clearDrillButtons();
+        clearDetailButtons();
         document.getElementById('input-drill').value = this.print();
         if(this.hasQuery()){
 
@@ -256,8 +269,10 @@ class DetailButton{
     }
     print(){
         let buttonId = '--detail-button-' + this.entity.entityId;
-        let divId = '--details-' + this.entity.entityId;
+        let divId = '--detail-' + this.entity.entityId;
+        let containerId = '--detail-container-' + this.entity.entityId;
         let container = document.createElement('div');
+        container.id = containerId;
         let button = document.createElement('button');
         button.classList.add('detail-button-inactive');
         button.classList.add('nounderline');

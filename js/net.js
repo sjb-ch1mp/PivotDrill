@@ -1,5 +1,6 @@
 function sendQuery(query){
     //clear query input
+    resetWorkspace();
     document.getElementById('input-query').value = '';
 
     //FIXME : Terminating function for debugging

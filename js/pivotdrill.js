@@ -1,3 +1,11 @@
+function resetWorkspace(){
+    document.getElementById('fields-container').innerHTML = '';
+    document.getElementById('pivot-container').innerHTML = '';
+    clearDetailButtons();
+    clearDrillButtons();
+    clearDrillQuery();
+}
+
 function addFields(fields){
     //create a button for in field in list 'fields' and add it to the fields panel
     fields = dedupList(fields);
@@ -71,8 +79,10 @@ function removeDrillValue(key, value, buttonId){
 }
 
 function clearDrillQuery(){
-    deactivatePivotTables(drillQuery.queryData);
-    drillQuery.queryData = {};
+    if(drillQuery !== null){
+        deactivatePivotTables(drillQuery.queryData);
+        drillQuery.queryData = {};
+    }
     document.getElementById('input-drill').value = '';
     clearDrillButtons();
     clearDetailButtons();

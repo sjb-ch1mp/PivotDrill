@@ -3,11 +3,11 @@ function sendQuery(query){
     resetWorkspace();
     document.getElementById('input-query').value = '';
 
-    //FIXME : Terminating function for debugging
+    /*//Test JSON
     let testJSON = getTestJSON();
     addFields(testJSON.split(/\W/g));
     return;
-    //FIXME : Terminating function for debugging
+    //Test JSON*/
 
     //check user has entered a query
     if(query.trim().length === 0){
@@ -22,5 +22,5 @@ function sendQuery(query){
     }
 
     //send query to server
-    summonChatterBox(query);
+    summonChatterBox('Sending query');
 }

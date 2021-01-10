@@ -59,6 +59,9 @@
     border: 3px solid #010822;
     margin-bottom: 10px;
 }
+#settings-padding{
+    padding: 10px;
+}
 
 /* CLASSES */
 .workspace{
@@ -217,6 +220,18 @@ td.pivot-table-active{
     border: 1px #010822 solid;
     border-radius: 5px;
 }
+.settings-heading{
+    font-family: "Yu Gothic";
+    color: #621F1C;
+    font-size: large;
+    font-wieght: bolder;
+}
+.settings-subheading{
+    font-family: "Yu Gothic UI";
+    color: #AA3630;
+    font-size: medium;
+    font-weight: bold;
+}
 
 /* BY ELEMENT */
 form{
@@ -230,4 +245,48 @@ input:focus{
 
 button:focus{
     outline: none;
+}
+hr.settings{
+    color: #AA3630;
+}
+form.settings-inactive{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border: 3px solid #AA3630;
+}
+input.settings-inactive{
+    pointer-events: none;
+    flex-grow: 2;
+    border: none;
+}
+button.settings-inactive{
+    background-color: #AA3630;
+    color: white;
+    border: none;
+    font-family: "Yu Gothic UI";
+    font-size: medium;
+    font-weight: bold;
+    padding: 5px;
+    width: 100px;
+}
+form.settings-active{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border: 3px solid #010822;
+}
+input.settings-active{
+    flex-grow: 2;
+    border: none;
+}
+button.settings-active{
+    background-color: #010822;
+    color: white;
+    border: none;
+    font-family: "Yu Gothic UI";
+    font-size: medium;
+    font-weight: bold;
+    padding: 5px;
+    width: 100px;
 }

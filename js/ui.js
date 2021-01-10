@@ -13,6 +13,11 @@ function summonChatterBox(message, type){
 }
 
 function setUpWorkspace(){
+
+    if(settings === null){
+        settings = new Settings();
+    }
+
     let workspace = document.getElementById('workspace');
     let dim = getCurrentDimensions();
 
@@ -93,17 +98,30 @@ function openPanel(panelName){
         }
     }
 
+    if(panelName === "settings"){
+        panel.style.width = (dim['WINDOW_WIDTH'] / 3) + "px";
+        menu.style.width = ((dim['WINDOW_WIDTH'] / 3) - 20) + 'px';
+        menu.style.left = "5px";
+        panel.style.left = (dim['WINDOW_WIDTH'] / 3) + "px";
+        container.style.width = ((dim['WINDOW_WIDTH'] / 3) - 20) + "px";
+    }else{
+        panel.style.width = dim['WINDOW_WIDTH'] + "px";
+        menu.style.width = (dim['WINDOW_WIDTH'] - 20) + 'px';
+        menu.style.left = "5px";
+        panel.style.left = "0px";
+        container.style.width = (dim['WINDOW_WIDTH'] - 20) + "px";
+    }
     panel.classList.remove('hidden');
     menu.style.top = (dim['WORKSPACE_HEIGHT'] - menu.clientHeight) + "px";
-    menu.style.left = "5px";
-    menu.style.width = (dim['WINDOW_WIDTH'] - 20) + 'px';
     panel.style.height = dim['WORKSPACE_HEIGHT'] + "px";
-    panel.style.width = dim['WINDOW_WIDTH'] + "px";
-    panel.style.left = "0px";
     panel.style.top = "0px";
     container.style.height = (dim['WORKSPACE_HEIGHT'] - (menu.clientHeight + 15)) + "px";
-    container.style.width = (dim['WINDOW_WIDTH'] - 20) + "px";
+
     getPanel(panelName).state = PanelState.OPEN;
+
+    if(panelName === 'settings'){
+        loadCurrentSettings();
+    }
 }
 
 function closePanel(panelName){
@@ -177,4 +195,35 @@ function closeDetailButton(buttonId, divId){
     button.classList.remove('detail-button-active');
     button.classList.add('detail-button-inactive');
     div.classList.add('hidden');
+}
+
+function activateSettingsInput(id){
+    let form = document.getElementById('form-' + id);
+    let input = document.getElementById('input-' + id);
+    let button = document.getElementById(id);
+    if(button.innerText === 'CHANGE'){
+        form.classList.remove("settings-inactive");
+        form.classList.add("settings-active");
+        input.classList.remove("settings-inactive");
+        input.classList.add("settings-active");
+        button.classList.remove("settings-inactive");
+        button.classList.add("settings-active");
+        button.innerText = 'SAVE';
+    }else{
+        settings.saveNewSetting(id, input.value);
+        form.classList.remove("settings-active");
+        form.classList.add("settings-inactive");
+        input.classList.remove("settings-active");
+        input.classList.add("settings-inactive");
+        button.classList.remove("settings-active");
+        button.classList.add("settings-inactive");
+        button.innerText = 'CHANGE';
+    }
+}
+
+function loadCurrentSettings(){
+    document.getElementById('input-rest-uri').value = settings.getCurrentSetting('rest-uri');
+    document.getElementById('input-rest-key').value = settings.getCurrentSetting('rest-key');
+    document.getElementById('input-rest-username').value = settings.getCurrentSetting('rest-username');
+    document.getElementById('input-data-root').value = settings.getCurrentSetting('data-root');
 }

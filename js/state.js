@@ -1,6 +1,7 @@
 let server = null;
 let panelNames = ['fields','pivot','drill','detail','settings'];
 let drillQuery = null;
+let settings = null;
 
 class Panel{
     constructor(name){
@@ -42,4 +43,23 @@ function getOpenPanel(){
         }
     }
     return null;
+}
+
+class Settings{
+    constructor(){
+        this.settings = {
+            'rest-uri':'',
+            'rest-username':'',
+            'rest-key':'',
+            'data-root':''
+        };
+    }
+
+    saveNewSetting(key, value){
+        this.settings[key] = value;
+    }
+
+    getCurrentSetting(key){
+        return this.settings[key];
+    }
 }

@@ -14,7 +14,6 @@
 
     <script src="js/state.js"></script>
     <script src="js/ui.js"></script>
-    <script src="js/settings.js"></script>
     <script src="js/net.js"></script>
     <script src="js/pivotdrill.js"></script>
     <script src="js/test.js"></script>
@@ -63,7 +62,38 @@
 
     <!-- Settings -->
     <div id="settings" class="panel hidden">
-        <div id="settings-container" class="panel-container"></div>
+        <div id="settings-container" class="panel-container">
+            <div id="settings-padding">
+                <h2 class="settings-heading">REST API</h2>
+                <hr class="settings">
+                <h4 class="settings-subheading text-orange">URI</h4>
+                <form id="form-rest-uri" class="settings-inactive">
+                    <input type="text" id="input-rest-uri" class="settings-inactive pivotdrill-heading">
+                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-uri">CHANGE</button>
+                </form>
+                <h4 class="settings-subheading text-orange">USERNAME</h4>
+                <form id="form-rest-username" class="settings-inactive">
+                    <input type="text" id="input-rest-username" class="settings-inactive pivotdrill-heading">
+                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-username">CHANGE</button>
+                </form>
+                <h4 class="settings-subheading text-orange">KEY</h4>
+                <form id="form-rest-key" class="settings-inactive">
+                    <input type="text" id="input-rest-key" class="settings-inactive pivotdrill-heading">
+                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-key">CHANGE</button>
+                </form>
+                <h2 class="settings-heading">DATA</h2>
+                <hr class="settings">
+                <h4 class="settings-subheading text-orange">ROOT KEY</h4>
+                <form id="form-data-root" class="settings-inactive">
+                    <input type="text" id="input-data-root" class="settings-inactive pivotdrill-heading">
+                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="data-root">CHANGE</button>
+                </form>
+                <h4 class="settings-subheading text-orange">UPLOAD DATA AS FILE</h4>
+                <form id="form-data-upload" class="settings-inactive">
+                    <input type="file" id="input-data-upload" class="pivotdrill-heading">
+                </form>
+            </div>
+        </div>
         <a onclick="togglePanel('settings')" class="nounderline"><div id="settings-menu" class="pivotdrill-heading panel-menu centered">SETTINGS</div></a>
     </div>
 </div>

@@ -1,14 +1,19 @@
-function resetWorkspace(){
-    document.getElementById('fields-container').innerHTML = '';
-    document.getElementById('pivot-container').innerHTML = '';
-    clearDetailButtons();
-    clearDrillButtons();
-    clearDrillQuery();
-}
-
-function addFields(fields){
+function addFields(data){
     //create a button for in field in list 'fields' and add it to the fields panel
-    fields = dedupList(fields);
+    //data : stringified JSON
+    data = JSON.parse(data);
+    let root = settings.getCurrentSetting('data-root');
+    if(!(root in Object.keys(data))){
+        let rootData = getDataAtRoot(data, 1, root);
+        if(rootData === null){
+            summonChatterBox('Unable to locate root node "' + root + '" in data.', 'error');
+            return;
+        }else{
+            data = rootData[0]; //FIXME : For the time being, I will fetch the first element of the array, but eventually, this is the point at which entities will be created and fields summarised
+        }
+    }
+    let fields = dedupList(Object.keys(data));
+
     fields.sort();
     let fieldButtonsContainer = document.getElementById('fields-container');
     for(let i in fields){
@@ -19,31 +24,57 @@ function addFields(fields){
     }
 }
 
-function addPivotTable(fieldName, buttonId){
-    //search through data for all objects with this field
+function activateFieldButton(buttonId){
     let button = document.getElementById(buttonId);
     button.classList.remove('field-button-inactive');
     button.classList.add('field-button-active');
+}
+
+function deactivateFieldButton(buttonId){
+    let button = document.getElementById(buttonId);
+    button.classList.remove('field-button-active');
+    button.classList.add('field-button-inactive');
+}
+
+function addPivotTable(fieldName, buttonId){
+    //search through data for all objects with this field
 
     //go get all the unique values for that field
     let pivotTable = new PivotTable(fieldName, getDummyList());
     let pivotContainer = document.getElementById('pivot-container');
     pivotContainer.appendChild(pivotTable.print());
+
+    activateFieldButton(buttonId);
 }
 
 function removePivotTable(fieldName, buttonId){
-    let button = document.getElementById(buttonId);
-    button.classList.remove('field-button-active');
-    button.classList.add('field-button-inactive');
 
     let pivotContainer = document.getElementById('pivot-container');
     let pivotTable = document.getElementById('--pivot-table-' + fieldName);
     pivotContainer.removeChild(pivotTable);
 
-    if(fieldName in drillQuery.queryData){
+    if(drillQuery !== null && fieldName in drillQuery.queryData){
         drillQuery.remove(fieldName, null);
         drillQuery.run();
     }
+
+    deactivateFieldButton(buttonId);
+}
+
+function clearPivotTables(){
+
+    let pivotTables = document.getElementsByClassName('pivot-table');
+    while(pivotTables.length > 0){
+        for(let i in pivotTables){
+            if(typeof(pivotTables[i]) === 'object' && pivotTables[i].id){
+                let fieldName = pivotTables[i].id.replace("--pivot-table-", '');
+                deactivateFieldButton('--field-' + fieldName);
+                document.getElementById('pivot-container').removeChild(pivotTables[i]);
+            }
+        }
+        pivotTables = document.getElementsByClassName('pivot-table');
+    }
+
 }
 
 function deactivatePivotTables(queryData){
@@ -301,16 +332,4 @@ class DetailButton{
         container.appendChild(details);
         return container;
     }
-}
-
-class Entity{
-    constructor(entityId, data){
-        this.entityId = entityId;
-        this.data = data;
-    }
-}
-
-class EntityBlob{
-    //Container class for all entities returned as the result of a query
-
 }

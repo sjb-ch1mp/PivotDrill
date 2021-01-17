@@ -227,3 +227,10 @@ function loadCurrentSettings(){
     document.getElementById('input-rest-username').value = settings.getCurrentSetting('rest-username');
     document.getElementById('input-data-root').value = settings.getCurrentSetting('data-root');
 }
+
+function resetWorkspace(){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF IT IS CALLED FROM SENDQUERY()
+    clearPivotTables();
+    clearDetailButtons();
+    clearDrillButtons();
+    clearDrillQuery();
+}

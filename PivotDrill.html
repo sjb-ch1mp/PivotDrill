@@ -17,6 +17,7 @@
     <script src="js/net.js"></script>
     <script src="js/pivotdrill.js"></script>
     <script src="js/test.js"></script>
+    <script src="js/entity.js"></script>
 </head>
 
 <body>
@@ -28,20 +29,20 @@
         <div id="fields-container" class="panel-container">
             <!-- FIELD BUTTONS -->
         </div>
-        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="fields-menu" class="pivotdrill-heading panel-menu centered">FIELDS</div></a>
+        <div id="fields-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">FIELDS</div>
     </div>
 
     <div id="pivot" class="panel">
         <div id="pivot-container" class="panel-container row pivotdrill-heading">
             <!-- PIVOT TABLES -->
         </div>
-        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="pivot-menu" class="pivotdrill-heading panel-menu centered">PIVOT</div></a>
+        <div id="pivot-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">PIVOT</div>
     </div>
 
     <div id="drill" class="panel">
         <div id="drill-container" class="panel-container">
             <div class="centered">
-                <form id="form-drill">
+                <form id="form-drill" action="javascript:void(0)">
                     <input id="input-drill" type="text" class="pivotdrill-heading" placeholder="" style="font-size: small;pointer-events: none">
                     <button id="clear-button" class="nounderline" onclick="clearDrillQuery()">CLEAR</button>
                 </form>
@@ -50,14 +51,14 @@
                 <!-- DRILL BUTTONS -->
             </div>
         </div>
-        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="drill-menu" class="pivotdrill-heading panel-menu centered">DRILL</div></a>
+        <div id="drill-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DRILL</div>
     </div>
 
     <div id="detail" class="panel">
         <div id="detail-container" class="panel-container">
             <!-- OBJECT DETAILS -->
         </div>
-        <a onclick="togglePanel(this.innerText.toLowerCase())" class="nounderline"><div id="detail-menu" class="pivotdrill-heading panel-menu centered">DETAIL</div></a>
+        <div id="detail-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DETAIL</div>
     </div>
 
     <!-- Settings -->
@@ -67,34 +68,34 @@
                 <h2 class="settings-heading">REST API</h2>
                 <hr class="settings">
                 <h4 class="settings-subheading text-orange">URI</h4>
-                <form id="form-rest-uri" class="settings-inactive">
+                <form id="form-rest-uri" class="settings-inactive" action="javascript:void(0)">
                     <input type="text" id="input-rest-uri" class="settings-inactive pivotdrill-heading">
                     <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-uri">CHANGE</button>
                 </form>
                 <h4 class="settings-subheading text-orange">USERNAME</h4>
-                <form id="form-rest-username" class="settings-inactive">
+                <form id="form-rest-username" class="settings-inactive" action="javascript:void(0)">
                     <input type="text" id="input-rest-username" class="settings-inactive pivotdrill-heading">
                     <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-username">CHANGE</button>
                 </form>
                 <h4 class="settings-subheading text-orange">KEY</h4>
-                <form id="form-rest-key" class="settings-inactive">
+                <form id="form-rest-key" class="settings-inactive" action="javascript:void(0)">
                     <input type="text" id="input-rest-key" class="settings-inactive pivotdrill-heading">
                     <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-key">CHANGE</button>
                 </form>
                 <h2 class="settings-heading">DATA</h2>
                 <hr class="settings">
                 <h4 class="settings-subheading text-orange">ROOT KEY</h4>
-                <form id="form-data-root" class="settings-inactive">
+                <form id="form-data-root" class="settings-inactive" action="javascript:void(0)">
                     <input type="text" id="input-data-root" class="settings-inactive pivotdrill-heading">
                     <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="data-root">CHANGE</button>
                 </form>
                 <h4 class="settings-subheading text-orange">UPLOAD DATA AS FILE</h4>
-                <form id="form-data-upload" class="settings-inactive">
+                <form id="form-data-upload" class="settings-inactive" action="javascript:void(0)">
                     <input type="file" id="input-data-upload" class="pivotdrill-heading">
                 </form>
             </div>
         </div>
-        <a onclick="togglePanel('settings')" class="nounderline"><div id="settings-menu" class="pivotdrill-heading panel-menu centered">SETTINGS</div></a>
+        <div id="settings-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel('settings')">SETTINGS</div>
     </div>
 </div>
 
@@ -102,7 +103,7 @@
 <div class="centered" id="header">
     <a href="https://github.com/sjb-ch1mp/PivotDrill/blob/master/README.md" target="_blank"><img id="pivotdrill-logo" src="img/pivotdrill-logo.png" alt="PivotDrill"></a>
     <div class="pivotdrill-heading" style="padding: 10px">
-        <form id="form-query">
+        <form id="form-query" action="javascript:void(0)">
             <input class="pivotdrill-heading" type="text" placeholder="ENTER A QUERY AND PRESS ENTER" id="input-query">
             <button id="send-button" class="nounderline" onclick="sendQuery(document.getElementById('input-query').value)">SEND</button>
         </form>
@@ -114,9 +115,9 @@
 
 <!-- Footer -->
 <div class="pivotdrill-heading centered" id="footer">
-    <a class="text-orange nounderline" onclick="resetWorkspace()">reset workspace</a>
+    <a class="text-orange nounderline" onclick="resetWorkspace()" href="javascript:void(0)">reset workspace</a>
     <span class="text-red">||</span>
-    <a class="text-orange nounderline" onclick="togglePanel('settings')">settings</a>
+    <a class="text-orange nounderline" onclick="togglePanel('settings')" href="javascript:void(0)">settings</a>
     <span class="text-red">||</span>
     <span class="text-orange">current server :: </span><span id="current-server"></span>
     <span class="text-red">||</span>

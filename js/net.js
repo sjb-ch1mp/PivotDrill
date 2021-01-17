@@ -3,11 +3,10 @@ function sendQuery(query){
     resetWorkspace();
     document.getElementById('input-query').value = '';
 
-    /*//Test JSON
-    let testJSON = getTestJSON();
-    addFields(testJSON.split(/\W/g));
+    //Test JSON
+    addFields(getTestJSON());
     return;
-    //Test JSON*/
+    //Test JSON
 
     //check user has entered a query
     if(query.trim().length === 0){

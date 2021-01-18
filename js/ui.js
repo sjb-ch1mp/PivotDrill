@@ -99,11 +99,11 @@ function openPanel(panelName){
     }
 
     if(panelName === "settings"){
-        panel.style.width = (dim['WINDOW_WIDTH'] / 3) + "px";
-        menu.style.width = ((dim['WINDOW_WIDTH'] / 3) - 20) + 'px';
+        panel.style.width = (dim['WINDOW_WIDTH'] / 2) + "px";
+        menu.style.width = ((dim['WINDOW_WIDTH'] / 2) - 20) + 'px';
         menu.style.left = "5px";
-        panel.style.left = (dim['WINDOW_WIDTH'] / 3) + "px";
-        container.style.width = ((dim['WINDOW_WIDTH'] / 3) - 20) + "px";
+        panel.style.left = (dim['WINDOW_WIDTH'] / 4) + "px";
+        container.style.width = ((dim['WINDOW_WIDTH'] / 2) - 20) + "px";
     }else{
         panel.style.width = dim['WINDOW_WIDTH'] + "px";
         menu.style.width = (dim['WINDOW_WIDTH'] - 20) + 'px';
@@ -210,7 +210,7 @@ function activateSettingsInput(id){
         button.classList.add("settings-active");
         button.innerText = 'SAVE';
     }else{
-        settings.saveNewSetting(id, input.value);
+        settings.saveNewSetting(id, (input.value.trim() === '') ? null : input.value);
         form.classList.remove("settings-active");
         form.classList.add("settings-inactive");
         input.classList.remove("settings-active");

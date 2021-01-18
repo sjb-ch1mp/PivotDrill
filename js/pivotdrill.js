@@ -1,19 +1,6 @@
 function addFields(data){
-    /*
-    data = JSON.parse(data);
-    let root = settings.getCurrentSetting('data-root');
-    if(!(root in Object.keys(data))){
-        let rootData = getDataAtRoot(data, 1, root);
-        if(rootData === null){
-            summonChatterBox('Unable to locate root node "' + root + '" in data.', 'error');
-            return;
-        }else{
-            data = rootData[0]; //FIXME : For the time being, I will fetch the first element of the array, but eventually, this is the point at which entities will be created and fields summarised
-        }
-    }
-    let fields = dedupList(Object.keys(data));
-    */
     let fields = Object.keys(data.keys);
+    //FIXME : Do pretty nesting here, e.g. results:host_type -> results [host_type] ???
     fields.sort();
     let fieldButtonsContainer = document.getElementById('fields-container');
     for(let i in fields){
@@ -37,14 +24,28 @@ function deactivateFieldButton(buttonId){
 }
 
 function clearFieldButtons(){
-    document.getElementById('fields-container').innerHTML = '';
+    let activeFieldButtons = document.getElementsByClassName('field-button-active');
+    let inactiveFieldButtons = document.getElementsByClassName('field-button-inactive');
+    while(activeFieldButtons.length > 0 || inactiveFieldButtons.length > 0){
+        for(let i in activeFieldButtons){
+            removeFieldButton(activeFieldButtons[i]);
+        }
+        for(let i in inactiveFieldButtons){
+            removeFieldButton(inactiveFieldButtons[i]);
+        }
+    }
+}
+
+function removeFieldButton(button){
+    if(typeof(button) === 'object' && button.id && button.id.startsWith('--field')){
+        document.getElementById('fields-container').removeChild(button);
+    }
 }
 
 function addPivotTable(fieldName, buttonId){
-    //search through data for all objects with this field
-
-    //go get all the unique values for that field
-    let pivotTable = new PivotTable(fieldName, getDummyList());
+    let values = entityBlobs['_main'].keys[fieldName]['values'];
+    values.sort();
+    let pivotTable = new PivotTable(fieldName, values);
     let pivotContainer = document.getElementById('pivot-container');
     pivotContainer.appendChild(pivotTable.print());
 

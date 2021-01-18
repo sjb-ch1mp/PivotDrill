@@ -1,6 +1,10 @@
 function sendQuery(query){
     //clear query input
     resetWorkspace('new_query');
+    let openPanel = getOpenPanel();
+    if(openPanel !== null && openPanel.name === 'settings'){
+        togglePanel('settings');
+    }
     document.getElementById('input-query').value = '';
 
     //FIXME : Test JSON

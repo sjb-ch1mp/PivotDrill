@@ -7,7 +7,7 @@ class Entity{
 class EntityBlob{
 
     constructor() {
-        this.keys = {}; //{key_1:{entity_idx:[values], ..., entity_idx:[values]}}
+        this.keys = {}; //{key_1:{entity_indexes:[entity_indexes], values:[values]}}
         this.entities = [];
     }
 
@@ -18,7 +18,6 @@ class EntityBlob{
     }
 
     flattenKeys(currentKey, data, entityIdx){
-        console.log('flattening keys');
         if(Array.isArray(data)){
             for(let i in data){
                 this.flattenKeys(
@@ -36,28 +35,28 @@ class EntityBlob{
                     entityIdx
                     );
             }
-        }else if(!(currentKey in this.keys)){
-            this.keys[currentKey] = {};
-            this.keys[currentKey][entityIdx] = [data];
         }else{
-            this.keys[currentKey][entityIdx] = [data];
+            if(!(currentKey in this.keys)){
+                this.keys[currentKey] = {
+                    'entities':[],
+                    'values':[]
+                };
+            }
+            if(!(this.keys[currentKey]['entities'].includes(entityIdx))){
+                this.keys[currentKey]['entities'].push(entityIdx);
+            }
+            if(!(this.keys[currentKey]['values'].includes(data))){
+                this.keys[currentKey]['values'].push(data);
+            }
         }
     }
 
-    pivotEntities(key){
-        //return a list of all unique values for 'key'
+    drillEntities(drillQuery){
 
-    }
-
-    drillEntities(key, value){
-        //if value == null, return a list of Entities that contain key
-
-        //if value != null, return a list of Entities that contain
     }
 }
 
 function buildEntityBlob(data, dataType){
-    console.log('building entity blob');
     try {
         switch (dataType) {
             case "JSON":
@@ -74,32 +73,30 @@ function buildEntityBlob(data, dataType){
 }
 
 function buildEntityBlobFromJSON(data){
-    console.log('building entity blob from JSON');
-    let root = settings.getCurrentSetting('data-root');console.log('root = ' + root);
-    let entityBlob = new EntityBlob();console.log('typeof(data) == ' + typeof(data));
-    if(Array.isArray(data)){console.log('data is a list, getting root data');
+    let root = settings.getCurrentSetting('data-root');
+    let entityBlob = new EntityBlob();
+    if(Array.isArray(data)){
         for(let i in data){
             let rootData = (root !== null) ?  getDataAtRoot(data[i], root) : data[i];
             if(rootData !== null){
                 entityBlob.addEntity(rootData);
             }
-        }console.log(entityBlob);
+        }
         return entityBlob;
     }else if(typeof(data) === 'object'){
-        console.log('data is an object, getting root data');
         if(root !== null){
             data = getDataAtRoot(data, root);
             if(data === null){
-                throw new Error('Root not found');
+                throw new Error('Root key "' + root + '" not found in data');
             }
         }
-        if(typeof(data) === 'object'){console.log('root data is an object, adding entity');
-            entityBlob.addEntity(data); console.log(entityBlob);
-            return entityBlob;
-        }else if(Array.isArray(data)){console.log('root data is a list, adding entities');
+        if(Array.isArray(data)){
             for(let i in data){
-                entityBlob.addEntity(data);
-            }console.log(entityBlob);
+                entityBlob.addEntity(data[i]);
+            }
+            return entityBlob;
+        }else if(typeof(data) === 'object'){
+            entityBlob.addEntity(data);
             return entityBlob;
         }else{
             throw new Error('Unexpected data format');
@@ -113,14 +110,14 @@ function buildEntityBlobFromCSV(data){
 
 function getDataAtRoot(data, root){
     if(Array.isArray(data)){
-        for(let i in data){console.log('@' + data[i]);
+        for(let i in data){
             if(typeof(data[i]) === 'object'){
                 return getDataAtRoot(data[i], root);
             }
         }
     }else if(typeof(data) === 'object'){
         let keys = Object.keys(data);
-        for(let i in keys){console.log('@' + keys[i]);
+        for(let i in keys){
             if(keys[i] === root){
                 return data[keys[i]];
             }else{
@@ -132,4 +129,9 @@ function getDataAtRoot(data, root){
         }
     }
     return null;
+}
+
+function saveNewRootDataSet(){
+    //FIXME : this method will save a new root data set to entityBlobs[_currentRoot] so that the
+    //FIXME : user can toggle between _main and _currentRoot
 }

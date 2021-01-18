@@ -2,7 +2,10 @@ let server = null;
 let panelNames = ['fields','pivot','drill','detail','settings'];
 let drillQuery = null;
 let settings = null;
-let entityBlobs = {'_main':null};
+let entityBlobs = {
+    '_main':null,
+    '_currentRoot':null
+};
 
 class Panel{
     constructor(name){
@@ -58,6 +61,9 @@ class Settings{
 
     saveNewSetting(key, value){
         this.settings[key] = value;
+        if(key === 'data-root'){
+            saveNewRootDataSet();
+        }
     }
 
     getCurrentSetting(key){

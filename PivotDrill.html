@@ -27,6 +27,14 @@
 
     <div id="fields" class="panel">
         <div id="fields-container" class="panel-container">
+            <div id="fields-dataset-container">
+                <label for="input-datasets">DATA SETS:</label>
+                <input list="fields-datasets" id="input-datasets">
+                <datalist id="fields-datasets">
+                    <option value="_main"></option>
+                    <option value="_currentRoot"></option>
+                </datalist>
+            </div>
             <!-- FIELD BUTTONS -->
         </div>
         <div id="fields-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">FIELDS</div>

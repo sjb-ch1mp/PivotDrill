@@ -228,9 +228,12 @@ function loadCurrentSettings(){
     document.getElementById('input-data-root').value = settings.getCurrentSetting('data-root');
 }
 
-function resetWorkspace(){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF IT IS CALLED FROM SENDQUERY()
+function resetWorkspace(caller){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF IT IS CALLED FROM SENDQUERY()
     clearPivotTables();
     clearDetailButtons();
     clearDrillButtons();
     clearDrillQuery();
+    if(caller === 'new_query'){
+        clearFieldButtons();
+    }
 }

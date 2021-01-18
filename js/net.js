@@ -1,6 +1,6 @@
 function sendQuery(query){
     //clear query input
-    resetWorkspace();
+    resetWorkspace('new_query');
     document.getElementById('input-query').value = '';
 
     //FIXME : Test JSON

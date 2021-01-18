@@ -36,6 +36,10 @@ function deactivateFieldButton(buttonId){
     button.classList.add('field-button-inactive');
 }
 
+function clearFieldButtons(){
+    document.getElementById('fields-container').innerHTML = '';
+}
+
 function addPivotTable(fieldName, buttonId){
     //search through data for all objects with this field
 

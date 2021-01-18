@@ -21,19 +21,11 @@ class EntityBlob{
         console.log('flattening keys');
         if(Array.isArray(data)){
             for(let i in data){
-                if(typeof(data[i]) === 'object'){
-                    this.flattenKeys(
-                        (currentKey === '') ? '[...]' : currentKey + ":[...]",
-                        data[i],
-                        entityIdx
-                    );
-                }else{
-                    this.flattenKeys(
-                        currentKey,
-                        data[i],
-                        entityIdx
-                    );
-                }
+                this.flattenKeys(
+                    currentKey,
+                    data[i],
+                    entityIdx
+                );
             }
         }else if(typeof(data) === 'object'){
             let keys = Object.keys(data);
@@ -121,18 +113,21 @@ function buildEntityBlobFromCSV(data){
 
 function getDataAtRoot(data, root){
     if(Array.isArray(data)){
-        for(let i in data){
+        for(let i in data){console.log('@' + data[i]);
             if(typeof(data[i]) === 'object'){
                 return getDataAtRoot(data[i], root);
             }
         }
     }else if(typeof(data) === 'object'){
         let keys = Object.keys(data);
-        for(let i in keys){
+        for(let i in keys){console.log('@' + keys[i]);
             if(keys[i] === root){
                 return data[keys[i]];
             }else{
-                return getDataAtRoot(data[keys[i]], root);
+                let rootData = getDataAtRoot(data[keys[i]], root);
+                if(rootData !== null){
+                    return rootData;
+                }
             }
         }
     }

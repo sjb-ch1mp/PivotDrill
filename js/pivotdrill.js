@@ -1,6 +1,5 @@
 function addFields(data){
-    //create a button for in field in list 'fields' and add it to the fields panel
-    //data : stringified JSON
+    /*
     data = JSON.parse(data);
     let root = settings.getCurrentSetting('data-root');
     if(!(root in Object.keys(data))){
@@ -13,7 +12,8 @@ function addFields(data){
         }
     }
     let fields = dedupList(Object.keys(data));
-
+    */
+    let fields = Object.keys(data.keys);
     fields.sort();
     let fieldButtonsContainer = document.getElementById('fields-container');
     for(let i in fields){

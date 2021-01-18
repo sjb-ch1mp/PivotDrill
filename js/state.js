@@ -2,6 +2,7 @@ let server = null;
 let panelNames = ['fields','pivot','drill','detail','settings'];
 let drillQuery = null;
 let settings = null;
+let entityBlobs = {'_main':null};
 
 class Panel{
     constructor(name){
@@ -48,10 +49,10 @@ function getOpenPanel(){
 class Settings{
     constructor(){
         this.settings = {
-            'rest-uri':'',
-            'rest-username':'',
-            'rest-key':'',
-            'data-root':''
+            'rest-uri':null,
+            'rest-username':null,
+            'rest-key':null,
+            'data-root':null
         };
     }
 
@@ -62,4 +63,9 @@ class Settings{
     getCurrentSetting(key){
         return this.settings[key];
     }
+}
+
+const DataType = {
+    "JSON":"JSON",
+    "CSV":"CSV"
 }

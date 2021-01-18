@@ -3,10 +3,11 @@ function sendQuery(query){
     resetWorkspace();
     document.getElementById('input-query').value = '';
 
-    //Test JSON
-    addFields(getTestJSON());
+    //FIXME : Test JSON
+    entityBlobs["_main"] = buildEntityBlob(JSON.parse(getTestJSON()), DataType.JSON);
+    addFields(entityBlobs['_main']);
     return;
-    //Test JSON
+    //FIXME : Test JSON
 
     //check user has entered a query
     if(query.trim().length === 0){

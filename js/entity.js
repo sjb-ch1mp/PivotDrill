@@ -14,15 +14,42 @@ class EntityBlob{
     addEntity(data){
         let entityIdx = this.entities.length;
         this.entities.push(new Entity(data));
-        this.addKeys(this.flattenKeys(data, entityIdx));
+        this.flattenKeys('', data, entityIdx);
     }
 
-    addKeys(flatKeys){
-        
-    }
-
-    flattenKeys(){
-
+    flattenKeys(currentKey, data, entityIdx){
+        console.log('flattening keys');
+        if(Array.isArray(data)){
+            for(let i in data){
+                if(typeof(data[i]) === 'object'){
+                    this.flattenKeys(
+                        (currentKey === '') ? '[...]' : currentKey + ":[...]",
+                        data[i],
+                        entityIdx
+                    );
+                }else{
+                    this.flattenKeys(
+                        currentKey,
+                        data[i],
+                        entityIdx
+                    );
+                }
+            }
+        }else if(typeof(data) === 'object'){
+            let keys = Object.keys(data);
+            for(let i in keys){
+                this.flattenKeys(
+                    (currentKey === '') ? keys[i] : currentKey + ":" + keys[i],
+                    data[keys[i]],
+                    entityIdx
+                    );
+            }
+        }else if(!(currentKey in this.keys)){
+            this.keys[currentKey] = {};
+            this.keys[currentKey][entityIdx] = [data];
+        }else{
+            this.keys[currentKey][entityIdx] = [data];
+        }
     }
 
     pivotEntities(key){
@@ -37,23 +64,77 @@ class EntityBlob{
     }
 }
 
-function buildEntityBlob(data){
-
+function buildEntityBlob(data, dataType){
+    console.log('building entity blob');
+    try {
+        switch (dataType) {
+            case "JSON":
+                return buildEntityBlobFromJSON(data);
+            case "CSV":
+                return buildEntityBlobFromCSV(data);
+        }
+    }catch(e){
+        summonChatterBox(e.message, 'error');
+        if(e.stack){
+            console.log(e.stack);
+        }
+    }
 }
 
-function getDataAtRoot(data, keyCount, root){
-    if(keyCount > Object.keys(data).length){
-        return null;
-    }else if(typeof(data) !== 'object'){
-        return null;
-    }else{
+function buildEntityBlobFromJSON(data){
+    console.log('building entity blob from JSON');
+    let root = settings.getCurrentSetting('data-root');console.log('root = ' + root);
+    let entityBlob = new EntityBlob();console.log('typeof(data) == ' + typeof(data));
+    if(Array.isArray(data)){console.log('data is a list, getting root data');
+        for(let i in data){
+            let rootData = (root !== null) ?  getDataAtRoot(data[i], root) : data[i];
+            if(rootData !== null){
+                entityBlob.addEntity(rootData);
+            }
+        }console.log(entityBlob);
+        return entityBlob;
+    }else if(typeof(data) === 'object'){
+        console.log('data is an object, getting root data');
+        if(root !== null){
+            data = getDataAtRoot(data, root);
+            if(data === null){
+                throw new Error('Root not found');
+            }
+        }
+        if(typeof(data) === 'object'){console.log('root data is an object, adding entity');
+            entityBlob.addEntity(data); console.log(entityBlob);
+            return entityBlob;
+        }else if(Array.isArray(data)){console.log('root data is a list, adding entities');
+            for(let i in data){
+                entityBlob.addEntity(data);
+            }console.log(entityBlob);
+            return entityBlob;
+        }else{
+            throw new Error('Unexpected data format');
+        }
+    }
+}
+
+function buildEntityBlobFromCSV(data){
+    return null; //FIXME
+}
+
+function getDataAtRoot(data, root){
+    if(Array.isArray(data)){
+        for(let i in data){
+            if(typeof(data[i]) === 'object'){
+                return getDataAtRoot(data[i], root);
+            }
+        }
+    }else if(typeof(data) === 'object'){
         let keys = Object.keys(data);
         for(let i in keys){
             if(keys[i] === root){
                 return data[keys[i]];
             }else{
-                return getDataAtRoot(data[keys[i]], keyCount++, root);
+                return getDataAtRoot(data[keys[i]], root);
             }
         }
     }
+    return null;
 }

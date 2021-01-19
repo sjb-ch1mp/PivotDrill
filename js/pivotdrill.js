@@ -107,13 +107,13 @@ function deactivatePivotTables(queryData){
 
 function addDrillValue(key, value, buttonId, conditional){
     //search through data for all objects with this key:value pair
-    console.log(conditional);
     let button = document.getElementById(buttonId);
     button.classList.add('pivot-table-active-' + conditional);
 
-    if(drillQuery === null){
+    if(drillQuery === null || drillQuery === undefined){
         drillQuery = new DrillQuery();
     }
+
     drillQuery.add(key, value, conditional);
     drillQuery.run();
 }
@@ -295,6 +295,7 @@ class DrillQuery{
     }
 
     add(key, value, conditional){
+        this.checkQueryData();
         if(!(key in this.queryData[conditional])){
             this.queryData[conditional][key] = [value];
         }else{
@@ -328,6 +329,15 @@ class DrillQuery{
         let toPrint = (orStatements.length > 0) ? orStatements.join(' AND ') : '';
         toPrint += ((notStatements.length > 0) ? ((toPrint.length > 0) ? ' AND ' : '') +  'NOT (' + notStatements.join(' OR ') + ')':'');
         return toPrint;
+    }
+
+    checkQueryData(){
+        if(!this.queryData['positive']){
+            this.queryData['positive'] = {};
+        }
+        if(!this.queryData['negative']){
+            this.queryData['negative'] = {};
+        }
     }
 
     hasQuery(){

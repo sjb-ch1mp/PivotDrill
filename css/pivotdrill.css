@@ -29,6 +29,7 @@
     flex-grow: 2;
     border: none;
     font-size: small;
+    font-family: "Arial Narrow";
 }
 #settings-container{
     background-color: antiquewhite;
@@ -284,7 +285,7 @@ table.pivot-table{
     color: black;
     border: 2px  #15920d  solid;
     font-family: "Yu Gothic UI";
-    font-size: smaller;
+    font-size: small;
     border-radius: 5px;
     margin: 1px;
     padding: 2px;
@@ -299,7 +300,7 @@ th.pivot-table{
     border: 2px  #15920d  solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
-    font-size: smaller;
+    font-size: small;
     border-radius: 5px;
     margin: 1px;
 }
@@ -307,18 +308,17 @@ td.pivot-table-active-positive{
     background-color: #010822;
     color: #a2fd9c;
     border: 2px #a2fd9c solid;
-    font-family: "Yu Gothic UI";
-    font-size: smaller;
+    font-size: small;
     border-radius: 5px;
 }
 td.pivot-table-active-negative{
     background-color: #010822;
     color: red;
     border: 2px red solid;
-    font-family: "Yu Gothic UI";
-    font-size: smaller;
+    font-size: small;
     border-radius: 5px;
 }
 td{
-    font-size: smaller;
+    font-size: small;
+    font-family: "Arial Narrow";
 }

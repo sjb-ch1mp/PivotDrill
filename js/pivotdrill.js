@@ -46,7 +46,7 @@ function addPivotTable(fieldName, buttonId){
     let values = entityBlobs['_main'].keys[fieldName]['values'];
     values.sort();
     let pivotTable = new PivotTable(fieldName, values);
-    let pivotContainer = document.getElementById('pivot-container');
+    let pivotContainer = document.getElementById('pivot-table-container');
     pivotContainer.appendChild(pivotTable.print());
 
     activateFieldButton(buttonId);
@@ -54,7 +54,7 @@ function addPivotTable(fieldName, buttonId){
 
 function removePivotTable(fieldName, buttonId){
 
-    let pivotContainer = document.getElementById('pivot-container');
+    let pivotContainer = document.getElementById('pivot-table-container');
     let pivotTable = document.getElementById('--pivot-table-' + fieldName);
     pivotContainer.removeChild(pivotTable);
 
@@ -74,7 +74,7 @@ function clearPivotTables(){
             if(typeof(pivotTables[i]) === 'object' && pivotTables[i].id){
                 let fieldName = pivotTables[i].id.replace("--pivot-table-", '');
                 deactivateFieldButton('--field-' + fieldName);
-                document.getElementById('pivot-container').removeChild(pivotTables[i]);
+                document.getElementById('pivot-table-container').removeChild(pivotTables[i]);
             }
         }
         pivotTables = document.getElementsByClassName('pivot-table');
@@ -83,11 +83,20 @@ function clearPivotTables(){
 }
 
 function deactivatePivotTables(queryData){
-    if(document.getElementById('pivot-container').innerHTML.trim().length > 0){ //check if pivot tables exist
-        for(let key in queryData){
+    if(document.getElementById('pivot-table-container').innerHTML.trim().length > 0){ //check if pivot tables exist
+        for(let key in queryData['positive']){
             let rows = document.getElementById("--pivot-table-" + key).childNodes;
             for(let j in rows){
-                if(queryData[key].includes(rows[j].innerText)){
+                if(queryData['positive'][key].includes(rows[j].innerText)){
+                    let td = rows[j].childNodes;
+                    td[0].classList.remove('pivot-table-active');
+                }
+            }
+        }
+        for(let key in queryData['negative']){
+            let rows = document.getElementById("--pivot-table-" + key).childNodes;
+            for(let j in rows){
+                if(queryData['negative'][key].includes(rows[j].innerText)){
                     let td = rows[j].childNodes;
                     td[0].classList.remove('pivot-table-active');
                 }
@@ -96,23 +105,30 @@ function deactivatePivotTables(queryData){
     }
 }
 
-function addDrillValue(key, value, buttonId){
+function addDrillValue(key, value, buttonId, conditional){
     //search through data for all objects with this key:value pair
+    console.log(conditional);
     let button = document.getElementById(buttonId);
-    button.classList.add('pivot-table-active');
+    button.classList.add('pivot-table-active-' + conditional);
 
     if(drillQuery === null){
         drillQuery = new DrillQuery();
     }
-    drillQuery.add(key, value);
+    drillQuery.add(key, value, conditional);
     drillQuery.run();
 }
 
 function removeDrillValue(key, value, buttonId){
     let button = document.getElementById(buttonId);
-    button.classList.remove('pivot-table-active');
+    if(button.classList.contains('pivot-table-active-positive')){
+        button.classList.remove('pivot-table-active-positive');
+        drillQuery.remove(key, value, 'positive');
+    }
+    if(button.classList.contains('pivot-table-active-negative')){
+        button.classList.remove('pivot-table-active-negative');
+        drillQuery.remove(key, value, 'negative');
+    }
 
-    drillQuery.remove(key, value);
     drillQuery.run();
 }
 
@@ -134,9 +150,11 @@ function clearDrillButtons(){
 
 function addDetail(entityId, buttonId){
     //add the raw object identified by the objectId to the detail panel
-    let button = document.getElementById(buttonId);
-    button.classList.remove('drill-button-inactive');
-    button.classList.add('drill-button-active');
+    if(buttonId !== null){
+        let button = document.getElementById(buttonId);
+        button.classList.remove('drill-button-inactive');
+        button.classList.add('drill-button-active');
+    }
 
     //fetch entity from entityBlob and add to detail pane
 
@@ -147,9 +165,11 @@ function addDetail(entityId, buttonId){
 
 function removeDetail(entityId, buttonId){
     //add the raw object identified by the objectId to the detail panel
-    let button = document.getElementById(buttonId);
-    button.classList.remove('drill-button-active');
-    button.classList.add('drill-button-inactive');
+    if(buttonId !== null){
+        let button = document.getElementById(buttonId);
+        button.classList.remove('drill-button-active');
+        button.classList.add('drill-button-inactive');
+    }
 
     //fetch entity from entityBlob and add to detail pane
 
@@ -159,18 +179,20 @@ function removeDetail(entityId, buttonId){
 }
 
 function clearDetailButtons(){
-    let detailContainer = document.getElementById('detail-container');
-    detailContainer.innerHTML = '';
-}
-
-function dedupList(list){
-    let unique = [];
-    for(let i in list){
-        if(!(unique.includes(list[i]))){
-            unique.push(list[i]);
+    let activeDetailButtons = document.getElementsByClassName('detail-button-active');
+    let inactiveDetailButtons = document.getElementsByClassName('detail-button-inactive');
+    while(activeDetailButtons.length > 0 || inactiveDetailButtons.length > 0){
+        for(let i in activeDetailButtons){
+            if(typeof(activeDetailButtons[i]) === 'object' && activeDetailButtons[i].id && activeDetailButtons[i].id.startsWith('--detail')){
+                removeDetail(activeDetailButtons[i].id, null);
+            }
+        }
+        for(let i in inactiveDetailButtons){
+            if(typeof(inactiveDetailButtons[i]) === 'object' && inactiveDetailButtons[i].id && inactiveDetailButtons[i].id.startsWith('--detail')){
+                removeDetail(inactiveDetailButtons[i].id, null);
+            }
         }
     }
-    return unique;
 }
 
 class FieldButton{
@@ -212,7 +234,7 @@ class PivotTable{
             let tr = document.createElement('tr');
             let td = document.createElement('td');
             td.classList.add("nounderline");
-            td.onclick = function(){togglePivotValue(key, this.innerText, this.id)};
+            td.onclick = function(){togglePivotValue(key, this.innerText, this.id, event)};
             td.id = "--pivot-" + this.key + "-" + idx;
             td.textContent = this.values[i];
             tr.appendChild(td);
@@ -240,35 +262,44 @@ class DrillButton{
 
 class DrillQuery{
     constructor(){
-        this.queryData = {}; //{key:[value, value, value],key:[value,value, value]}
+        this.queryData = {
+            'positive':{},
+            'negative':{}
+        }; //{positive:{key:[value, value, value],key:[value,value, value]},negative:{key:[value,..]}}
     }
 
-    remove(key, value){
+    remove(key, value, conditional){
         if(value === null){
-            delete this.queryData[key];
+            if(this.queryData['positive'][key]){
+                delete this.queryData['positive'][key];
+            }
+            if(this.queryData['negative'][key]){
+                delete this.queryData['negative'][key];
+            }
             return;
         }
-        if(key in this.queryData && this.queryData[key].includes(value)){
+
+        if(key in this.queryData[conditional] && this.queryData[conditional][key].includes(value)){
             let hold = [];
-            for(let i in this.queryData[key]){
-                if(this.queryData[key][i] !== value){
-                    hold.push(this.queryData[key][i]);
+            for(let i in this.queryData[conditional][key]){
+                if(this.queryData[conditional][key][i] !== value){
+                    hold.push(this.queryData[conditional][key][i]);
                 }
             }
             if(hold.length > 0){
-                this.queryData[key] = hold;
+                this.queryData[conditional][key] = hold;
             }else{
-                delete this.queryData[key];
+                delete this.queryData[conditional][key];
             }
         }
     }
 
-    add(key, value){
-        if(!(key in this.queryData)){
-            this.queryData[key] = [value];
+    add(key, value, conditional){
+        if(!(key in this.queryData[conditional])){
+            this.queryData[conditional][key] = [value];
         }else{
-            if(!(this.queryData[key].includes(value))){
-                this.queryData[key].push(value);
+            if(!(this.queryData[conditional][key].includes(value))){
+                this.queryData[conditional][key].push(value);
             }
         }
     }
@@ -279,18 +310,28 @@ class DrillQuery{
         }
 
         let orStatements = [];
-        for(let key in this.queryData){
+        for(let key in this.queryData['positive']){
             let elements = [];
-            for(let i in this.queryData[key]){
-                elements.push(key + ":" + this.queryData[key][i]);
+            for(let i in this.queryData['positive'][key]){
+                elements.push(key + '="' + this.queryData['positive'][key][i] + '"');
             }
             orStatements.push('(' +  elements.join(' OR ') + ')');
         }
-        return orStatements.join(' AND ');
+
+        let notStatements = [];
+        for(let key in this.queryData['negative']){
+            for(let i in this.queryData['negative'][key]){
+                notStatements.push(key + '="' + this.queryData['negative'][key][i] + '"')
+            }
+        }
+
+        let toPrint = (orStatements.length > 0) ? orStatements.join(' AND ') : '';
+        toPrint += ((notStatements.length > 0) ? ((toPrint.length > 0) ? ' AND ' : '') +  'NOT (' + notStatements.join(' OR ') + ')':'');
+        return toPrint;
     }
 
     hasQuery(){
-        return Object.keys(this.queryData).length > 0;
+        return Object.keys(this.queryData['positive']).length > 0 || Object.keys(this.queryData['negative']).length > 0;
     }
 
     run(){

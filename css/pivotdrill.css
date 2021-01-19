@@ -28,6 +28,7 @@
 #input-query,#input-drill{
     flex-grow: 2;
     border: none;
+    font-size: small;
 }
 #settings-container{
     background-color: antiquewhite;
@@ -101,7 +102,7 @@
 .bg-normal{
     background-color: #FFC000;
 }
-.panel-menu{
+.panel-footer{
     color: white;
     background-color: #AA3630;
     font-family: "Yu Gothic UI";
@@ -110,6 +111,16 @@
     height: 25px;
     border-radius: 0px 0px 10px 10px;
     text-align: left;
+}
+.panel-menu{
+    background-color: #225686;
+    height: 25px;
+    width: auto;
+    border-radius: 5px 0px 0px 0px;
+    padding: 5px;
+    align-self: center;
+    display: flex;
+    align-content: space-between;
 }
 .panel-container{
     background-color:white;
@@ -141,37 +152,8 @@
 }
 .row{
     display: flex;
-}
-table.pivot-table{
-    color: black;
-    border: 2px  #15920d  solid;
-    font-family: "Yu Gothic UI";
-    font-size: medium;
-    border-radius: 5px;
-    margin: 1px;
-    padding: 2px;
-}
-table.center{
-    margin-left:auto;
-    margin-right:auto;
-}
-th.pivot-table{
-    background-color:  #a2fd9c;
-    color:  #15920d;
-    border: 2px  #15920d  solid;
-    padding: 5px;
-    font-family: "Yu Gothic UI";
-    font-size: medium;
-    border-radius: 5px;
-    margin: 1px;
-}
-td.pivot-table-active{
-    background-color: #010822;
-    color: #a2fd9c;
-    border: 2px #a2fd9c solid;
-    font-family: "Yu Gothic UI";
-    font-size: smaller;
-    border-radius: 5px;
+    flex-wrap: wrap;
+    align-content: flex-start;
 }
 .drill-button-inactive{
     background-color: #baf8fe;
@@ -270,6 +252,14 @@ button.settings-inactive{
     padding: 5px;
     width: 100px;
 }
+button.panel-menu{
+    color: white;
+    border: none;
+    font-family: "Yu Gothic UI";
+    font-weight: bolder;
+    height: 100%;
+    width: 25px;
+}
 form.settings-active{
     display: flex;
     flex-direction: row;
@@ -289,4 +279,46 @@ button.settings-active{
     font-weight: bold;
     padding: 5px;
     width: 100px;
+}
+table.pivot-table{
+    color: black;
+    border: 2px  #15920d  solid;
+    font-family: "Yu Gothic UI";
+    font-size: smaller;
+    border-radius: 5px;
+    margin: 1px;
+    padding: 2px;
+}
+table.center{
+    margin-left:auto;
+    margin-right:auto;
+}
+th.pivot-table{
+    background-color:  #a2fd9c;
+    color:  #15920d;
+    border: 2px  #15920d  solid;
+    padding: 5px;
+    font-family: "Yu Gothic UI";
+    font-size: smaller;
+    border-radius: 5px;
+    margin: 1px;
+}
+td.pivot-table-active-positive{
+    background-color: #010822;
+    color: #a2fd9c;
+    border: 2px #a2fd9c solid;
+    font-family: "Yu Gothic UI";
+    font-size: smaller;
+    border-radius: 5px;
+}
+td.pivot-table-active-negative{
+    background-color: #010822;
+    color: red;
+    border: 2px red solid;
+    font-family: "Yu Gothic UI";
+    font-size: smaller;
+    border-radius: 5px;
+}
+td{
+    font-size: smaller;
 }

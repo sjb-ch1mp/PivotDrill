@@ -162,12 +162,16 @@ function toggleFieldButton(fieldName, buttonId){
     }
 }
 
-function togglePivotValue(key, value, buttonId){
+function togglePivotValue(key, value, buttonId, event){
     let button = document.getElementById(buttonId);
-    if(button.classList.contains('pivot-table-active')){
+    if(button.classList.contains('pivot-table-active-positive') || button.classList.contains('pivot-table-active-negative')){
         removeDrillValue(key, value, buttonId);
     }else{
-        addDrillValue(key, value, buttonId);
+        if(event.shiftKey){
+            addDrillValue(key, value, buttonId, 'negative');
+        }else{
+            addDrillValue(key, value, buttonId, 'positive');
+        }
     }
 }
 
@@ -235,5 +239,11 @@ function resetWorkspace(caller){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF I
     clearDrillQuery();
     if(caller === 'new_query'){
         clearFieldButtons();
+    }
+}
+
+function resetDrillQueryInput(){
+    if(drillQuery !== null){
+        document.getElementById('input-drill').value = drillQuery.print();
     }
 }

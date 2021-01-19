@@ -27,31 +27,32 @@
 
     <div id="fields" class="panel">
         <div id="fields-container" class="panel-container">
-            <div id="fields-dataset-container">
-                <label for="input-datasets">DATA SETS:</label>
-                <input list="fields-datasets" id="input-datasets">
-                <datalist id="fields-datasets">
-                    <option value="_main"></option>
-                    <option value="_currentRoot"></option>
-                </datalist>
+            <div class="panel-menu">
+                <button class="panel-menu nounderline">&#9776;</button>
             </div>
             <!-- FIELD BUTTONS -->
         </div>
-        <div id="fields-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">FIELDS</div>
+        <div id="fields-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">FIELDS</div>
     </div>
 
     <div id="pivot" class="panel">
-        <div id="pivot-container" class="panel-container row pivotdrill-heading">
+        <div id="pivot-container" class="panel-container pivotdrill-heading">
+            <div class="panel-menu">
+                <button class="panel-menu nounderline">&#9776;</button>
+            </div>
+            <div id="pivot-table-container" class="row">
+
+            </div>
             <!-- PIVOT TABLES -->
         </div>
-        <div id="pivot-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">PIVOT</div>
+        <div id="pivot-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">PIVOT</div>
     </div>
 
     <div id="drill" class="panel">
         <div id="drill-container" class="panel-container">
             <div class="centered">
                 <form id="form-drill" action="javascript:void(0)">
-                    <input id="input-drill" type="text" class="pivotdrill-heading" placeholder="" style="font-size: small;pointer-events: none">
+                    <input id="input-drill" type="text" class="pivotdrill-heading" onchange="resetDrillQueryInput()">
                     <button id="clear-button" class="nounderline" onclick="clearDrillQuery()">CLEAR</button>
                 </form>
             </div>
@@ -59,14 +60,17 @@
                 <!-- DRILL BUTTONS -->
             </div>
         </div>
-        <div id="drill-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DRILL</div>
+        <div id="drill-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DRILL</div>
     </div>
 
     <div id="detail" class="panel">
         <div id="detail-container" class="panel-container">
+            <div class="panel-menu">
+                <button class="panel-menu nounderline">&#9776;</button>
+            </div>
             <!-- OBJECT DETAILS -->
         </div>
-        <div id="detail-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DETAIL</div>
+        <div id="detail-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DETAIL</div>
     </div>
 
     <!-- Settings -->
@@ -103,7 +107,7 @@
                 </form>
             </div>
         </div>
-        <div id="settings-menu" class="pivotdrill-heading panel-menu centered nounderline" onclick="togglePanel('settings')">SETTINGS</div>
+        <div id="settings-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel('settings')">SETTINGS</div>
     </div>
 </div>
 

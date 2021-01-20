@@ -55,7 +55,8 @@ class Settings{
             'rest-uri':null,
             'rest-username':null,
             'rest-key':null,
-            'data-root':null
+            'data-root':null,
+            'current-dataset':'_main'
         };
     }
 

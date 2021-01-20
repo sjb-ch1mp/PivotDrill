@@ -7,7 +7,7 @@ class Entity{
 class EntityBlob{
 
     constructor() {
-        this.keys = {}; //{key_1:{entity_indexes:[entity_indexes], values:[values]}}
+        this.keys = {}; //{key_1:{entities:[entity_indexes], values:[values]}}
         this.entities = [];
     }
 

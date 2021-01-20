@@ -137,7 +137,7 @@
     border: 2px #782622 solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
-    font-size: medium;
+    font-size: smaller;
     border-radius: 5px;
     margin: 1px;
 }
@@ -147,7 +147,7 @@
     border: 2px #fcb5b5 solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
-    font-size: medium;
+    font-size: smaller;
     border-radius: 5px;
     margin: 1px;
 }

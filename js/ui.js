@@ -168,6 +168,7 @@ function togglePivotValue(key, value, buttonId, event){
         removeDrillValue(key, value, buttonId);
     }else{
         if(event.shiftKey){
+            event.stopPropagation();
             addDrillValue(key, value, buttonId, 'negative');
         }else{
             addDrillValue(key, value, buttonId, 'positive');

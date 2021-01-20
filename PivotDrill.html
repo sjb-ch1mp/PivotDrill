@@ -52,7 +52,7 @@
         <div id="drill-container" class="panel-container">
             <div class="centered">
                 <form id="form-drill" action="javascript:void(0)">
-                    <input id="input-drill" type="text" class="pivotdrill-heading" onchange="resetDrillQueryInput()">
+                    <input id="input-drill" type="text" class="pivotdrill-heading" onchange="resetDrillQueryInput()" placeholder="DRILL QUERY" autocomplete="false">
                     <button id="clear-button" class="nounderline" onclick="clearDrillQuery()">CLEAR</button>
                 </form>
             </div>
@@ -116,7 +116,7 @@
     <a href="https://github.com/sjb-ch1mp/PivotDrill/blob/master/README.md" target="_blank"><img id="pivotdrill-logo" src="img/pivotdrill-logo.png" alt="PivotDrill"></a>
     <div class="pivotdrill-heading" style="padding: 10px">
         <form id="form-query" action="javascript:void(0)">
-            <input class="pivotdrill-heading" type="text" placeholder="ENTER A QUERY AND PRESS ENTER" id="input-query">
+            <input class="pivotdrill-heading" type="text" placeholder="API QUERY" id="input-query">
             <button id="send-button" class="nounderline" onclick="sendQuery(document.getElementById('input-query').value)">SEND</button>
         </form>
     </div>

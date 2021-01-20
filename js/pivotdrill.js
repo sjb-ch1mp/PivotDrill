@@ -83,22 +83,28 @@ function clearPivotTables(){
 }
 
 function deactivatePivotTables(queryData){
-    if(document.getElementById('pivot-table-container').innerHTML.trim().length > 0){ //check if pivot tables exist
-        for(let key in queryData['positive']){
-            let rows = document.getElementById("--pivot-table-" + key).childNodes;
+
+    for(let key in queryData['positive']){
+        let pivotTable = document.getElementById("--pivot-table-" + key);
+        if(pivotTable !== null){
+            let rows = pivotTable.childNodes;
             for(let j in rows){
                 if(queryData['positive'][key].includes(rows[j].innerText)){
                     let td = rows[j].childNodes;
-                    td[0].classList.remove('pivot-table-active');
+                    td[0].classList.remove('pivot-table-active-positive');
                 }
             }
         }
-        for(let key in queryData['negative']){
-            let rows = document.getElementById("--pivot-table-" + key).childNodes;
+    }
+
+    for(let key in queryData['negative']){
+        let pivotTable = document.getElementById("--pivot-table-" + key);
+        if(pivotTable !== null){
+            let rows = pivotTable.childNodes;
             for(let j in rows){
                 if(queryData['negative'][key].includes(rows[j].innerText)){
                     let td = rows[j].childNodes;
-                    td[0].classList.remove('pivot-table-active');
+                    td[0].classList.remove('pivot-table-active-negative');
                 }
             }
         }
@@ -135,10 +141,12 @@ function removeDrillValue(key, value, buttonId){
 function clearDrillQuery(){
     if(drillQuery !== null){
         deactivatePivotTables(drillQuery.queryData);
-        drillQuery.queryData = {};
+        drillQuery.queryData = {
+            'positive':{},
+            'negative':{}
+        };
     }
-    let drillInput = document.getElementById('input-drill');
-    drillInput.value = '';
+    document.getElementById('input-drill').value = '';
     clearDrillButtons();
     clearDetailButtons();
 }
@@ -266,6 +274,7 @@ class DrillQuery{
             'positive':{},
             'negative':{}
         }; //{positive:{key:[value, value, value],key:[value,value, value]},negative:{key:[value,..]}}
+        this.dataBuffer = []; //object-scoped variable used to fetch data for getDataAtKey() method
     }
 
     remove(key, value, conditional){
@@ -295,7 +304,6 @@ class DrillQuery{
     }
 
     add(key, value, conditional){
-        this.checkQueryData();
         if(!(key in this.queryData[conditional])){
             this.queryData[conditional][key] = [value];
         }else{
@@ -306,7 +314,7 @@ class DrillQuery{
     }
 
     print(){
-        if(this.queryData.length === 0){
+        if(!(this.hasQuery())){
             return '';
         }
 
@@ -331,15 +339,6 @@ class DrillQuery{
         return toPrint;
     }
 
-    checkQueryData(){
-        if(!this.queryData['positive']){
-            this.queryData['positive'] = {};
-        }
-        if(!this.queryData['negative']){
-            this.queryData['negative'] = {};
-        }
-    }
-
     hasQuery(){
         return Object.keys(this.queryData['positive']).length > 0 || Object.keys(this.queryData['negative']).length > 0;
     }
@@ -347,16 +346,146 @@ class DrillQuery{
     run(){
         clearDrillButtons();
         clearDetailButtons();
-        document.getElementById('input-drill').value = this.print();
         if(this.hasQuery()){
+            try{
+                document.getElementById('input-drill').value = this.print();
 
-            //FIXME: Run query and post resulting drill table
-            let data = getDummyList();
+                //get the indices of all entities that contain a key in the query
+                let currentDataset = settings.getCurrentSetting('current-dataset');
+                let positiveQueryKeys = Object.keys(this.queryData['positive']);
+                let negativeQueryKeys = Object.keys(this.queryData['negative']);
+                let entityIndices = [];
+                for(let i in positiveQueryKeys){
+                    let eIdx = entityBlobs[currentDataset]['keys'][positiveQueryKeys[i]]['entities'];
+                    for(let j in eIdx){
+                        if(!(entityIndices.includes(eIdx[j]))){
+                            entityIndices.push(eIdx[j]);
+                        }
+                    }
+                }
+                for(let i in negativeQueryKeys){
+                    let eIdx = entityBlobs[currentDataset]['keys'][negativeQueryKeys[i]]['entities'];
+                    for(let j in eIdx){
+                        if(!(entityIndices.includes(eIdx[j]))){
+                            entityIndices.push(eIdx[j]);
+                        }
+                    }
+                }
 
-            let drillButtonContainer = document.getElementById('drill-button-container');
-            for(let i in data){
-                let drillButton = new DrillButton(data[i]);
-                drillButtonContainer.appendChild(drillButton.print());
+                //iterate through entities with the query keys
+                //remove those that either:
+                //  - do not contain a positive query key value
+                //  - do contain a negative query key value
+                let filteredEntityIndices = [];
+                for(let i in entityIndices){
+                    let e = entityBlobs[currentDataset]['entities'][entityIndices[i]];
+
+                    //add all entities contains a value from a positive query key
+                    let hasValue = false;
+                    for(let pKey in this.queryData['positive']){
+                        this.dataBuffer = [];
+                        this.getDataAtKey(pKey, e.data); //method will feed values into dataBuffer
+                        for(let i in this.dataBuffer){
+                            if(this.queryData['positive'][pKey].includes('' + this.dataBuffer[i])){
+                                hasValue = true;
+                                break;
+                            }
+                        }
+                        if(hasValue){
+                            break;
+                        }
+                    }
+                    if(hasValue){
+                        filteredEntityIndices.push(entityIndices[i]);
+                    }
+
+                    //remove all entities in filteredEntityIndices that contain a value from a negative query key
+                    hasValue = false;
+                    for(let nKey in this.queryData['negative']){
+                        this.dataBuffer = [];
+                        this.getDataAtKey(nKey, e.data);
+                        for(let i in this.dataBuffer){
+                            if(this.queryData['negative'][nKey].includes('' + this.dataBuffer[i])){
+                                hasValue = true;
+                                break;
+                            }
+                        }
+                        if(hasValue){
+                            break;
+                        }
+                    }
+                    if(hasValue && filteredEntityIndices.includes(entityIndices[i])){
+                        filteredEntityIndices.splice(filteredEntityIndices.indexOf(entityIndices[i]), 1);
+                    }
+                }
+                this.dataBuffer = [];
+
+                let drillButtonContainer = document.getElementById('drill-button-container');
+                for(let i in filteredEntityIndices){
+                    let drillButton = new DrillButton(filteredEntityIndices[i]);
+                    drillButtonContainer.appendChild(drillButton.print());
+                }
+            }catch(e){
+                summonChatterBox(e.message, 'error');
+                if(e.stack){
+                    console.log(e.stack);
+                }
+            }
+        }else{
+            document.getElementById('input-drill').value = '';
+        }
+    }
+
+    getDataAtKey(key, data){
+        if(key !== null){
+            let headKey = (key.includes(':')) ? key.split(':')[0] : key;
+            let tailKey = (key.includes(':')) ? key.substring(key.indexOf(':') + 1, key.length) : '';
+            let thisData = data[headKey];
+            if(tailKey.length > 0){ //there are more key levels
+                if(Array.isArray(thisData)){
+                    for(let i in thisData){
+                        this.getDataAtKey(tailKey, thisData[i]);
+                    }
+                }else if(typeof(thisData) === 'object'){
+                    //tailKey can either be of the form 'subkey_1:...:subkey_n' or 'subkey'
+                    if(tailKey.includes(':')){
+                        headKey = tailKey.split(':')[0];
+                        tailKey = tailKey.substring(tailKey.indexOf(':') + 1, tailKey.length);
+                        this.getDataAtKey(tailKey, thisData[headKey]);
+                    }else{
+                        if(!(this.dataBuffer.includes(thisData[tailKey]))){
+                            this.dataBuffer.push(null, thisData[tailKey]);
+                        }
+                    }
+                }else{
+                    if(!(this.dataBuffer.includes(thisData))){
+                        this.dataBuffer.push(thisData);
+                    }
+                }
+            }else{ //this must be the terminus. It is either an array or a value
+                if(Array.isArray(thisData)){
+                    for(let i in thisData){
+                        if(!(this.dataBuffer.includes(thisData[i]))){
+                            this.dataBuffer.push(thisData[i]);
+                        }
+                    }
+                }else{
+                    if(!(this.dataBuffer.includes(thisData))){
+                        this.dataBuffer.push(thisData);
+                    }
+                }
+            }
+        }else{ //key is null - this must be the terminus. It is either an array or a value
+            if(Array.isArray(data)){
+                for(let i in data){
+                    if(!(this.dataBuffer.includes(data[i]))){
+                        this.dataBuffer.push(data[i]);
+                    }
+                }
+            }else{
+                if(!(this.dataBuffer.includes(data))){
+                    this.dataBuffer.push(data);
+                }
             }
         }
     }

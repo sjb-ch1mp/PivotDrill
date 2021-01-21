@@ -36,23 +36,21 @@ class EntityBlob{
                     );
             }
         }else{
-            if(!(currentKey in this.keys)){
-                this.keys[currentKey] = {
-                    'entities':[],
-                    'values':[]
-                };
-            }
-            if(!(this.keys[currentKey]['entities'].includes(entityIdx))){
-                this.keys[currentKey]['entities'].push(entityIdx);
-            }
-            if(!(this.keys[currentKey]['values'].includes(data))){
-                this.keys[currentKey]['values'].push(data);
+            if(data === undefined || data === null || ('' + data).trim().length > 0){
+                if(!(currentKey in this.keys)){
+                    this.keys[currentKey] = {
+                        'entities':[],
+                        'values':[]
+                    };
+                }
+                if(!(this.keys[currentKey]['entities'].includes(entityIdx))){
+                    this.keys[currentKey]['entities'].push(entityIdx);
+                }
+                if(!(this.keys[currentKey]['values'].includes(data))){
+                    this.keys[currentKey]['values'].push(data);
+                }
             }
         }
-    }
-
-    drillEntities(drillQuery){
-
     }
 }
 

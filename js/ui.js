@@ -33,15 +33,15 @@ function setUpWorkspace(){
 
     //Set up sidebar
     let sidebar = document.getElementById('fields');
-    let panelMenu = document.getElementById('fields-menu');
+    let panelFooter = document.getElementById('fields-footer');
     let panelContainer = document.getElementById('fields-container');
     sidebar.classList.remove('hidden');
     sidebar.style.height = dim['WORKSPACE_HEIGHT'] + "px";
     sidebar.style.width = dim['SIDEBAR_WIDTH'] + "px";
-    panelMenu.style.top = (dim['WORKSPACE_HEIGHT'] - panelMenu.clientHeight) + "px";
-    panelMenu.style.width = (dim['SIDEBAR_WIDTH'] - 20) + "px";
-    panelMenu.style.left = "5px";
-    panelContainer.style.height = (dim['WORKSPACE_HEIGHT'] - (panelMenu.clientHeight + 15)) + "px";
+    panelFooter.style.top = (dim['WORKSPACE_HEIGHT'] - panelFooter.clientHeight) + "px";
+    panelFooter.style.width = (dim['SIDEBAR_WIDTH'] - 20) + "px";
+    panelFooter.style.left = "5px";
+    panelContainer.style.height = (dim['WORKSPACE_HEIGHT'] - (panelFooter.clientHeight + 15)) + "px";
     panelContainer.style.width = (dim['SIDEBAR_WIDTH'] - 20) + "px";
 
     //Set up panels
@@ -49,16 +49,16 @@ function setUpWorkspace(){
     for(let i in allPanels){
         if(allPanels[i].id && ['pivot','drill','detail'].includes(allPanels[i].id)){
             let panel = allPanels[i];
-            panelMenu = document.getElementById(panel.id + '-menu');
+            panelFooter = document.getElementById(panel.id + '-footer');
             panelContainer = document.getElementById(panel.id + '-container');
             panel.classList.remove('hidden');
             panel.style.height = dim['PANEL_HEIGHT'] + "px";
             panel.style.width = dim['PANEL_WIDTH'] + "px";
             panel.style.left = dim['SIDEBAR_WIDTH'] + "px";
-            panelMenu.style.top = (dim['PANEL_HEIGHT'] - panelMenu.clientHeight) + "px";
-            panelMenu.style.width = (dim['PANEL_WIDTH'] - 20) + "px";
-            panelMenu.style.left = "5px";
-            panelContainer.style.height = (dim['PANEL_HEIGHT'] - (panelMenu.clientHeight + 15)) + "px";
+            panelFooter.style.top = (dim['PANEL_HEIGHT'] - panelFooter.clientHeight) + "px";
+            panelFooter.style.width = (dim['PANEL_WIDTH'] - 20) + "px";
+            panelFooter.style.left = "5px";
+            panelContainer.style.height = (dim['PANEL_HEIGHT'] - (panelFooter.clientHeight + 15)) + "px";
             panelContainer.style.width = (dim['PANEL_WIDTH'] - 20) + "px";
 
             switch(panel.id){
@@ -89,7 +89,7 @@ function togglePanel(panelName){
 function openPanel(panelName){
     let dim = getCurrentDimensions();
     let panel = document.getElementById(panelName);
-    let menu = document.getElementById(panelName + '-menu');
+    let footer = document.getElementById(panelName + '-footer');
     let container = document.getElementById(panelName + '-container');
     let allPanels = document.getElementsByClassName('panel');
     for(let i in allPanels){
@@ -100,22 +100,22 @@ function openPanel(panelName){
 
     if(panelName === "settings"){
         panel.style.width = (dim['WINDOW_WIDTH'] / 2) + "px";
-        menu.style.width = ((dim['WINDOW_WIDTH'] / 2) - 20) + 'px';
-        menu.style.left = "5px";
+        footer.style.width = ((dim['WINDOW_WIDTH'] / 2) - 20) + 'px';
+        footer.style.left = "5px";
         panel.style.left = (dim['WINDOW_WIDTH'] / 4) + "px";
         container.style.width = ((dim['WINDOW_WIDTH'] / 2) - 20) + "px";
     }else{
         panel.style.width = dim['WINDOW_WIDTH'] + "px";
-        menu.style.width = (dim['WINDOW_WIDTH'] - 20) + 'px';
-        menu.style.left = "5px";
+        footer.style.width = (dim['WINDOW_WIDTH'] - 20) + 'px';
+        footer.style.left = "5px";
         panel.style.left = "0px";
         container.style.width = (dim['WINDOW_WIDTH'] - 20) + "px";
     }
     panel.classList.remove('hidden');
-    menu.style.top = (dim['WORKSPACE_HEIGHT'] - menu.clientHeight) + "px";
+    footer.style.top = (dim['WORKSPACE_HEIGHT'] - footer.clientHeight) + "px";
     panel.style.height = dim['WORKSPACE_HEIGHT'] + "px";
     panel.style.top = "0px";
-    container.style.height = (dim['WORKSPACE_HEIGHT'] - (menu.clientHeight + 15)) + "px";
+    container.style.height = (dim['WORKSPACE_HEIGHT'] - (footer.clientHeight + 15)) + "px";
 
     getPanel(panelName).state = PanelState.OPEN;
 
@@ -139,7 +139,7 @@ function getCurrentDimensions(){
     let FOOTER_HEIGHT = document.getElementById('footer').clientHeight;
     let WORKSPACE_HEIGHT = WINDOW_HEIGHT - (HEADER_HEIGHT + FOOTER_HEIGHT);
     let SIDEBAR_WIDTH = (WINDOW_WIDTH * 0.20);
-    let PANEL_HEIGHT = (WORKSPACE_HEIGHT / 3);
+    let PANEL_HEIGHT = (WORKSPACE_HEIGHT / 2);
     let PANEL_WIDTH = (WINDOW_WIDTH - SIDEBAR_WIDTH);
     return {
         'WINDOW_HEIGHT':WINDOW_HEIGHT,
@@ -157,6 +157,7 @@ function toggleFieldButton(fieldName, buttonId){
     let button = document.getElementById(buttonId);
     if(button.classList.contains('field-button-active')){
         removePivotTable(fieldName, buttonId);
+        removeDrillValue(fieldName, null, null);
     }else{
         addPivotTable(fieldName, buttonId);
     }

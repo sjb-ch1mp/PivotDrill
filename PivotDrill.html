@@ -32,7 +32,7 @@
             </div>
             <!-- FIELD BUTTONS -->
         </div>
-        <div id="fields-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">FIELDS</div>
+        <div id="fields-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">FIELDS</div>
     </div>
 
     <div id="pivot" class="panel">
@@ -45,12 +45,15 @@
             </div>
             <!-- PIVOT TABLES -->
         </div>
-        <div id="pivot-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">PIVOT</div>
+        <div id="pivot-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">PIVOT</div>
     </div>
 
     <div id="drill" class="panel">
         <div id="drill-container" class="panel-container">
             <div class="centered">
+                <div class="panel-menu">
+                    <button class="panel-menu nounderline">&#9776;</button>
+                </div>
                 <form id="form-drill" action="javascript:void(0)">
                     <input id="input-drill" type="text" class="pivotdrill-heading" onchange="resetDrillQueryInput()" placeholder="DRILL QUERY" autocomplete="false">
                     <button id="clear-button" class="nounderline" onclick="clearDrillQuery()">CLEAR</button>
@@ -60,18 +63,18 @@
                 <!-- DRILL BUTTONS -->
             </div>
         </div>
-        <div id="drill-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DRILL</div>
+        <div id="drill-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DRILL</div>
     </div>
-
+    <!--
     <div id="detail" class="panel">
         <div id="detail-container" class="panel-container">
             <div class="panel-menu">
                 <button class="panel-menu nounderline">&#9776;</button>
             </div>
-            <!-- OBJECT DETAILS -->
+            <-- OBJECT DETAILS
         </div>
         <div id="detail-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DETAIL</div>
-    </div>
+    </div>-->
 
     <!-- Settings -->
     <div id="settings" class="panel hidden">
@@ -107,7 +110,7 @@
                 </form>
             </div>
         </div>
-        <div id="settings-menu" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel('settings')">SETTINGS</div>
+        <div id="settings-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel('settings')">SETTINGS</div>
     </div>
 </div>
 

@@ -125,14 +125,19 @@ function addDrillValue(key, value, buttonId, conditional){
 }
 
 function removeDrillValue(key, value, buttonId){
-    let button = document.getElementById(buttonId);
-    if(button.classList.contains('pivot-table-active-positive')){
-        button.classList.remove('pivot-table-active-positive');
-        drillQuery.remove(key, value, 'positive');
-    }
-    if(button.classList.contains('pivot-table-active-negative')){
-        button.classList.remove('pivot-table-active-negative');
-        drillQuery.remove(key, value, 'negative');
+    if(buttonId === null){
+        //this is being called from toggleFieldButton() and will therefore remove the pivotTable and the entire key from the drillQuery
+        drillQuery.remove(key, value, buttonId);
+    }else{
+        let button = document.getElementById(buttonId);
+        if(button.classList.contains('pivot-table-active-positive')){
+            button.classList.remove('pivot-table-active-positive');
+            drillQuery.remove(key, value, 'positive');
+        }
+        if(button.classList.contains('pivot-table-active-negative')){
+            button.classList.remove('pivot-table-active-negative');
+            drillQuery.remove(key, value, 'negative');
+        }
     }
 
     drillQuery.run();
@@ -181,8 +186,8 @@ function removeDetail(entityId, buttonId){
 
     //fetch entity from entityBlob and add to detail pane
 
-    let detailContainer = document.getElementById('detail-container');
-    let detailButton = document.getElementById('--detail-container-' + entityId);
+    let detailContainer = document.getElementById('drill-container');
+    let detailButton = document.getElementById('--drill-container-' + entityId);
     detailContainer.removeChild(detailButton);
 }
 
@@ -352,7 +357,7 @@ class DrillQuery{
                 //get the indices of all entities that contain a key in the query
                 let currentDataset = settings.getCurrentSetting('current-dataset');
 
-                //build query keys
+                //collect all query keys together
                 let queryKeys = {};
                 for(let key in this.queryData['positive']){
                     queryKeys[key] = {'positive':null,'negative':null};
@@ -365,32 +370,51 @@ class DrillQuery{
                     queryKeys[key]['negative'] = this.queryData['negative'][key];
                 }
 
-
-                //collect the indices of any entities that contain a positive value at positive key and DO NOT contain a negative value at negative key
+                //collect the indices of entities that contain keys in the query, both positive and negative
                 let entityIndices = [];
                 for(let key in queryKeys){
-                    let eIdx = entityBlobs[currentDataset]['keys'][key]['entities'];
-                    for(let j in eIdx){
-                        let hasPositiveValueAtKey = this.hasValueAtKey(
-                            key,
-                            entityBlobs[currentDataset]['entities'][eIdx[j]].data,
-                            queryKeys[key]['positive']
-                        );
-                        let hasNegativeValueAtKey = this.hasValueAtKey(
-                            key,
-                            entityBlobs[currentDataset]['entities'][eIdx[j]].data,
-                            queryKeys[key]['negative']
-                        );
-                        if(hasPositiveValueAtKey && !hasNegativeValueAtKey && !(entityIndices.includes(eIdx[j]))){
-                            entityIndices.push(eIdx[j]);
+                    let indices = entityBlobs[currentDataset]['keys'][key]['entities'];
+                    for(let j in indices){
+                        if(!(entityIndices.includes(indices[j]))){
+                            entityIndices.push(indices[j]);
                         }
                     }
                 }
 
+                //collect the indices of any entities that contain a positive value at positive key and DO NOT contain a negative value at negative key
+                let filteredEntityIndices = [];
+                for(let i in entityIndices){
+                    let e = entityIndices[i];
+                    for(let key in queryKeys){
+
+                        let hasPositiveValueAtKey = this.hasValueAtKey(
+                            key,
+                            entityBlobs[currentDataset]['entities'][e].data,
+                            queryKeys[key]['positive']
+                        );
+
+                        let hasNegativeValueAtKey = this.hasValueAtKey(
+                            key,
+                            entityBlobs[currentDataset]['entities'][e].data,
+                            queryKeys[key]['negative']
+                        );
+
+                        if(!(filteredEntityIndices.includes(e)) && hasPositiveValueAtKey && !hasNegativeValueAtKey){
+                            //if the entity is not yet in the array and it should be... add it
+                            filteredEntityIndices.push(e);
+                        }else if(hasNegativeValueAtKey){
+                            //if the entity is already in the array and it shouldn't be... remove it and leave loops
+                            filteredEntityIndices.splice(filteredEntityIndices.indexOf(e), 1);
+                            break;
+                        }
+                    }
+                }
+
+
                 //add all entity indices that remain as drillButtons
                 let drillButtonContainer = document.getElementById('drill-button-container');
-                for(let i in entityIndices){
-                    let drillButton = new DrillButton(entityIndices[i]);
+                for(let i in filteredEntityIndices){
+                    let drillButton = new DrillButton(filteredEntityIndices[i]);
                     drillButtonContainer.appendChild(drillButton.print());
                 }
             }catch(e){
@@ -417,7 +441,7 @@ class DrillQuery{
             if(tailKey.length > 0){ //there are more key levels, object is either an array containing dicts, or a dict
                 if(Array.isArray(data)){ //data is an array
                     for(let i in data){
-                        hasValue = this.hasValueAtKey(tailKey, data[i], values, depth + 1);
+                        hasValue = this.hasValueAtKey(tailKey, data[i], values);
                         if(hasValue){
                             return true;
                         }
@@ -426,7 +450,7 @@ class DrillQuery{
                     for(let subKey in data){
                         headKey = (key.includes(':')) ? key.split(':')[0] : tailKey;
                         tailKey = (key.includes(':')) ? key.substring(key.indexOf(':') + 1, key.length) : '';
-                        hasValue = this.hasValueAtKey(tailKey, data[subKey], values, depth + 1);
+                        hasValue = this.hasValueAtKey(tailKey, data[subKey], values);
                         if(hasValue){
                             return true;
                         }
@@ -462,7 +486,7 @@ class DetailButton{
     print(){
         let buttonId = '--detail-button-' + this.entity.entityId;
         let divId = '--detail-' + this.entity.entityId;
-        let containerId = '--detail-container-' + this.entity.entityId;
+        let containerId = '--drill-container-' + this.entity.entityId;
         let container = document.createElement('div');
         container.id = containerId;
         let button = document.createElement('button');

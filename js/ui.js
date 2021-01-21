@@ -47,7 +47,7 @@ function setUpWorkspace(){
     //Set up panels
     let allPanels = document.getElementsByClassName('panel');
     for(let i in allPanels){
-        if(allPanels[i].id && ['pivot','drill','detail'].includes(allPanels[i].id)){
+        if(allPanels[i].id && ['pivot','drill'].includes(allPanels[i].id)){
             let panel = allPanels[i];
             panelFooter = document.getElementById(panel.id + '-footer');
             panelContainer = document.getElementById(panel.id + '-container');
@@ -60,13 +60,8 @@ function setUpWorkspace(){
             panelFooter.style.left = "5px";
             panelContainer.style.height = (dim['PANEL_HEIGHT'] - (panelFooter.clientHeight + 15)) + "px";
             panelContainer.style.width = (dim['PANEL_WIDTH'] - 20) + "px";
-
-            switch(panel.id){
-                case 'drill':
-                    panel.style.top = dim['PANEL_HEIGHT'] + "px";
-                    break;
-                case 'detail':
-                    panel.style.top = (dim['PANEL_HEIGHT'] * 2) + "px";
+            if(panel.id === 'drill'){
+                panel.style.top = dim['PANEL_HEIGHT'] + "px";
             }
         }
     }
@@ -179,28 +174,13 @@ function togglePivotValue(key, value, buttonId, event){
 
 function toggleDrillbutton(entityId, buttonId){
     let button = document.getElementById(buttonId);
-    (button.classList.contains('drill-button-active')) ? removeDetail(entityId, buttonId) : addDetail(entityId, buttonId);
-}
-
-function toggleDetailButton(buttonId, divId){
-    let button = document.getElementById(buttonId);
-    (button.classList.contains('detail-button-active') ? closeDetailButton(buttonId, divId) : expandDetailButton(buttonId, divId));
-}
-
-function expandDetailButton(buttonId, divId){
-    let button = document.getElementById(buttonId);
-    let div = document.getElementById(divId);
-    button.classList.remove('detail-button-inactive');
-    button.classList.add('detail-button-active');
-    div.classList.remove('hidden');
-}
-
-function closeDetailButton(buttonId, divId){
-    let button = document.getElementById(buttonId);
-    let div = document.getElementById(divId);
-    button.classList.remove('detail-button-active');
-    button.classList.add('detail-button-inactive');
-    div.classList.add('hidden');
+    if(button.classList.contains('drill-button-active')){
+        button.classList.remove('drill-button-active');
+        button.classList.add('drill-button-inactive');
+    }else{
+        button.classList.remove('drill-button-inactive');
+        button.classList.add('drill-button-active');
+    }
 }
 
 function activateSettingsInput(id){
@@ -236,7 +216,6 @@ function loadCurrentSettings(){
 
 function resetWorkspace(caller){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF IT IS CALLED FROM SENDQUERY()
     clearPivotTables();
-    clearDetailButtons();
     clearDrillButtons();
     clearDrillQuery();
     if(caller === 'new_query'){

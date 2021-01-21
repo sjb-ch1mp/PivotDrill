@@ -1,5 +1,5 @@
 let server = null;
-let panelNames = ['fields','pivot','drill','detail','settings'];
+let panelNames = ['fields','pivot','drill','settings'];
 let drillQuery = null;
 let settings = null;
 let entityBlobs = {
@@ -22,7 +22,6 @@ const PanelState = {
 let fieldsPanel = new Panel('fields');
 let pivotPanel = new Panel('pivot');
 let drillPanel = new Panel('drill');
-let detailPanel = new Panel('detail');
 let settingsPanel = new Panel('settings');
 
 function getPanel(panelName){
@@ -33,8 +32,6 @@ function getPanel(panelName){
             return pivotPanel;
         case 'drill':
             return drillPanel;
-        case 'detail':
-            return detailPanel;
         case 'settings':
             return settingsPanel;
     }

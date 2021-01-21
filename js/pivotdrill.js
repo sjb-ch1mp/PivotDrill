@@ -153,59 +153,11 @@ function clearDrillQuery(){
     }
     document.getElementById('input-drill').value = '';
     clearDrillButtons();
-    clearDetailButtons();
 }
 
 function clearDrillButtons(){
     let drillButtonContainer = document.getElementById('drill-button-container');
     drillButtonContainer.innerHTML = '';
-}
-
-function addDetail(entityId, buttonId){
-    //add the raw object identified by the objectId to the detail panel
-    if(buttonId !== null){
-        let button = document.getElementById(buttonId);
-        button.classList.remove('drill-button-inactive');
-        button.classList.add('drill-button-active');
-    }
-
-    //fetch entity from entityBlob and add to detail pane
-
-    let detailButton = new DetailButton(new Entity(entityId, JSON.parse(getTestJSON())));
-    let detailContainer = document.getElementById('detail-container');
-    detailContainer.appendChild(detailButton.print());
-}
-
-function removeDetail(entityId, buttonId){
-    //add the raw object identified by the objectId to the detail panel
-    if(buttonId !== null){
-        let button = document.getElementById(buttonId);
-        button.classList.remove('drill-button-active');
-        button.classList.add('drill-button-inactive');
-    }
-
-    //fetch entity from entityBlob and add to detail pane
-
-    let detailContainer = document.getElementById('drill-container');
-    let detailButton = document.getElementById('--drill-container-' + entityId);
-    detailContainer.removeChild(detailButton);
-}
-
-function clearDetailButtons(){
-    let activeDetailButtons = document.getElementsByClassName('detail-button-active');
-    let inactiveDetailButtons = document.getElementsByClassName('detail-button-inactive');
-    while(activeDetailButtons.length > 0 || inactiveDetailButtons.length > 0){
-        for(let i in activeDetailButtons){
-            if(typeof(activeDetailButtons[i]) === 'object' && activeDetailButtons[i].id && activeDetailButtons[i].id.startsWith('--detail')){
-                removeDetail(activeDetailButtons[i].id, null);
-            }
-        }
-        for(let i in inactiveDetailButtons){
-            if(typeof(inactiveDetailButtons[i]) === 'object' && inactiveDetailButtons[i].id && inactiveDetailButtons[i].id.startsWith('--detail')){
-                removeDetail(inactiveDetailButtons[i].id, null);
-            }
-        }
-    }
 }
 
 class FieldButton{
@@ -349,7 +301,6 @@ class DrillQuery{
 
     run(){
         clearDrillButtons();
-        clearDetailButtons();
         if(this.hasQuery()){
             try{
                 document.getElementById('input-drill').value = this.print();
@@ -476,32 +427,4 @@ class DrillQuery{
         return false;
     }
 
-}
-
-class DetailButton{
-    //Container class for each individual entity in a data stream
-    constructor(entity){
-        this.entity = entity;
-    }
-    print(){
-        let buttonId = '--detail-button-' + this.entity.entityId;
-        let divId = '--detail-' + this.entity.entityId;
-        let containerId = '--drill-container-' + this.entity.entityId;
-        let container = document.createElement('div');
-        container.id = containerId;
-        let button = document.createElement('button');
-        button.classList.add('detail-button-inactive');
-        button.classList.add('nounderline');
-        button.id = buttonId;
-        button.onclick = function(){toggleDetailButton(buttonId, divId);};
-        button.textContent = this.entity.entityId;
-        let details = document.createElement('div');
-        details.classList.add('hidden');
-        details.classList.add('detail-container');
-        details.id = divId;
-        details.innerHTML = prettyPrintJson.toHtml(this.entity.data);
-        container.appendChild(button);
-        container.appendChild(details);
-        return container;
-    }
 }

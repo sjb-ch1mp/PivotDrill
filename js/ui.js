@@ -167,7 +167,7 @@ function togglePivotValue(key, value, buttonId, event){
     if(button.classList.contains('pivot-table-active-positive') || button.classList.contains('pivot-table-active-negative')){
         removeDrillValue(key, value, buttonId);
     }else{
-        if(event.shiftKey){
+        if(event.altKey){
             event.stopPropagation();
             addDrillValue(key, value, buttonId, 'negative');
         }else{

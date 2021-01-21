@@ -274,7 +274,6 @@ class DrillQuery{
             'positive':{},
             'negative':{}
         }; //{positive:{key:[value, value, value],key:[value,value, value]},negative:{key:[value,..]}}
-        this.dataBuffer = []; //object-scoped variable used to fetch data for getDataAtKey() method
     }
 
     remove(key, value, conditional){
@@ -352,77 +351,46 @@ class DrillQuery{
 
                 //get the indices of all entities that contain a key in the query
                 let currentDataset = settings.getCurrentSetting('current-dataset');
-                let positiveQueryKeys = Object.keys(this.queryData['positive']);
-                let negativeQueryKeys = Object.keys(this.queryData['negative']);
+
+                //build query keys
+                let queryKeys = {};
+                for(let key in this.queryData['positive']){
+                    queryKeys[key] = {'positive':null,'negative':null};
+                    queryKeys[key]['positive'] = this.queryData['positive'][key];
+                }
+                for(let key in this.queryData['negative']){
+                    if(!(key in queryKeys)){
+                        queryKeys[key] = {'positive':null,'negative':null};
+                    }
+                    queryKeys[key]['negative'] = this.queryData['negative'][key];
+                }
+
+
+                //collect the indices of any entities that contain a positive value at positive key and DO NOT contain a negative value at negative key
                 let entityIndices = [];
-                for(let i in positiveQueryKeys){
-                    let eIdx = entityBlobs[currentDataset]['keys'][positiveQueryKeys[i]]['entities'];
+                for(let key in queryKeys){
+                    let eIdx = entityBlobs[currentDataset]['keys'][key]['entities'];
                     for(let j in eIdx){
-                        if(!(entityIndices.includes(eIdx[j]))){
+                        let hasPositiveValueAtKey = this.hasValueAtKey(
+                            key,
+                            entityBlobs[currentDataset]['entities'][eIdx[j]].data,
+                            queryKeys[key]['positive']
+                        );
+                        let hasNegativeValueAtKey = this.hasValueAtKey(
+                            key,
+                            entityBlobs[currentDataset]['entities'][eIdx[j]].data,
+                            queryKeys[key]['negative']
+                        );
+                        if(hasPositiveValueAtKey && !hasNegativeValueAtKey && !(entityIndices.includes(eIdx[j]))){
                             entityIndices.push(eIdx[j]);
                         }
                     }
                 }
-                for(let i in negativeQueryKeys){
-                    let eIdx = entityBlobs[currentDataset]['keys'][negativeQueryKeys[i]]['entities'];
-                    for(let j in eIdx){
-                        if(!(entityIndices.includes(eIdx[j]))){
-                            entityIndices.push(eIdx[j]);
-                        }
-                    }
-                }
 
-                //iterate through entities with the query keys
-                //remove those that either:
-                //  - do not contain a positive query key value
-                //  - do contain a negative query key value
-                let filteredEntityIndices = [];
-                for(let i in entityIndices){
-                    let e = entityBlobs[currentDataset]['entities'][entityIndices[i]];
-
-                    //add all entities contains a value from a positive query key
-                    let hasValue = false;
-                    for(let pKey in this.queryData['positive']){
-                        this.dataBuffer = [];
-                        this.getDataAtKey(pKey, e.data); //method will feed values into dataBuffer
-                        for(let i in this.dataBuffer){
-                            if(this.queryData['positive'][pKey].includes('' + this.dataBuffer[i])){
-                                hasValue = true;
-                                break;
-                            }
-                        }
-                        if(hasValue){
-                            break;
-                        }
-                    }
-                    if(hasValue){
-                        filteredEntityIndices.push(entityIndices[i]);
-                    }
-
-                    //remove all entities in filteredEntityIndices that contain a value from a negative query key
-                    hasValue = false;
-                    for(let nKey in this.queryData['negative']){
-                        this.dataBuffer = [];
-                        this.getDataAtKey(nKey, e.data);
-                        for(let i in this.dataBuffer){
-                            if(this.queryData['negative'][nKey].includes('' + this.dataBuffer[i])){
-                                hasValue = true;
-                                break;
-                            }
-                        }
-                        if(hasValue){
-                            break;
-                        }
-                    }
-                    if(hasValue && filteredEntityIndices.includes(entityIndices[i])){
-                        filteredEntityIndices.splice(filteredEntityIndices.indexOf(entityIndices[i]), 1);
-                    }
-                }
-                this.dataBuffer = [];
-
+                //add all entity indices that remain as drillButtons
                 let drillButtonContainer = document.getElementById('drill-button-container');
-                for(let i in filteredEntityIndices){
-                    let drillButton = new DrillButton(filteredEntityIndices[i]);
+                for(let i in entityIndices){
+                    let drillButton = new DrillButton(entityIndices[i]);
                     drillButtonContainer.appendChild(drillButton.print());
                 }
             }catch(e){
@@ -436,59 +404,54 @@ class DrillQuery{
         }
     }
 
-    getDataAtKey(key, data){
+    hasValueAtKey(key, data, values){
+        if(values === null){
+            return false;
+        }
+
+        let hasValue = false;
         if(key !== null){
             let headKey = (key.includes(':')) ? key.split(':')[0] : key;
             let tailKey = (key.includes(':')) ? key.substring(key.indexOf(':') + 1, key.length) : '';
-            let thisData = data[headKey];
-            if(tailKey.length > 0){ //there are more key levels
-                if(Array.isArray(thisData)){
-                    for(let i in thisData){
-                        this.getDataAtKey(tailKey, thisData[i]);
-                    }
-                }else if(typeof(thisData) === 'object'){
-                    //tailKey can either be of the form 'subkey_1:...:subkey_n' or 'subkey'
-                    if(tailKey.includes(':')){
-                        headKey = tailKey.split(':')[0];
-                        tailKey = tailKey.substring(tailKey.indexOf(':') + 1, tailKey.length);
-                        this.getDataAtKey(tailKey, thisData[headKey]);
-                    }else{
-                        if(!(this.dataBuffer.includes(thisData[tailKey]))){
-                            this.dataBuffer.push(null, thisData[tailKey]);
+            data = data[headKey];
+            if(tailKey.length > 0){ //there are more key levels, object is either an array containing dicts, or a dict
+                if(Array.isArray(data)){ //data is an array
+                    for(let i in data){
+                        hasValue = this.hasValueAtKey(tailKey, data[i], values, depth + 1);
+                        if(hasValue){
+                            return true;
                         }
                     }
-                }else{
-                    if(!(this.dataBuffer.includes(thisData))){
-                        this.dataBuffer.push(thisData);
-                    }
-                }
-            }else{ //this must be the terminus. It is either an array or a value
-                if(Array.isArray(thisData)){
-                    for(let i in thisData){
-                        if(!(this.dataBuffer.includes(thisData[i]))){
-                            this.dataBuffer.push(thisData[i]);
+                }else if(typeof(data) === 'object'){ //data is a dict
+                    for(let subKey in data){
+                        headKey = (key.includes(':')) ? key.split(':')[0] : tailKey;
+                        tailKey = (key.includes(':')) ? key.substring(key.indexOf(':') + 1, key.length) : '';
+                        hasValue = this.hasValueAtKey(tailKey, data[subKey], values, depth + 1);
+                        if(hasValue){
+                            return true;
                         }
                     }
-                }else{
-                    if(!(this.dataBuffer.includes(thisData))){
-                        this.dataBuffer.push(thisData);
-                    }
-                }
+                } // only the previous two conditions can be true because there are more keys.
             }
-        }else{ //key is null - this must be the terminus. It is either an array or a value
+        }
+
+        if(!hasValue && (key === null || !(key.includes(':')))){
+            //either the key is null or there are no more tailKeys - this must be the terminus.
             if(Array.isArray(data)){
                 for(let i in data){
-                    if(!(this.dataBuffer.includes(data[i]))){
-                        this.dataBuffer.push(data[i]);
+                    if(values.includes('' + data[i])){//FIXME : potentially dangerous coercing all datatypes to srings
+                        return true;
                     }
                 }
             }else{
-                if(!(this.dataBuffer.includes(data))){
-                    this.dataBuffer.push(data);
+                if(values.includes('' + data)){//FIXME : potentially dangerous coercing all datatypes to srings
+                    return true;
                 }
             }
         }
+        return false;
     }
+
 }
 
 class DetailButton{

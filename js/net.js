@@ -8,8 +8,7 @@ function sendQuery(query){
     document.getElementById('input-query').value = '';
 
     //FIXME : Test JSON
-    entityBlobs["_main"] = buildEntityBlob(JSON.parse(getTestJSON()), DataType.JSON);
-    addFields(entityBlobs['_main']);
+    addNewEntityBlob('MAIN', buildEntityBlob(JSON.parse(getTestJSON()), DataType.JSON, null));
     return;
     //FIXME : Test JSON
 

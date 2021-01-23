@@ -63,8 +63,38 @@
 #settings-padding{
     padding: 10px;
 }
+#drill-menu{
+    margin-bottom:0px;
+}
+#fields-menu-button-container{
+
+}
+#pivot-menu-buttons-container{
+    display: none;
+}
+#drill-menu-button-container{
+    display: none;
+}
+
 
 /* CLASSES */
+.menu-buttons-container{
+    background-color: #225686;
+    padding: 5px;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+}
+.menu-button{
+    background-color: #225686;
+    border: 1px #FFC000 solid;
+    color: #FFC000;
+    border-radius: 5px;
+    padding: 2px;
+    margin: 2px;
+}
+.menu-button-selected{
+    background-color: #AA3630 !important;
+}
 .workspace{
     background-color:#010822;
     position: absolute;
@@ -118,6 +148,7 @@
     width: auto;
     border-radius: 5px 0px 0px 0px;
     padding: 5px;
+    margin-bottom:5px;
     align-self: center;
     display: flex;
     align-content: space-between;
@@ -133,7 +164,7 @@
 .field-button-inactive{
     background-color:  #fcb5b5;
     color: #782622;
-    border: 2px #782622 solid;
+    border: 1px #782622 solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: smaller;
@@ -143,7 +174,7 @@
 .field-button-active{
     background-color: #010822;
     color: #fcb5b5;
-    border: 2px #fcb5b5 solid;
+    border: 1px #fcb5b5 solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: smaller;
@@ -154,11 +185,12 @@
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+    align-items: baseline;
 }
 .drill-button-inactive{
     background-color: #baf8fe;
     color:  #008693;
-    border: 2px  #008693 solid;
+    border: 1px  #008693 solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: medium;
@@ -168,34 +200,12 @@
 .drill-button-active{
     background-color: #010822;
     color:  #baf8fe;
-    border: 2px  #baf8fe solid;
+    border: 1px  #baf8fe solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: medium;
     border-radius: 5px;
     margin: 1px;
-}
-.detail-button-inactive{
-    background-color: #e1d1fd;
-    color: #6f17ff;
-    border: 2px #6f17ff solid;
-    padding: 5px;
-    font-family: "Yu Gothic UI";
-    font-size: medium;
-    border-radius: 5px;
-    margin: 1px;
-    width: 100%;
-}
-.detail-button-active{
-    background-color: #010822;
-    color: #e1d1fd;
-    border: 2px #e1d1fd solid;
-    padding: 5px;
-    font-family: "Yu Gothic UI";
-    font-size: medium;
-    border-radius: 5px;
-    margin: 1px;
-    width: 100%;
 }
 .detail-container{
     padding: 20px;
@@ -213,6 +223,25 @@
     color: #AA3630;
     font-size: medium;
     font-weight: bold;
+}
+.parent-field-button{
+    border: none;
+    font-size: small;
+    background-color: #FFF1C5;
+    font-family: "Yu Gothic UI";
+    font-size: small;
+    color: #782622;
+}
+.parent-button-container{
+    background-color: #FFF1C5;
+    border-radius: 5px;
+    border: 1px solid #782622;
+    padding:2px;
+    margin:2px;
+}
+.child-button-container{
+    padding:2px;
+    margin:2px;
 }
 
 /* BY ELEMENT */
@@ -282,7 +311,7 @@ button.settings-active{
 }
 table.pivot-table{
     color: black;
-    border: 2px  #15920d  solid;
+    border: 1px  #15920d  solid;
     font-family: "Yu Gothic UI";
     font-size: small;
     border-radius: 5px;
@@ -296,24 +325,25 @@ table.center{
 th.pivot-table{
     background-color:  #a2fd9c;
     color:  #15920d;
-    border: 2px  #15920d  solid;
+    border: 1px  #15920d  solid;
     padding: 5px;
     font-family: "Yu Gothic UI";
     font-size: small;
+    font-weight: normal;
     border-radius: 5px;
     margin: 1px;
 }
 td.pivot-table-active-positive{
     background-color: #010822;
     color: #a2fd9c;
-    border: 2px #a2fd9c solid;
+    border: 1px #a2fd9c solid;
     font-size: small;
     border-radius: 5px;
 }
 td.pivot-table-active-negative{
     background-color: #010822;
     color: red;
-    border: 2px red solid;
+    border: 1px red solid;
     font-size: small;
     border-radius: 5px;
 }

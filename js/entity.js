@@ -6,7 +6,8 @@ class Entity{
 
 class EntityBlob{
 
-    constructor() {
+    constructor(_raw) {
+        this._raw = _raw;
         this.keys = {}; //{key_1:{entities:[entity_indexes], values:[values]}}
         this.entities = [];
     }
@@ -54,11 +55,11 @@ class EntityBlob{
     }
 }
 
-function buildEntityBlob(data, dataType){
+function buildEntityBlob(data, dataType, root){
     try {
         switch (dataType) {
             case "JSON":
-                return buildEntityBlobFromJSON(data);
+                return buildEntityBlobFromJSON(data, root);
             case "CSV":
                 return buildEntityBlobFromCSV(data);
         }
@@ -70,9 +71,8 @@ function buildEntityBlob(data, dataType){
     }
 }
 
-function buildEntityBlobFromJSON(data){
-    let root = settings.getCurrentSetting('data-root');
-    let entityBlob = new EntityBlob();
+function buildEntityBlobFromJSON(data, root){
+    let entityBlob = new EntityBlob(data);
     if(Array.isArray(data)){
         for(let i in data){
             let rootData = (root !== null) ?  getDataAtRoot(data[i], root) : data[i];
@@ -129,7 +129,30 @@ function getDataAtRoot(data, root){
     return null;
 }
 
-function saveNewRootDataSet(){
-    //FIXME : this method will save a new root data set to entityBlobs[_currentRoot] so that the
-    //FIXME : user can toggle between _main and _currentRoot
+function setNewRootKey(root){
+    let newDataset = 'ROOT_' + root.toUpperCase();
+    //check if root key already exists, if so - open that dataset
+    if(Object.keys(entityBlobs).includes(newDataset)){
+        loadEntityBlob(newDataset);
+    }else{
+        //if root key does not exist - create new root key dataset
+        let currentDataset = settings.getCurrentSetting('current-dataset');
+        let entityBlob = buildEntityBlob(entityBlobs[currentDataset]._raw, DataType.JSON, root);
+        addNewEntityBlob(newDataset, entityBlob);
+    }
+}
+
+function loadEntityBlob(name){
+    resetWorkspace(null);
+    activateDatasetButton(name);
+    clearFieldButtons();
+    addFields(entityBlobs[name]);
+    settings.saveNewSetting('current-dataset', name);
+}
+
+function addNewEntityBlob(name, entityBlob){
+    name = name.toUpperCase().replace(/\s+/g, '_');
+    entityBlobs[name] = entityBlob;
+    addDatasetButton(name);
+    loadEntityBlob(name);
 }

@@ -21,23 +21,30 @@
 
     <div id="fields" class="panel">
         <div id="fields-container" class="panel-container">
-            <div class="panel-menu">
-                <button class="panel-menu nounderline">&#9776;</button>
+            <div class="panel-menu" id="fields-menu">
+                <button id="fields-dropdown-button" class="panel-menu nounderline" onclick="toggleMenu(this.id)">&#9776;</button>
             </div>
-            <!-- FIELD BUTTONS -->
+            <div id="fields-menu-button-container" class="menu-buttons-container hidden">
+                <!-- DATASET BUTTONS -->
+            </div>
+            <div id="fields-button-container" class="row">
+                <!-- FIELD BUTTONS -->
+            </div>
         </div>
         <div id="fields-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">FIELDS</div>
     </div>
 
     <div id="pivot" class="panel">
         <div id="pivot-container" class="panel-container pivotdrill-heading">
-            <div class="panel-menu">
-                <button class="panel-menu nounderline">&#9776;</button>
+            <div class="panel-menu" id="pivot-menu">
+                <button id="pivot-dropdown-button" class="panel-menu nounderline"  onclick="toggleMenu(this.id)">&#9776;</button>
             </div>
-            <div id="pivot-table-container" class="row">
+            <div id="pivot-menu-button-container" class="menu-buttons-container hidden">
 
             </div>
-            <!-- PIVOT TABLES -->
+            <div id="pivot-table-container" class="row">
+                <!-- PIVOT TABLES -->
+            </div>
         </div>
         <div id="pivot-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">PIVOT</div>
     </div>
@@ -45,8 +52,11 @@
     <div id="drill" class="panel">
         <div id="drill-container" class="panel-container">
             <div class="centered">
-                <div class="panel-menu">
-                    <button class="panel-menu nounderline">&#9776;</button>
+                <div class="panel-menu" id="drill-menu">
+                    <button id="drill-dropdown-button" class="panel-menu nounderline"  onclick="toggleMenu(this.id)">&#9776;</button>
+                </div>
+                <div id="drill-menu-button-container"  class="menu-buttons-container hidden">
+
                 </div>
                 <form id="form-drill" action="javascript:void(0)">
                     <input id="input-drill" type="text" class="pivotdrill-heading" onchange="resetDrillQueryInput()" placeholder="DRILL QUERY" autocomplete="false">
@@ -83,11 +93,6 @@
                 </form>
                 <h2 class="settings-heading">DATA</h2>
                 <hr class="settings">
-                <h4 class="settings-subheading text-orange">ROOT KEY</h4>
-                <form id="form-data-root" class="settings-inactive" action="javascript:void(0)">
-                    <input type="text" id="input-data-root" class="settings-inactive pivotdrill-heading">
-                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="data-root">CHANGE</button>
-                </form>
                 <h4 class="settings-subheading text-orange">UPLOAD DATA AS FILE</h4>
                 <form id="form-data-upload" class="settings-inactive" action="javascript:void(0)">
                     <input type="file" id="input-data-upload" class="pivotdrill-heading">

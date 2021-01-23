@@ -1,13 +1,26 @@
 function addFields(data){
+
     let fields = Object.keys(data.keys);
-    //FIXME : Do pretty nesting here, e.g. results:host_type -> results [host_type] ???
     fields.sort();
-    let fieldButtonsContainer = document.getElementById('fields-container');
+
+    let processedFields = {};
     for(let i in fields){
-        if(fields[i].trim().length > 0){
-            let field = new FieldButton(fields[i]);
-            fieldButtonsContainer.appendChild(field.print());
+        if(fields[i].includes(':')){
+            let parent = fields[i].split(':')[0];
+            let child = fields[i].substring(fields[i].indexOf(':') + 1, fields[i].length);
+            if(!(parent in processedFields)){
+                processedFields[parent] = [];
+            }
+            processedFields[parent].push(child);
+        }else{
+            processedFields[fields[i]] = null;
         }
+    }
+
+    let fieldButtonsContainer = document.getElementById('fields-button-container');
+    for(let parent in processedFields){
+        let field = new FieldButton(parent, processedFields[parent]);
+        fieldButtonsContainer.appendChild(field.print());
     }
 }
 
@@ -24,6 +37,13 @@ function deactivateFieldButton(buttonId){
 }
 
 function clearFieldButtons(){
+    let parentButtonContainers = document.getElementsByClassName('parent-button-container');
+    while(parentButtonContainers.length > 0){
+        for(let i in parentButtonContainers){
+            removeFieldButton(parentButtonContainers[i]);
+        }
+        parentButtonContainers = document.getElementsByClassName('parent-button-container');
+    }
     let activeFieldButtons = document.getElementsByClassName('field-button-active');
     let inactiveFieldButtons = document.getElementsByClassName('field-button-inactive');
     while(activeFieldButtons.length > 0 || inactiveFieldButtons.length > 0){
@@ -33,17 +53,19 @@ function clearFieldButtons(){
         for(let i in inactiveFieldButtons){
             removeFieldButton(inactiveFieldButtons[i]);
         }
+        activeFieldButtons = document.getElementsByClassName('field-button-active');
+        inactiveFieldButtons = document.getElementsByClassName('field-button-inactive');
     }
 }
 
 function removeFieldButton(button){
-    if(typeof(button) === 'object' && button.id && button.id.startsWith('--field')){
-        document.getElementById('fields-container').removeChild(button);
+    if(typeof(button) === 'object' && button.id && (button.id.startsWith('--field') || button.id.startsWith('--parent-container-'))){
+        document.getElementById('fields-button-container').removeChild(button);
     }
 }
 
 function addPivotTable(fieldName, buttonId){
-    let values = entityBlobs['_main'].keys[fieldName]['values'];
+    let values = entityBlobs[settings.getCurrentSetting('current-dataset')].keys[fieldName]['values'];
     values.sort();
     let pivotTable = new PivotTable(fieldName, values);
     let pivotContainer = document.getElementById('pivot-table-container');
@@ -112,19 +134,25 @@ function deactivatePivotTables(queryData){
 }
 
 function addDrillValue(key, value, buttonId, conditional){
-    //search through data for all objects with this key:value pair
-    let button = document.getElementById(buttonId);
-    button.classList.add('pivot-table-active-' + conditional);
 
     if(drillQuery === null || drillQuery === undefined){
         drillQuery = new DrillQuery();
     }
+
+    //search through data for all objects with this key:value pair
+    let button = document.getElementById(buttonId);
+    button.classList.add('pivot-table-active-' + conditional);
 
     drillQuery.add(key, value, conditional);
     drillQuery.run();
 }
 
 function removeDrillValue(key, value, buttonId){
+
+    if(drillQuery === null || drillQuery === undefined){
+        drillQuery = new DrillQuery();
+    }
+
     if(buttonId === null){
         //this is being called from toggleFieldButton() and will therefore remove the pivotTable and the entire key from the drillQuery
         drillQuery.remove(key, value, buttonId);
@@ -161,17 +189,43 @@ function clearDrillButtons(){
 }
 
 class FieldButton{
-    constructor(fieldName){
-        this.fieldName = fieldName;
+    constructor(parent, children){
+        this.parent = parent;
+        this.children = children;
     }
 
     print(){
+        if(this.children !== null){
+            let parentButtonContainer = document.createElement('div');
+            parentButtonContainer.classList.add('parent-button-container');
+            parentButtonContainer.id = '--parent-container-' + this.parent;
+            let parentButton = document.createElement('button');
+            parentButton.classList.add('parent-field-button');
+            parentButton.classList.add('nounderline');
+            parentButton.id = '--parent-button-' + this.parent;
+            let root = this.parent;
+            parentButton.onclick = function(){setNewRootKey(root)};
+            parentButton.textContent = root;
+            let childButtonContainer = document.createElement('div');
+            childButtonContainer.classList.add('child-button-container');
+            for(let i in this.children){
+                childButtonContainer.appendChild(this.buildFieldButton(this.children[i]));
+            }
+            parentButtonContainer.appendChild(parentButton);
+            parentButtonContainer.appendChild(childButtonContainer);
+            return parentButtonContainer;
+        }else{
+            return this.buildFieldButton(this.parent);
+        }
+    }
+
+    buildFieldButton(name){
         let button = document.createElement('button');
-        button.id = "--field-" + this.fieldName;
+        button.id = "--field-" + ((this.children === null) ? name : this.parent + ':' + name);
         button.classList.add("field-button-inactive");
         button.classList.add("nounderline");
-        button.onclick = function(){toggleFieldButton(this.innerText, this.id)};
-        button.textContent = this.fieldName;
+        button.onclick = function(){toggleFieldButton(this.id)};
+        button.textContent = name;
         return button;
     }
 }
@@ -190,7 +244,7 @@ class PivotTable{
         let th = document.createElement('th');
         th.classList.add("pivot-table");
         th.classList.add("nounderline");
-        th.onclick = function(){toggleFieldButton(key, "--field-" + key);};
+        th.onclick = function(){toggleFieldButton("--field-" + key);};
         th.textContent = this.key;
         table.appendChild(th);
         let idx = 0;
@@ -426,5 +480,4 @@ class DrillQuery{
         }
         return false;
     }
-
 }

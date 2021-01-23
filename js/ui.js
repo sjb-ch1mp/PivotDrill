@@ -148,7 +148,8 @@ function getCurrentDimensions(){
     };
 }
 
-function toggleFieldButton(fieldName, buttonId){
+function toggleFieldButton(buttonId){
+    let fieldName = buttonId.replace('--field-', '');
     let button = document.getElementById(buttonId);
     if(button.classList.contains('field-button-active')){
         removePivotTable(fieldName, buttonId);
@@ -211,7 +212,6 @@ function loadCurrentSettings(){
     document.getElementById('input-rest-uri').value = settings.getCurrentSetting('rest-uri');
     document.getElementById('input-rest-key').value = settings.getCurrentSetting('rest-key');
     document.getElementById('input-rest-username').value = settings.getCurrentSetting('rest-username');
-    document.getElementById('input-data-root').value = settings.getCurrentSetting('data-root');
 }
 
 function resetWorkspace(caller){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF IT IS CALLED FROM SENDQUERY()
@@ -227,4 +227,55 @@ function resetDrillQueryInput(){
     if(drillQuery !== null){
         document.getElementById('input-drill').value = drillQuery.print();
     }
+}
+
+function toggleMenu(menuId){
+    let menuName = menuId.split('-')[0];
+    let menuButtonsContainer = document.getElementById(menuName + '-menu-button-container');
+    let menuHeader = document.getElementById(menuName + '-menu');
+    let dropdownButton = document.getElementById(menuName + '-dropdown-button');
+    if(menuButtonsContainer.classList.contains('hidden')){
+        menuButtonsContainer.classList.remove('hidden');
+        if(menuName !== 'drill'){
+            menuHeader.style.marginBottom = '0px';
+        }
+        switch(menuName){
+            case 'fields':
+                dropdownButton.textContent = 'DATASETS';
+                break;
+            default:
+                dropdownButton.textContent = 'OPTIONS';
+        }
+    }else{
+        menuButtonsContainer.classList.add('hidden');
+        if(menuName !== 'drill'){
+            menuHeader.style.marginBottom = '5px';
+        }
+        dropdownButton.textContent = '☰';
+    }
+}
+
+function addDatasetButton(name){
+    let button = document.createElement('button');
+    button.classList.add('menu-button');
+    button.classList.add('pivotdrill-heading');
+    button.classList.add('nounderline');
+    let id = 'dataset-' + name.toLowerCase();
+    button.id = id;
+    button.onclick = function(){loadEntityBlob(name)};
+    button.textContent = name.toUpperCase();
+    document.getElementById('fields-menu-button-container').appendChild(button);
+    /*
+        <button class="menu-button pivotdrill-heading menu-button-selected nounderline" id="dataset-main" onclick="makeCurrentDataSet(this.id)">MAIN</button>
+        <button class="menu-button pivotdrill-heading nounderline" id="dataset-root_results">ROOT_RESULTS</button>
+    * */
+}
+
+function activateDatasetButton(name){
+    name = name.toLowerCase();
+    let dataSetButtons = document.getElementsByClassName('menu-button-selected');
+    if(dataSetButtons.length > 0){
+        dataSetButtons[0].classList.remove('menu-button-selected');
+    }
+    document.getElementById('dataset-' + name).classList.add('menu-button-selected');
 }

@@ -3,8 +3,7 @@ let panelNames = ['fields','pivot','drill','settings'];
 let drillQuery = null;
 let settings = null;
 let entityBlobs = {
-    '_main':null,
-    '_currentRoot':null
+    'MAIN':null //ROOT_RESULTS
 };
 
 class Panel{
@@ -52,16 +51,12 @@ class Settings{
             'rest-uri':null,
             'rest-username':null,
             'rest-key':null,
-            'data-root':null,
-            'current-dataset':'_main'
+            'current-dataset':null
         };
     }
 
     saveNewSetting(key, value){
         this.settings[key] = value;
-        if(key === 'data-root'){
-            saveNewRootDataSet();
-        }
     }
 
     getCurrentSetting(key){

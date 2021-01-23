@@ -156,3 +156,8 @@ function addNewEntityBlob(name, entityBlob){
     addDatasetButton(name);
     loadEntityBlob(name);
 }
+
+function clearDatasets(){
+    entityBlobs = {};
+    clearDatasetButtons();
+}

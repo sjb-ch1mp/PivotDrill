@@ -2,9 +2,7 @@ let server = null;
 let panelNames = ['fields','pivot','drill','settings'];
 let drillQuery = null;
 let settings = null;
-let entityBlobs = {
-    'MAIN':null //ROOT_RESULTS
-};
+let entityBlobs = {};
 
 class Panel{
     constructor(name){

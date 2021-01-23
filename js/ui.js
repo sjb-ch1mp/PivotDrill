@@ -220,6 +220,7 @@ function resetWorkspace(caller){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF I
     clearDrillQuery();
     if(caller === 'new_query'){
         clearFieldButtons();
+        clearDatasets();
     }
 }
 
@@ -278,4 +279,8 @@ function activateDatasetButton(name){
         dataSetButtons[0].classList.remove('menu-button-selected');
     }
     document.getElementById('dataset-' + name).classList.add('menu-button-selected');
+}
+
+function clearDatasetButtons(){
+    document.getElementById('fields-menu-button-container').innerHTML = '';
 }

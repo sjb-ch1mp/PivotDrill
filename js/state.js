@@ -1,4 +1,3 @@
-let server = null;
 let panelNames = ['fields','pivot','drill','settings'];
 let drillQuery = null;
 let settings = null;
@@ -47,14 +46,13 @@ class Settings{
     constructor(){
         this.settings = {
             'rest-uri':null,
-            'rest-username':null,
-            'rest-key':null,
+            'rest-headers':null,
             'current-dataset':null
         };
     }
 
     saveNewSetting(key, value){
-        this.settings[key] = value;
+        this.settings[key.trim()] = value.trim();
     }
 
     getCurrentSetting(key){

@@ -67,7 +67,18 @@ function setUpWorkspace(){
     }
 
     //Set up other remaining interface variables
-    document.getElementById('current-server').innerText = (server !== null) ? server : "no server";
+    updateServer();
+}
+
+function updateServer(){
+    let server = settings.getCurrentSetting('rest-uri');
+    if(server === null){
+        server = 'no server';
+    }else{
+        server = server.replace(/^http(s):/g, '');
+        server = server.split('/')[2];
+    }
+    document.getElementById('current-server').innerText = server;
 }
 
 function setUpWorkspaceContainer(workspace, dim){
@@ -173,17 +184,6 @@ function togglePivotValue(key, value, buttonId, event){
     }
 }
 
-function toggleDrillbutton(entityId, buttonId){
-    let button = document.getElementById(buttonId);
-    if(button.classList.contains('drill-button-active')){
-        button.classList.remove('drill-button-active');
-        button.classList.add('drill-button-inactive');
-    }else{
-        button.classList.remove('drill-button-inactive');
-        button.classList.add('drill-button-active');
-    }
-}
-
 function activateSettingsInput(id){
     let form = document.getElementById('form-' + id);
     let input = document.getElementById('input-' + id);
@@ -210,13 +210,12 @@ function activateSettingsInput(id){
 
 function loadCurrentSettings(){
     document.getElementById('input-rest-uri').value = settings.getCurrentSetting('rest-uri');
-    document.getElementById('input-rest-key').value = settings.getCurrentSetting('rest-key');
-    document.getElementById('input-rest-username').value = settings.getCurrentSetting('rest-username');
+    document.getElementById('input-rest-headers').value = settings.getCurrentSetting('rest-headers');
 }
 
 function resetWorkspace(caller){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF IT IS CALLED FROM SENDQUERY()
     clearPivotTables();
-    clearDrillButtons();
+    clearDrillTable();
     clearDrillQuery();
     if(caller === 'new_query'){
         clearFieldButtons();
@@ -237,9 +236,6 @@ function toggleMenu(menuId){
     let dropdownButton = document.getElementById(menuName + '-dropdown-button');
     if(menuButtonsContainer.classList.contains('hidden')){
         menuButtonsContainer.classList.remove('hidden');
-        if(menuName !== 'drill'){
-            menuHeader.style.marginBottom = '0px';
-        }
         switch(menuName){
             case 'fields':
                 dropdownButton.textContent = 'DATASETS';
@@ -249,9 +245,6 @@ function toggleMenu(menuId){
         }
     }else{
         menuButtonsContainer.classList.add('hidden');
-        if(menuName !== 'drill'){
-            menuHeader.style.marginBottom = '5px';
-        }
         dropdownButton.textContent = '☰';
     }
 }
@@ -266,15 +259,11 @@ function addDatasetButton(name){
     button.onclick = function(){loadEntityBlob(name)};
     button.textContent = name.toUpperCase();
     document.getElementById('fields-menu-button-container').appendChild(button);
-    /*
-        <button class="menu-button pivotdrill-heading menu-button-selected nounderline" id="dataset-main" onclick="makeCurrentDataSet(this.id)">MAIN</button>
-        <button class="menu-button pivotdrill-heading nounderline" id="dataset-root_results">ROOT_RESULTS</button>
-    * */
 }
 
 function activateDatasetButton(name){
     name = name.toLowerCase();
-    let dataSetButtons = document.getElementsByClassName('menu-button-selected');
+    let dataSetButtons = document.getElementById('fields-menu-button-container').getElementsByClassName('menu-button-selected');
     if(dataSetButtons.length > 0){
         dataSetButtons[0].classList.remove('menu-button-selected');
     }
@@ -283,4 +272,38 @@ function activateDatasetButton(name){
 
 function clearDatasetButtons(){
     document.getElementById('fields-menu-button-container').innerHTML = '';
+}
+
+function hideDrillTableColumn(columnId){
+    let column = document.getElementsByClassName(columnId);
+    let header = document.getElementById(columnId);
+    for(let row in column){
+        if(typeof(column[row]) === 'object' && column[row].classList){
+            column[row].classList.add('hidden');
+        }
+    }
+    header.classList.add('hidden');
+}
+
+function restoreHiddenDrillTableColumns(){
+    let drillTableContainer = document.getElementById('drill-table-container');
+    if(drillTableContainer.innerHTML.length > 0){
+        let hiddenColumns = drillTableContainer.getElementsByClassName('hidden');
+        while(hiddenColumns.length > 0){
+            for(let row in hiddenColumns){
+                if(typeof(hiddenColumns[row]) === 'object' && hiddenColumns[row].classList){
+                    hiddenColumns[row].classList.remove('hidden');
+                }
+            }
+            hiddenColumns = drillTableContainer.getElementsByClassName('hidden');
+        }
+    }
+}
+
+function downloadDrillTable(){
+
+}
+
+function downloadPivotTables(){
+
 }

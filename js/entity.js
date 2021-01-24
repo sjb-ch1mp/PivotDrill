@@ -136,8 +136,9 @@ function setNewRootKey(root){
         loadEntityBlob(newDataset);
     }else{
         //if root key does not exist - create new root key dataset
-        let currentDataset = settings.getCurrentSetting('current-dataset');
-        let entityBlob = buildEntityBlob(entityBlobs[currentDataset]._raw, DataType.JSON, root);
+        //let currentDataset = settings.getCurrentSetting('current-dataset');
+        console.log('creating new blob for root "' + root + '"');
+        let entityBlob = buildEntityBlob(entityBlobs['MAIN']._raw, DataType.JSON, root);
         addNewEntityBlob(newDataset, entityBlob);
     }
 }
@@ -160,4 +161,8 @@ function addNewEntityBlob(name, entityBlob){
 function clearDatasets(){
     entityBlobs = {};
     clearDatasetButtons();
+}
+
+function saveDrillTableAsDataset(){
+
 }

@@ -40,7 +40,7 @@
                 <button id="pivot-dropdown-button" class="panel-menu nounderline"  onclick="toggleMenu(this.id)">&#9776;</button>
             </div>
             <div id="pivot-menu-button-container" class="menu-buttons-container hidden">
-
+                <button class="menu-button pivotdrill-heading nounderline" onclick="downloadPivotTables()">DOWNLOAD PIVOT TABLES</button>
             </div>
             <div id="pivot-table-container" class="row">
                 <!-- PIVOT TABLES -->
@@ -51,20 +51,20 @@
 
     <div id="drill" class="panel">
         <div id="drill-container" class="panel-container">
-            <div class="centered">
                 <div class="panel-menu" id="drill-menu">
                     <button id="drill-dropdown-button" class="panel-menu nounderline"  onclick="toggleMenu(this.id)">&#9776;</button>
                 </div>
                 <div id="drill-menu-button-container"  class="menu-buttons-container hidden">
-
+                    <button class="menu-button pivotdrill-heading nounderline" onclick="restoreHiddenDrillTableColumns()">RESTORE HIDDEN COLUMNS</button>
+                    <button class="menu-button pivotdrill-heading nounderline" onclick="saveDrillTableAsDataset()">SAVE AS NEW DATASET</button>
+                    <button class="menu-button pivotdrill-heading nounderline" onclick="downloadDrillTable()">DOWNLOAD DRILL TABLE</button>
                 </div>
                 <form id="form-drill" action="javascript:void(0)">
                     <input id="input-drill" type="text" class="pivotdrill-heading" onchange="resetDrillQueryInput()" placeholder="DRILL QUERY" autocomplete="false">
                     <button id="clear-button" class="nounderline" onclick="clearDrillQuery()">CLEAR</button>
                 </form>
-            </div>
-            <div id="drill-button-container">
-                <!-- DRILL BUTTONS -->
+            <div id="drill-table-container">
+                <!-- DRILL TABLE -->
             </div>
         </div>
         <div id="drill-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DRILL</div>
@@ -81,15 +81,10 @@
                     <input type="text" id="input-rest-uri" class="settings-inactive pivotdrill-heading">
                     <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-uri">CHANGE</button>
                 </form>
-                <h4 class="settings-subheading text-orange">USERNAME</h4>
-                <form id="form-rest-username" class="settings-inactive" action="javascript:void(0)">
-                    <input type="text" id="input-rest-username" class="settings-inactive pivotdrill-heading">
-                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-username">CHANGE</button>
-                </form>
-                <h4 class="settings-subheading text-orange">KEY</h4>
-                <form id="form-rest-key" class="settings-inactive" action="javascript:void(0)">
-                    <input type="text" id="input-rest-key" class="settings-inactive pivotdrill-heading">
-                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-key">CHANGE</button>
+                <h4 class="settings-subheading text-orange">HEADERS</h4>
+                <form id="form-rest-headers" class="settings-inactive" action="javascript:void(0)">
+                    <input type="text" id="input-rest-headers" class="settings-inactive pivotdrill-heading" placeholder="Enter as key:value pairs with a semi-colon delimiter, e.g. API-Key:my-api-key;Username:my-user-name@my-email.com">
+                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-headers">CHANGE</button>
                 </form>
                 <h2 class="settings-heading">DATA</h2>
                 <hr class="settings">

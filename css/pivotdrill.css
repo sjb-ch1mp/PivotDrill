@@ -59,6 +59,7 @@
 }
 #form-drill{
     border: 3px solid #225686;
+    margin-bottom: 1px;
 }
 #settings-padding{
     padding: 10px;
@@ -66,14 +67,8 @@
 #drill-menu{
     margin-bottom:0px;
 }
-#fields-menu-button-container{
-
-}
-#pivot-menu-buttons-container{
-    display: none;
-}
 #drill-menu-button-container{
-    display: none;
+    justify-content: flex-start !important;
 }
 
 
@@ -82,7 +77,6 @@
     background-color: #225686;
     padding: 5px;
     justify-content: flex-start;
-    margin-bottom: 5px;
 }
 .menu-button{
     background-color: #225686;
@@ -148,7 +142,6 @@
     width: auto;
     border-radius: 5px 0px 0px 0px;
     padding: 5px;
-    margin-bottom:5px;
     align-self: center;
     display: flex;
     align-content: space-between;
@@ -353,4 +346,20 @@ td{
 }
 body{
     background-color: #010822;
+}
+table.drill-table{
+    border-collapse: collapse;
+}
+th.drill-table{
+    border: 1px #782622 solid;
+    text-align: center;
+    padding: 5px;
+    background-color: #FFF1C5;
+    color: #782622;
+}
+td.drill-table{
+    border: 1px #782622 solid;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
 }

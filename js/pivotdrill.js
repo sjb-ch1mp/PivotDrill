@@ -180,11 +180,11 @@ function clearDrillQuery(){
         };
     }
     document.getElementById('input-drill').value = '';
-    clearDrillButtons();
+    clearDrillTable();
 }
 
-function clearDrillButtons(){
-    let drillButtonContainer = document.getElementById('drill-button-container');
+function clearDrillTable(){
+    let drillButtonContainer = document.getElementById('drill-table-container');
     drillButtonContainer.innerHTML = '';
 }
 
@@ -263,22 +263,6 @@ class PivotTable{
     }
 }
 
-class DrillButton{
-    constructor(entityId){
-        this.entityId = entityId;
-    }
-
-    print(){
-        let drillButton = document.createElement('button');
-        drillButton.classList.add("drill-button-inactive");
-        drillButton.classList.add("nounderline");
-        drillButton.id = "--drill-" + this.entityId;
-        drillButton.onclick = function(){toggleDrillbutton(this.innerText, this.id);};
-        drillButton.textContent = this.entityId;
-        return drillButton;
-    }
-}
-
 class DrillQuery{
     constructor(){
         this.queryData = {
@@ -354,7 +338,7 @@ class DrillQuery{
     }
 
     run(){
-        clearDrillButtons();
+        clearDrillTable();
         if(this.hasQuery()){
             try{
                 document.getElementById('input-drill').value = this.print();
@@ -417,10 +401,10 @@ class DrillQuery{
 
 
                 //add all entity indices that remain as drillButtons
-                let drillButtonContainer = document.getElementById('drill-button-container');
-                for(let i in filteredEntityIndices){
-                    let drillButton = new DrillButton(filteredEntityIndices[i]);
-                    drillButtonContainer.appendChild(drillButton.print());
+                if(filteredEntityIndices.length > 0){
+                    let drillTable = new DrillTable(filteredEntityIndices);
+                    let drillTableContainer = document.getElementById('drill-table-container');
+                    drillTableContainer.appendChild(drillTable.print());
                 }
             }catch(e){
                 summonChatterBox(e.message, 'error');
@@ -479,5 +463,132 @@ class DrillQuery{
             }
         }
         return false;
+    }
+}
+
+class DrillTable{
+
+    constructor(entityIndices){
+        this.entityBuffer = {};
+        this.entities = [];
+        this.headers = ['entity_id'];
+        this.compileDataForDrillTable(entityIndices);
+    }
+
+    compileDataForDrillTable(entityIndices){
+        for(let i in entityIndices){
+            let data = entityBlobs[settings.getCurrentSetting('current-dataset')].entities[entityIndices[i]].data;
+            this.entityBuffer['entity_id'] = entityIndices[i];
+            this.flattenData('', data);
+            let keys = Object.keys(this.entityBuffer);
+            for(let j in keys){
+                if(!(this.headers.includes(keys[j]))){
+                    this.headers.push(keys[j]);
+                }
+            }
+            this.entities.push(this.entityBuffer);
+            this.entityBuffer = {};
+        }
+    }
+
+    flattenData(currentKey, data){
+        if(Array.isArray(data)){
+            if(!this.arrayContainsObjects(data)){
+                this.addDataToEntityBuffer(currentKey, data);
+            }else{
+                for(let i in data){
+                    this.flattenData(
+                        currentKey,
+                        data[i],
+                    );
+                }
+            }
+        }else if(typeof(data) === 'object'){
+            let keys = Object.keys(data);
+            for(let i in keys){
+                this.flattenData(
+                    (currentKey === '') ? keys[i] : currentKey + ":" + keys[i],
+                    data[keys[i]]
+                );
+            }
+        }else{
+            this.addDataToEntityBuffer(currentKey, data);
+        }
+    }
+
+    arrayContainsObjects(data){
+        for(let i in data){
+            if(typeof(data[i]) === 'object'){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    addDataToEntityBuffer(key, data){
+        if(data !== undefined && data !== null && ('' + data).trim().length > 0){
+            if(!(key in this.entityBuffer)){
+                this.entityBuffer[key] = [];
+            }
+            if(Array.isArray(data)){
+                for(let i in data){
+                    if(!(this.entityBuffer[key].includes(data[i]))){
+                        this.entityBuffer[key].push(data[i]);
+                    }
+                }
+            }else{
+                if(!(this.entityBuffer[key].includes(data))){
+                    this.entityBuffer[key].push(data);
+                }
+            }
+        }
+    }
+
+    print(){
+        let drillTable = document.createElement('table');
+        drillTable.classList.add('drill-table');
+        drillTable.appendChild(this.buildDrillTableHeader());
+        for(let i in this.entities){
+            drillTable.appendChild(this.buildDrillTableRow(i));
+        }
+        return drillTable;
+    }
+
+    buildDrillTableHeader(){
+        let drillHeader = document.createElement('tr');
+        drillHeader.classList.add('drill-table');
+        for(let i in this.headers){
+            let header = document.createElement('th');
+            header.id = 'drill-table-col-' + this.headers[i];
+            header.classList.add('drill-table');
+            header.classList.add('pivotdrill-heading');
+            header.classList.add('nounderline');
+            header.onclick = function(){hideDrillTableColumn(this.id)};
+            header.textContent = this.headers[i];
+            drillHeader.appendChild(header);
+        }
+        return drillHeader;
+    }
+
+    buildDrillTableRow(idx){
+        let drillRow = document.createElement('tr');
+        drillRow.classList.add('drill-table');
+        for(let i in this.headers){
+            let elmt = document.createElement('td');
+            elmt.classList.add('drill-table-col-' + this.headers[i]);
+            elmt.classList.add('drill-table');
+            elmt.innerHTML = this.formatArray(idx + "__" + this.headers[i], (this.headers[i] in this.entities[idx]) ? this.entities[idx][this.headers[i]] : '-');
+            drillRow.appendChild(elmt);
+        }
+        return drillRow;
+    }
+
+    formatArray(elmtId, data){
+        if(Array.isArray(data)){
+            //FIXME : toggleable content that hides long arrays
+            return data;
+        }else{
+            return data;
+        }
     }
 }

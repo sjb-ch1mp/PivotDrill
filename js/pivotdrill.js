@@ -375,7 +375,6 @@ class DrillQuery{
                 for(let i in entityIndices){
                     let e = entityIndices[i];
                     for(let key in queryKeys){
-
                         let hasPositiveValueAtKey = this.hasValueAtKey(
                             key,
                             entityBlobs[currentDataset]['entities'][e].data,
@@ -387,7 +386,6 @@ class DrillQuery{
                             entityBlobs[currentDataset]['entities'][e].data,
                             queryKeys[key]['negative']
                         );
-
                         if(!(filteredEntityIndices.includes(e)) && hasPositiveValueAtKey && !hasNegativeValueAtKey){
                             //if the entity is not yet in the array and it should be... add it
                             filteredEntityIndices.push(e);
@@ -423,46 +421,33 @@ class DrillQuery{
         }
 
         let hasValue = false;
-        if(key !== null){
-            let headKey = (key.includes(':')) ? key.split(':')[0] : key;
-            let tailKey = (key.includes(':')) ? key.substring(key.indexOf(':') + 1, key.length) : '';
-            data = data[headKey];
-            if(tailKey.length > 0){ //there are more key levels, object is either an array containing dicts, or a dict
-                if(Array.isArray(data)){ //data is an array
-                    for(let i in data){
-                        hasValue = this.hasValueAtKey(tailKey, data[i], values);
-                        if(hasValue){
-                            return true;
-                        }
-                    }
-                }else if(typeof(data) === 'object'){ //data is a dict
-                    for(let subKey in data){
-                        headKey = (key.includes(':')) ? key.split(':')[0] : tailKey;
-                        tailKey = (key.includes(':')) ? key.substring(key.indexOf(':') + 1, key.length) : '';
-                        hasValue = this.hasValueAtKey(tailKey, data[subKey], values);
-                        if(hasValue){
-                            return true;
-                        }
-                    }
-                } // only the previous two conditions can be true because there are more keys.
-            }
-        }
-
-        if(!hasValue && (key === null || !(key.includes(':')))){
-            //either the key is null or there are no more tailKeys - this must be the terminus.
+        let parent = (key !== null && key.includes(':')) ? key.split(':')[0] : key;
+        let children = (key !== null && key.includes(':')) ? key.substring(key.indexOf(':') + 1, key.length) : null;
+        if(parent === null){ //this is the terminus - either an array or a datum
             if(Array.isArray(data)){
                 for(let i in data){
-                    if(values.includes('' + data[i])){//FIXME : potentially dangerous coercing all datatypes to srings
+                    if(values.includes('' + data[i])){ //FIXME : coercing all datatypes to string might be dangerous
                         return true;
                     }
                 }
             }else{
-                if(values.includes('' + data)){//FIXME : potentially dangerous coercing all datatypes to srings
+                if(values.includes('' + data)){ //FIXME : coercing all datatypes to string might be dangerous
                     return true;
                 }
             }
+        }else{
+            if(Array.isArray(data)){
+                for(let i in data){
+                    hasValue = this.hasValueAtKey(children, data[i][parent], values);
+                    if(hasValue === true){
+                        break;
+                    }
+                }
+            }else{
+                hasValue = this.hasValueAtKey(children, data[parent], values);
+            }
         }
-        return false;
+        return hasValue;
     }
 }
 

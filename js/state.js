@@ -1,7 +1,7 @@
 let panelNames = ['fields','pivot','drill'/*,'settings'*/];
 let drillQuery = null;
 let settings = null;
-let data = null;
+let dataBuffer = [];
 let entityBlobs = {};
 
 class Panel{
@@ -74,8 +74,8 @@ function loadData(event){
         let fileName = event.target.files[0].name;
         const reader = new FileReader();
         reader.addEventListener('load', function(event){
-            data = JSON.parse(event.target.result.toString());
-            addNewEntityBlob(fileName.replace(/\s+/g, '_').toUpperCase(), buildEntityBlob(data, DataType.JSON, null));
+            resetWorkspace('new_query');
+            addNewEntityBlob(fileName.replace(/\s+/g, '_').toUpperCase(), buildEntityBlob(JSON.parse(event.target.result.toString()), DataType.JSON, null));
         });
         reader.readAsText(event.target.files[0]);
     }catch(e){

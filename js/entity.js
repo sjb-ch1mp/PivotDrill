@@ -6,7 +6,8 @@ class Entity{
 
 class EntityBlob{
 
-    constructor() {
+    constructor(data) {
+        this._raw = data;
         this.keys = {}; //{key_1:{entities:[entity_indexes], values:[values]}}
         this.entities = [];
     }
@@ -71,72 +72,50 @@ function buildEntityBlob(data, dataType, root){
 }
 
 function buildEntityBlobFromJSON(data, root){
-    let entityBlob = new EntityBlob();
-    if(Array.isArray(data)){
-        for(let i in data){
-            let rootData = (root !== null) ?  getDataAtRoot(data[i], root) : data[i];
-            if(rootData !== null){
-                entityBlob.addEntity(rootData);
-            }
-        }
-        return entityBlob;
-    }else if(typeof(data) === 'object'){
-        if(root !== null){
-            data = getDataAtRoot(data, root);
-            if(data === null){
-                throw new Error('Root key "' + root + '" not found in data');
-            }
-        }
-        if(Array.isArray(data)){
-            for(let i in data){
-                entityBlob.addEntity(data[i]);
-            }
-            return entityBlob;
-        }else if(typeof(data) === 'object'){
-            entityBlob.addEntity(data);
-            return entityBlob;
-        }else{
-            throw new Error('Unexpected data format');
-        }
+    getDataAtKey(data, root);
+    let entityBlob = new EntityBlob(dataBuffer);
+    for(let i in dataBuffer){
+        entityBlob.addEntity(dataBuffer[i]);
     }
+    dataBuffer = [];
+    return entityBlob;
 }
 
 function buildEntityBlobFromCSV(data){
     return null; //FIXME
 }
 
-function getDataAtRoot(data, root){
-    if(Array.isArray(data)){
-        for(let i in data){
-            if(typeof(data[i]) === 'object'){
-                return getDataAtRoot(data[i], root);
+function getDataAtKey(data, key){
+    let parent = (key !== null && key.includes(':')) ? key.split(':')[0] : key;
+    let children = (key !== null && key.includes(':')) ? key.substring(key.indexOf(':') + 1, key.length) : null;
+    if(parent === null){ //this is the terminus - either an array or a datum
+        if(Array.isArray(data)){
+            for(let i in data){
+                dataBuffer.push(data[i]);
             }
+        }else{
+            dataBuffer.push(data);
         }
-    }else if(typeof(data) === 'object'){
-        let keys = Object.keys(data);
-        for(let i in keys){
-            if(keys[i] === root){
-                return data[keys[i]];
-            }else{
-                let rootData = getDataAtRoot(data[keys[i]], root);
-                if(rootData !== null){
-                    return rootData;
-                }
+    }else{
+        if(Array.isArray(data)){
+            for(let i in data){
+                getDataAtKey(data[i][parent], children);
             }
+        }else{
+            getDataAtKey(data[parent], children);
         }
     }
-    return null;
 }
 
 function setNewRootKey(root){
-    let newDataset = 'ROOT_' + root.toUpperCase();
+    let name = 'ROOT_' + root.toUpperCase();
     //check if root key already exists, if so - open that dataset
-    if(Object.keys(entityBlobs).includes(newDataset)){
-        loadEntityBlob(newDataset);
+    if(Object.keys(entityBlobs).includes(name)){
+        loadEntityBlob(name);
     }else{
         //if root key does not exist - create new root key dataset
-        let entityBlob = buildEntityBlob(data, DataType.JSON, root);
-        addNewEntityBlob(newDataset, entityBlob);
+        let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);
+        addNewEntityBlob(name, entityBlob);
     }
 }
 

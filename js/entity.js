@@ -6,8 +6,7 @@ class Entity{
 
 class EntityBlob{
 
-    constructor(_raw) {
-        this._raw = _raw;
+    constructor() {
         this.keys = {}; //{key_1:{entities:[entity_indexes], values:[values]}}
         this.entities = [];
     }
@@ -72,7 +71,7 @@ function buildEntityBlob(data, dataType, root){
 }
 
 function buildEntityBlobFromJSON(data, root){
-    let entityBlob = new EntityBlob(data);
+    let entityBlob = new EntityBlob();
     if(Array.isArray(data)){
         for(let i in data){
             let rootData = (root !== null) ?  getDataAtRoot(data[i], root) : data[i];
@@ -136,9 +135,7 @@ function setNewRootKey(root){
         loadEntityBlob(newDataset);
     }else{
         //if root key does not exist - create new root key dataset
-        //let currentDataset = settings.getCurrentSetting('current-dataset');
-        console.log('creating new blob for root "' + root + '"');
-        let entityBlob = buildEntityBlob(entityBlobs['MAIN']._raw, DataType.JSON, root);
+        let entityBlob = buildEntityBlob(data, DataType.JSON, root);
         addNewEntityBlob(newDataset, entityBlob);
     }
 }

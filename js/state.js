@@ -1,6 +1,7 @@
-let panelNames = ['fields','pivot','drill','settings'];
+let panelNames = ['fields','pivot','drill'/*,'settings'*/];
 let drillQuery = null;
 let settings = null;
+let data = null;
 let entityBlobs = {};
 
 class Panel{
@@ -18,7 +19,7 @@ const PanelState = {
 let fieldsPanel = new Panel('fields');
 let pivotPanel = new Panel('pivot');
 let drillPanel = new Panel('drill');
-let settingsPanel = new Panel('settings');
+/*let settingsPanel = new Panel('settings');*/
 
 function getPanel(panelName){
     switch(panelName){
@@ -27,9 +28,9 @@ function getPanel(panelName){
         case 'pivot':
             return pivotPanel;
         case 'drill':
-            return drillPanel;
+            return drillPanel;/*
         case 'settings':
-            return settingsPanel;
+            return settingsPanel;*/
     }
 }
 
@@ -44,9 +45,9 @@ function getOpenPanel(){
 
 class Settings{
     constructor(){
-        this.settings = {
+        this.settings = {/*
             'rest-uri':null,
-            'rest-headers':null,
+            'rest-headers':null,*/
             'current-dataset':null
         };
     }
@@ -63,4 +64,24 @@ class Settings{
 const DataType = {
     "JSON":"JSON",
     "CSV":"CSV"
+}
+
+function loadData(event){
+    try{
+        if(event.target.files.length > 1){
+            summonChatterBox('Can only load one file at a time. Loading the first file...');
+        }
+        let fileName = event.target.files[0].name;
+        const reader = new FileReader();
+        reader.addEventListener('load', function(event){
+            data = JSON.parse(event.target.result.toString());
+            addNewEntityBlob(fileName.replace(/\s+/g, '_').toUpperCase(), buildEntityBlob(data, DataType.JSON, null));
+        });
+        reader.readAsText(event.target.files[0]);
+    }catch(e){
+        summonChatterBox(e.message, 'error');
+        if(e.stack){
+            console.log(e.stack);
+        }
+    }
 }

@@ -8,9 +8,7 @@
     <link rel="icon" href="img/favicon.png">
     <script src="js/state.js"></script>
     <script src="js/ui.js"></script>
-    <script src="js/net.js"></script>
     <script src="js/pivotdrill.js"></script>
-    <script src="js/test.js"></script>
     <script src="js/entity.js"></script>
 </head>
 
@@ -70,25 +68,13 @@
         <div id="drill-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel(this.innerText.toLowerCase())">DRILL</div>
     </div>
 
-    <!-- Settings -->
+    <!-- Settings
     <div id="settings" class="panel hidden">
         <div id="settings-container" class="panel-container">
             <div id="settings-padding">
-                <h2 class="settings-heading">REST API</h2>
-                <hr class="settings">
-                <h4 class="settings-subheading text-orange">URI</h4>
-                <form id="form-rest-uri" class="settings-inactive" action="javascript:void(0)">
-                    <input type="text" id="input-rest-uri" class="settings-inactive pivotdrill-heading">
-                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-uri">CHANGE</button>
-                </form>
-                <h4 class="settings-subheading text-orange">HEADERS</h4>
-                <form id="form-rest-headers" class="settings-inactive" action="javascript:void(0)">
-                    <input type="text" id="input-rest-headers" class="settings-inactive pivotdrill-heading" placeholder="Enter as key:value pairs with a semi-colon delimiter, e.g. API-Key:my-api-key;Username:my-user-name@my-email.com">
-                    <button onclick="activateSettingsInput(this.id)" class="nounderline settings-inactive" id="rest-headers">CHANGE</button>
-                </form>
                 <h2 class="settings-heading">DATA</h2>
                 <hr class="settings">
-                <h4 class="settings-subheading text-orange">UPLOAD DATA AS FILE</h4>
+                <h4 class="settings-subheading text-orange">UPLOAD DATA</h4>
                 <form id="form-data-upload" class="settings-inactive" action="javascript:void(0)">
                     <input type="file" id="input-data-upload" class="pivotdrill-heading">
                 </form>
@@ -96,30 +82,29 @@
         </div>
         <div id="settings-footer" class="pivotdrill-heading panel-footer centered nounderline" onclick="togglePanel('settings')">SETTINGS</div>
     </div>
+    -->
 </div>
 
 <!-- Header -->
-<div class="centered" id="header">
-    <a href="https://github.com/sjb-ch1mp/PivotDrill/blob/master/README.md" target="_blank"><img id="pivotdrill-logo" src="img/pivotdrill-logo.png" alt="PivotDrill"></a>
-    <div class="pivotdrill-heading" style="padding: 10px">
-        <form id="form-query" action="javascript:void(0)">
-            <input class="pivotdrill-heading" type="text" placeholder="API QUERY" id="input-query">
-            <button id="send-button" class="nounderline" onclick="sendQuery(document.getElementById('input-query').value)">SEND</button>
-        </form>
+<div id="header">
+    <div class="justified-end">
+        <a href="https://github.com/sjb-ch1mp/PivotDrill/blob/master/README.md" target="_blank"><img id="pivotdrill-logo" src="img/pivotdrill-logo.png" alt="PivotDrill"></a>
+        <div class="pivotdrill-heading" style="padding: 10px">
+            <form id="form-data" action="javascript:void(0)">
+                <input class="pivotdrill-heading" type="file" id="input-data" accept="application/json" onchange="loadData(event)">
+                <button id="upload-button" class="nounderline">DATA</button>
+            </form>
+        </div>
     </div>
-    <div class="pivotdrill-heading" id="chatter-box">
-        Welcome to <b>pivotdrill</b>!
-    </div>
+    <div class="centered pivotdrill-heading" id="chatter-box"></div>
 </div>
 
 <!-- Footer -->
 <div class="pivotdrill-heading centered" id="footer">
     <a class="text-orange nounderline" onclick="resetWorkspace('menu')" href="javascript:void(0)">reset workspace</a>
-    <span class="text-red">||</span>
+    <span class="text-red">||</span><!--
     <a class="text-orange nounderline" onclick="togglePanel('settings')" href="javascript:void(0)">settings</a>
-    <span class="text-red">||</span>
-    <span class="text-orange">current server :: </span><span id="current-server"></span>
-    <span class="text-red">||</span>
+    <span class="text-red">||</span>-->
     <span class="text-orange">version :: </span><span class="text-light">0.0.1</span>
     <span class="text-red">||</span>
     <a class="text-orange nounderline" href="https://github.com/sjb-ch1mp" target="_blank">ch1mp</a>
@@ -136,6 +121,7 @@
     };
     window.onload = function(){
         document.getElementById('input-drill').value = '';
+        document.getElementById('input-data').value = '';
         setUpWorkspace();
     }
 </script>

@@ -65,20 +65,6 @@ function setUpWorkspace(){
             }
         }
     }
-
-    //Set up other remaining interface variables
-    updateServer();
-}
-
-function updateServer(){
-    let server = settings.getCurrentSetting('rest-uri');
-    if(server === null){
-        server = 'no server';
-    }else{
-        server = server.replace(/^http(s):/g, '');
-        server = server.split('/')[2];
-    }
-    document.getElementById('current-server').innerText = server;
 }
 
 function setUpWorkspaceContainer(workspace, dim){
@@ -104,19 +90,19 @@ function openPanel(panelName){
         }
     }
 
-    if(panelName === "settings"){
+    /*if(panelName === "settings"){
         panel.style.width = (dim['WINDOW_WIDTH'] / 2) + "px";
         footer.style.width = ((dim['WINDOW_WIDTH'] / 2) - 20) + 'px';
         footer.style.left = "5px";
         panel.style.left = (dim['WINDOW_WIDTH'] / 4) + "px";
         container.style.width = ((dim['WINDOW_WIDTH'] / 2) - 20) + "px";
-    }else{
+    }else{*/
         panel.style.width = dim['WINDOW_WIDTH'] + "px";
         footer.style.width = (dim['WINDOW_WIDTH'] - 20) + 'px';
         footer.style.left = "5px";
         panel.style.left = "0px";
         container.style.width = (dim['WINDOW_WIDTH'] - 20) + "px";
-    }
+    //}
     panel.classList.remove('hidden');
     footer.style.top = (dim['WORKSPACE_HEIGHT'] - footer.clientHeight) + "px";
     panel.style.height = dim['WORKSPACE_HEIGHT'] + "px";
@@ -124,16 +110,14 @@ function openPanel(panelName){
     container.style.height = (dim['WORKSPACE_HEIGHT'] - (footer.clientHeight + 15)) + "px";
 
     getPanel(panelName).state = PanelState.OPEN;
-
-    if(panelName === 'settings'){
-        loadCurrentSettings();
-    }
 }
 
 function closePanel(panelName){
+    /*
     if(panelName === 'settings'){
         document.getElementById(panelName).classList.add('hidden');
     }
+     */
     getPanel(panelName).state = PanelState.CLOSED;
     setUpWorkspace();
 }
@@ -184,6 +168,7 @@ function togglePivotValue(key, value, buttonId, event){
     }
 }
 
+/*
 function activateSettingsInput(id){
     let form = document.getElementById('form-' + id);
     let input = document.getElementById('input-' + id);
@@ -207,11 +192,7 @@ function activateSettingsInput(id){
         button.innerText = 'CHANGE';
     }
 }
-
-function loadCurrentSettings(){
-    document.getElementById('input-rest-uri').value = settings.getCurrentSetting('rest-uri');
-    document.getElementById('input-rest-headers').value = settings.getCurrentSetting('rest-headers');
-}
+*/
 
 function resetWorkspace(caller){//FIXME : THIS NEEDS TO CLEAR FIELD BUTTONS IF IT IS CALLED FROM SENDQUERY()
     clearPivotTables();

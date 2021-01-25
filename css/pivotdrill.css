@@ -23,9 +23,11 @@
     width: 150px;
 }
 #chatter-box{
-    height: 25px;
+    height: 10px;
+    font-size: small;
+    margin-bottom: 2px;
 }
-#input-query,#input-drill{
+#input-data,#input-drill{
     flex-grow: 2;
     border: none;
     font-size: small;
@@ -34,7 +36,7 @@
 #settings-container{
     background-color: antiquewhite;
 }
-#send-button{
+#upload-button{
     background-color: #AA3630;
     color: white;
     border: none;
@@ -43,6 +45,7 @@
     font-weight: bold;
     padding: 5px;
     width: 100px;
+    pointer-events: none;
 }
 #clear-button{
     background-color: #225686;
@@ -54,7 +57,7 @@
     padding: 5px;
     width: 80px;
 }
-#form-query{
+#form-data{
     border: 3px solid #AA3630;
 }
 #form-drill{
@@ -73,6 +76,10 @@
 
 
 /* CLASSES */
+.justified-end{
+    display: flex;
+    justify-content: space-between;
+}
 .menu-buttons-container{
     background-color: #225686;
     padding: 5px;

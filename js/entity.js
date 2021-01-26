@@ -27,7 +27,7 @@ class EntityBlob{
                     entityIdx
                 );
             }
-        }else if(typeof(data) === 'object'){
+        }else if(data !== null && typeof(data) === 'object'){
             let keys = Object.keys(data);
             for(let i in keys){
                 this.flattenKeys(
@@ -37,7 +37,7 @@ class EntityBlob{
                     );
             }
         }else{
-            if(data === undefined || data === null || ('' + data).trim().length > 0){
+            if(data !== undefined && data !== null && ('' + data).trim().length > 0){
                 if(!(currentKey in this.keys)){
                     this.keys[currentKey] = {
                         'entities':[],

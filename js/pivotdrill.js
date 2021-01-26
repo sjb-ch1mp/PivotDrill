@@ -3,18 +3,28 @@ function addFields(data){
     let fields = Object.keys(data.keys);
     fields.sort();
 
+    let noChildren = {};
+    let hasChildren = {};
     let processedFields = {};
     for(let i in fields){
         if(fields[i].includes(':')){
             let parent = fields[i].split(':')[0];
             let child = fields[i].substring(fields[i].indexOf(':') + 1, fields[i].length);
-            if(!(parent in processedFields)){
-                processedFields[parent] = [];
+            if(!(parent in hasChildren)){
+                hasChildren[parent] = [];
             }
-            processedFields[parent].push(child);
+            hasChildren[parent].push(child);
         }else{
-            processedFields[fields[i]] = null;
+            noChildren[fields[i]] = null;
         }
+    }
+
+    for(let key in noChildren){
+        processedFields[key] = noChildren[key];
+    }
+
+    for(let key in hasChildren){
+        processedFields[key] = hasChildren[key];
     }
 
     let fieldButtonsContainer = document.getElementById('fields-button-container');
@@ -328,8 +338,9 @@ class DrillQuery{
             }
         }
 
-        let toPrint = (orStatements.length > 0) ? orStatements.join(' AND ') : '';
-        toPrint += ((notStatements.length > 0) ? ((toPrint.length > 0) ? ' AND ' : '') +  'NOT (' + notStatements.join(' OR ') + ')':'');
+        let toPrint = 'dataset="' + settings.getCurrentSetting('current-dataset') + '"';
+        toPrint += (orStatements.length > 0) ? ' AND ' + orStatements.join(' AND ') : '';
+        toPrint += ((notStatements.length > 0) ? ' AND NOT (' + notStatements.join(' OR ') + ')':'');
         return toPrint;
     }
 
@@ -488,7 +499,7 @@ class DrillTable{
                     );
                 }
             }
-        }else if(typeof(data) === 'object'){
+        }else if(data !== null && typeof(data) === 'object'){
             let keys = Object.keys(data);
             for(let i in keys){
                 this.flattenData(
@@ -496,7 +507,7 @@ class DrillTable{
                     data[keys[i]]
                 );
             }
-        }else{
+        }else if(data !== null && data !== undefined && data.length > 0){
             this.addDataToEntityBuffer(currentKey, data);
         }
     }
@@ -544,7 +555,7 @@ class DrillTable{
         drillHeader.classList.add('drill-table');
         for(let i in this.headers){
             let header = document.createElement('th');
-            header.id = 'drill-table-col-' + this.headers[i];
+            header.id = 'drill-table-col-' + this.headers[i].replace(/\s+/g, '_');
             header.classList.add('drill-table');
             header.classList.add('pivotdrill-heading');
             header.classList.add('nounderline');
@@ -559,10 +570,11 @@ class DrillTable{
         let drillRow = document.createElement('tr');
         drillRow.classList.add('drill-table');
         for(let i in this.headers){
+            let h = this.headers[i].replace(/\s+/g, '_');
             let elmt = document.createElement('td');
-            elmt.classList.add('drill-table-col-' + this.headers[i]);
+            elmt.classList.add('drill-table-col-' + h);
             elmt.classList.add('drill-table');
-            elmt.innerHTML = this.formatArray(idx + "__" + this.headers[i], (this.headers[i] in this.entities[idx]) ? this.entities[idx][this.headers[i]] : '-');
+            elmt.innerHTML = this.formatArray(idx + "__" + h, (this.headers[i] in this.entities[idx]) ? this.entities[idx][this.headers[i]] : '-');
             drillRow.appendChild(elmt);
         }
         return drillRow;

@@ -234,7 +234,7 @@ class FieldButton{
         button.id = "--field-" + ((this.children === null) ? name : this.parent + ':' + name);
         button.classList.add("field-button-inactive");
         button.classList.add("nounderline");
-        button.onclick = function(){toggleFieldButton(this.id)};
+        button.onclick = function(){toggleFieldButton(this.id, event, 'field-button')};
         button.textContent = name;
         return button;
     }
@@ -254,7 +254,7 @@ class PivotTable{
         let th = document.createElement('th');
         th.classList.add("pivot-table");
         th.classList.add("nounderline");
-        th.onclick = function(){toggleFieldButton("--field-" + key);};
+        th.onclick = function(){toggleFieldButton("--field-" + key, event, null);};
         th.textContent = this.key;
         table.appendChild(th);
         let idx = 0;

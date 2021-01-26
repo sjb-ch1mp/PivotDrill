@@ -142,3 +142,51 @@ function clearDatasets(){
 function saveDrillTableAsDataset(){
 
 }
+
+function buildEntityBlobFromSiblings(key){
+    let mergeKey = key;
+    let data = entityBlobs[settings.getCurrentSetting('current-dataset')]._raw;
+    let depth = 0;
+    if(mergeKey.includes(':')){
+        let splitKey = mergeKey.split(':');
+        depth = splitKey.length - 1;
+        mergeKey = splitKey[depth];
+    }
+    let datasetName = 'MERGE_' + mergeKey.toUpperCase().replace(/\s+/g, '_');
+    if(datasetName in entityBlobs){//dataset already exists FIXME : This is potentially dangerous if a key has the same name at two different levels
+        loadEntityBlob(datasetName);
+    }else{
+        //make new merge dataset
+        mergeDataOnKey(data, depth, mergeKey, 0);
+        let entityBlob = new EntityBlob(dataBuffer);
+        for(let i in dataBuffer){
+            entityBlob.addEntity(dataBuffer[i]);
+        }
+        if(dataBuffer.length <= 1){
+            summonChatterBox('No siblings for merge key "' + key + '"', 'error');
+        }else{
+            addNewEntityBlob('MERGE_' + mergeKey.toUpperCase().replace(/\s+/g, '_'), entityBlob);
+        }
+        dataBuffer = [];
+    }
+}
+
+function mergeDataOnKey(data, depth, key, depthCount){
+    if(Array.isArray(data)){
+        for(let i in data){
+            mergeDataOnKey(data[i], depth, key, depthCount);
+        }
+    }else if(data !== null && typeof(data) === 'object'){
+        for(let subKey in data){
+            if(depthCount === (depth - 1)){
+                if(Object.keys(data[subKey]).includes(key)){
+                    let siblingData = data[subKey];
+                    siblingData['pivotdrill_metafield_parent'] = subKey;
+                    dataBuffer.push(siblingData);
+                }
+            }else{
+                mergeDataOnKey(data[subKey], depth, key, depthCount + 1);
+            }
+        }
+    }
+}

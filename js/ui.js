@@ -143,14 +143,18 @@ function getCurrentDimensions(){
     };
 }
 
-function toggleFieldButton(buttonId){
+function toggleFieldButton(buttonId, event, caller){
     let fieldName = buttonId.replace('--field-', '');
-    let button = document.getElementById(buttonId);
-    if(button.classList.contains('field-button-active')){
-        removePivotTable(fieldName, buttonId);
-        removeDrillValue(fieldName, null, null);
+    if(caller === 'field-button' && event.altKey){
+        buildEntityBlobFromSiblings(fieldName);
     }else{
-        addPivotTable(fieldName, buttonId);
+        let button = document.getElementById(buttonId);
+        if(button.classList.contains('field-button-active')){
+            removePivotTable(fieldName, buttonId);
+            removeDrillValue(fieldName, null, null);
+        }else{
+            addPivotTable(fieldName, buttonId);
+        }
     }
 }
 

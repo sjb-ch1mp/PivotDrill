@@ -7,15 +7,17 @@ function addFields(data){
     let hasChildren = {};
     let processedFields = {};
     for(let i in fields){
-        if(fields[i].includes(':')){
-            let parent = fields[i].split(':')[0];
-            let child = fields[i].substring(fields[i].indexOf(':') + 1, fields[i].length);
-            if(!(parent in hasChildren)){
-                hasChildren[parent] = [];
+        if(!(fields[i].includes('pivotdrill_metafield'))){ //Ignore any metafields created by PivotDrill
+            if(fields[i].includes(':')){
+                let parent = fields[i].split(':')[0];
+                let child = fields[i].substring(fields[i].indexOf(':') + 1, fields[i].length);
+                if(!(parent in hasChildren)){
+                    hasChildren[parent] = [];
+                }
+                hasChildren[parent].push(child);
+            }else{
+                noChildren[fields[i]] = null;
             }
-            hasChildren[parent].push(child);
-        }else{
-            noChildren[fields[i]] = null;
         }
     }
 
@@ -279,6 +281,7 @@ class DrillQuery{
             'positive':{},
             'negative':{}
         }; //{positive:{key:[value, value, value],key:[value,value, value]},negative:{key:[value,..]}}
+        this.currentResults = [];
     }
 
     remove(key, value, conditional){
@@ -411,6 +414,7 @@ class DrillQuery{
 
                 //add all entity indices that remain as drillButtons
                 if(filteredEntityIndices.length > 0){
+                    this.currentResults = filteredEntityIndices;
                     let drillTable = new DrillTable(filteredEntityIndices);
                     let drillTableContainer = document.getElementById('drill-table-container');
                     drillTableContainer.appendChild(drillTable.print());
@@ -554,14 +558,16 @@ class DrillTable{
         let drillHeader = document.createElement('tr');
         drillHeader.classList.add('drill-table');
         for(let i in this.headers){
-            let header = document.createElement('th');
-            header.id = 'drill-table-col-' + this.headers[i].replace(/\s+/g, '_');
-            header.classList.add('drill-table');
-            header.classList.add('pivotdrill-heading');
-            header.classList.add('nounderline');
-            header.onclick = function(){hideDrillTableColumn(this.id)};
-            header.textContent = this.headers[i];
-            drillHeader.appendChild(header);
+            if(!(this.headers[i].startsWith('pivotdrill_metafield'))){//Ignore any metafields created by PivotDrill
+                let header = document.createElement('th');
+                header.id = 'drill-table-col-' + this.headers[i].replace(/\s+/g, '_');
+                header.classList.add('drill-table');
+                header.classList.add('pivotdrill-heading');
+                header.classList.add('nounderline');
+                header.onclick = function(){hideDrillTableColumn(this.id)};
+                header.textContent = this.headers[i];
+                drillHeader.appendChild(header);
+            }
         }
         return drillHeader;
     }
@@ -570,12 +576,14 @@ class DrillTable{
         let drillRow = document.createElement('tr');
         drillRow.classList.add('drill-table');
         for(let i in this.headers){
-            let h = this.headers[i].replace(/\s+/g, '_');
-            let elmt = document.createElement('td');
-            elmt.classList.add('drill-table-col-' + h);
-            elmt.classList.add('drill-table');
-            elmt.innerHTML = this.formatArray(idx + "__" + h, (this.headers[i] in this.entities[idx]) ? this.entities[idx][this.headers[i]] : '-');
-            drillRow.appendChild(elmt);
+            if(!(this.headers[i].startsWith('pivotdrill_metafield'))){//Ignore any metafields created by PivotDrill
+                let h = this.headers[i].replace(/\s+/g, '_');
+                let elmt = document.createElement('td');
+                elmt.classList.add('drill-table-col-' + h);
+                elmt.classList.add('drill-table');
+                elmt.innerHTML = this.formatArray(idx + "__" + h, (this.headers[i] in this.entities[idx]) ? this.entities[idx][this.headers[i]] : '-');
+                drillRow.appendChild(elmt);
+            }
         }
         return drillRow;
     }

@@ -157,6 +157,7 @@ function setNewRootKey(root){
     let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);
     let existingEntityBlob = getMatchingEntityBlob(entityBlob);
     if(existingEntityBlob !== null){
+        summonChatterBox('Dataset already exists [' + existingDataset + ']', 'normal');
         loadEntityBlob(existingEntityBlob);
     }else{
         let idx = 0;
@@ -202,7 +203,35 @@ function clearDatasets(){
 }
 
 function saveDrillTableAsDataset(){
-
+    if(drillQuery !== null && drillQuery.currentResults.length > 0){
+        for(let i in drillQuery.currentResults){
+            dataBuffer.push(entityBlobs[settings.getCurrentSetting('current-dataset')].entities[drillQuery.currentResults[i]].data);
+        }
+        let entityBlob = new EntityBlob(dataBuffer);
+        for(let i in dataBuffer){
+            entityBlob.addEntity(dataBuffer[i]);
+        }
+        let existingDataset = getMatchingEntityBlob(entityBlob);
+        if(existingDataset !== null){
+            summonChatterBox('Dataset already exists [' + existingDataset + ']', 'normal');
+            loadEntityBlob(existingDataset);
+        }else{
+            let name = 'DRILL_' + settings.getCurrentSetting('current-dataset');
+            let idx = 0;
+            while(name in entityBlobs){
+                idx++;
+                if(/_[0-9]+$/g.test(name)){
+                    name = name.replace(/_[0-9]+$/g, '_' + idx);
+                }else{
+                    name += '_' + idx;
+                }
+            }
+            addNewEntityBlob(name, entityBlob);
+        }
+        dataBuffer = [];
+    }else{
+        summonChatterBox('No drill query results to save!', 'error');
+    }
 }
 
 function buildEntityBlobFromSiblings(key){
@@ -227,6 +256,7 @@ function buildEntityBlobFromSiblings(key){
         if(existingDataset === null){
             addNewEntityBlob(datasetName, entityBlob);
         }else{
+            summonChatterBox('Dataset already exists [' + existingDataset + ']', 'normal');
             loadEntityBlob(existingDataset);
         }
     }

@@ -53,6 +53,51 @@ class EntityBlob{
             }
         }
     }
+
+    equals(entityBlob){
+        return this.compareDataAtKeys(this._raw, entityBlob._raw);
+    }
+
+    compareDataAtKeys(thisData, otherData){
+        let isSame = true;
+        if(Array.isArray(thisData) && Array.isArray(otherData)){
+            if(thisData.length === otherData.length){
+                for(let i in thisData){
+                    isSame = this.compareDataAtKeys(thisData[i], otherData[i]);
+                    if(!isSame){
+                        break;
+                    }
+                }
+            }else{
+                isSame = false;
+            }
+        }else if(typeof(thisData) === 'object' && thisData !== null &&
+            typeof(otherData) === 'object' && otherData !== null){
+            if(Object.keys(thisData).length === Object.keys(otherData).length){
+                for(let key in thisData){
+                    if(key in otherData){
+                        isSame = this.compareDataAtKeys(thisData[key], otherData[key]);
+                        if(!isSame){
+                            break;
+                        }
+                    }
+                }
+            }else{
+                isSame = false;
+            }
+        }else{
+            if(thisData === null && otherData === null){
+                return true;
+            }else if(thisData !== null && otherData === null){
+                return false;
+            }else if(thisData === null && otherData !== null){
+                return false;
+            }else{
+                return thisData === otherData;
+            }
+        }
+        return isSame;
+    }
 }
 
 function buildEntityBlob(data, dataType, root){
@@ -109,14 +154,31 @@ function getDataAtKey(data, key){
 
 function setNewRootKey(root){
     let name = 'ROOT_' + root.toUpperCase();
-    //check if root key already exists, if so - open that dataset
-    if(Object.keys(entityBlobs).includes(name)){
-        loadEntityBlob(name);
+    let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);
+    let existingEntityBlob = getMatchingEntityBlob(entityBlob);
+    if(existingEntityBlob !== null){
+        loadEntityBlob(existingEntityBlob);
     }else{
-        //if root key does not exist - create new root key dataset
-        let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);
+        let idx = 0;
+        while(name in entityBlobs){
+            idx++;
+            if(/_[0-9]+$/g.test(name)){
+                name = name.replace(/_[0-9]+$/g, '_' + idx);
+            }else{
+                name = name + '_' + idx;
+            }
+        }
         addNewEntityBlob(name, entityBlob);
     }
+}
+
+function getMatchingEntityBlob(entityBlob){
+    for(let key in entityBlobs){
+        if(entityBlobs[key].equals(entityBlob)){
+            return key;
+        }
+    }
+    return null;
 }
 
 function loadEntityBlob(name){
@@ -153,22 +215,22 @@ function buildEntityBlobFromSiblings(key){
         mergeKey = splitKey[depth];
     }
     let datasetName = 'MERGE_' + mergeKey.toUpperCase().replace(/\s+/g, '_');
-    if(datasetName in entityBlobs){//dataset already exists FIXME : This is potentially dangerous if a key has the same name at two different levels
-        loadEntityBlob(datasetName);
-    }else{
-        //make new merge dataset
-        mergeDataOnKey(data, depth, mergeKey, 0);
-        let entityBlob = new EntityBlob(dataBuffer);
-        for(let i in dataBuffer){
-            entityBlob.addEntity(dataBuffer[i]);
-        }
-        if(dataBuffer.length <= 1){
-            summonChatterBox('No siblings for merge key "' + key + '"', 'error');
-        }else{
-            addNewEntityBlob('MERGE_' + mergeKey.toUpperCase().replace(/\s+/g, '_'), entityBlob);
-        }
-        dataBuffer = [];
+    mergeDataOnKey(data, depth, mergeKey, 0);
+    let entityBlob = new EntityBlob(dataBuffer);
+    for(let i in dataBuffer){
+        entityBlob.addEntity(dataBuffer[i]);
     }
+    if(dataBuffer.length <= 1){
+        summonChatterBox('No siblings for merge key "' + key + '"', 'error');
+    }else{
+        let existingDataset = getMatchingEntityBlob(entityBlob);
+        if(existingDataset === null){
+            addNewEntityBlob(datasetName, entityBlob);
+        }else{
+            loadEntityBlob(existingDataset);
+        }
+    }
+    dataBuffer = [];
 }
 
 function mergeDataOnKey(data, depth, key, depthCount){

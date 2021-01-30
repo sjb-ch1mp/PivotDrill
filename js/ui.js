@@ -292,3 +292,53 @@ function downloadDrillTable(){
 function downloadPivotTables(){
 
 }
+
+class ToggleArray{
+    constructor(id, data){
+        this.id = id;
+        this.data = data;
+    }
+
+    print(){
+        let span = document.createElement('span');
+        let closeId = 'close__' + this.id;
+        let openId = 'open__' + this.id;
+        let toggler = this.buildToggler('[...]', closeId);
+        toggler.id = closeId;
+        span.appendChild(toggler);
+
+        let listDiv = document.createElement('div');
+        listDiv.id = openId;
+        listDiv.classList.add('open-toggle-array');
+        listDiv.classList.add('hidden');
+        listDiv.appendChild(this.buildToggler('[...', openId));
+        for(let i in this.data){
+            if(this.data[i] !== null && this.data[i].length > 0){
+                let aryDiv = document.createElement('div');
+                aryDiv.textContent = this.data[i];
+                listDiv.appendChild(aryDiv);
+            }
+        }
+        listDiv.appendChild(this.buildToggler('...]', openId));
+        span.appendChild(listDiv);
+
+        return span;
+    }
+
+    buildToggler(text, id){
+        let toggler = document.createElement('a');
+        toggler.textContent = text;
+        toggler.href = "javascript:void(0)";
+        toggler.classList.add('text-red');
+        toggler.classList.add('nounderline');
+        toggler.onclick = function(){toggleToggleArray(id)};
+        return toggler;
+    }
+}
+
+function toggleToggleArray(id){
+    let elmt = document.getElementById(id);
+    let otherElmt = document.getElementById((id.startsWith('close__')) ? id.replace(/^close__/g, 'open__'): id.replace(/^open__/g, 'close__'));
+    elmt.classList.add('hidden');
+    otherElmt.classList.remove('hidden');
+}

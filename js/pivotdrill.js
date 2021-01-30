@@ -471,14 +471,13 @@ class DrillTable{
     constructor(entityIndices){
         this.entityBuffer = {};
         this.entities = [];
-        this.headers = ['entity_id'];
+        this.headers = [];
         this.compileDataForDrillTable(entityIndices);
     }
 
     compileDataForDrillTable(entityIndices){
         for(let i in entityIndices){
             let data = entityBlobs[settings.getCurrentSetting('current-dataset')].entities[entityIndices[i]].data;
-            this.entityBuffer['entity_id'] = entityIndices[i];
             this.flattenData('', data);
             let keys = Object.keys(this.entityBuffer);
             for(let j in keys){
@@ -581,19 +580,21 @@ class DrillTable{
                 let elmt = document.createElement('td');
                 elmt.classList.add('drill-table-col-' + h);
                 elmt.classList.add('drill-table');
-                elmt.innerHTML = this.formatArray(idx + "__" + h, (this.headers[i] in this.entities[idx]) ? this.entities[idx][this.headers[i]] : '-');
+                if(this.headers[i] in this.entities[idx]){
+                    let data = this.entities[idx][this.headers[i]];
+                    if(data.length > 1){
+                        let toggleArray = new ToggleArray(idx + "__" + h, data);
+                        elmt.appendChild(toggleArray.print());
+                    }else{
+                        elmt.textContent = data[0];
+                    }
+                }else{
+                    elmt.textContent = '-';
+                }
+                //elmt.innerHTML = this.formatArray(idx + "__" + h, (this.headers[i] in this.entities[idx]) ? this.entities[idx][this.headers[i]] : '-');
                 drillRow.appendChild(elmt);
             }
         }
         return drillRow;
-    }
-
-    formatArray(elmtId, data){
-        if(Array.isArray(data)){
-            //FIXME : toggleable content that hides long arrays
-            return data;
-        }else{
-            return data;
-        }
     }
 }

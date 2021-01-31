@@ -588,10 +588,9 @@ class DrillTable{
                     }else{
                         elmt.textContent = data[0];
                     }
-                }else{
+                }else {
                     elmt.textContent = '-';
                 }
-                //elmt.innerHTML = this.formatArray(idx + "__" + h, (this.headers[i] in this.entities[idx]) ? this.entities[idx][this.headers[i]] : '-');
                 drillRow.appendChild(elmt);
             }
         }

@@ -157,7 +157,7 @@ function setNewRootKey(root){
     let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);
     let existingEntityBlob = getMatchingEntityBlob(entityBlob);
     if(existingEntityBlob !== null){
-        summonChatterBox('Dataset already exists [' + existingDataset + ']', 'normal');
+        summonChatterBox('Dataset already exists [' + existingEntityBlob + ']', 'normal');
         loadEntityBlob(existingEntityBlob);
     }else{
         let idx = 0;
@@ -211,10 +211,10 @@ function saveDrillTableAsDataset(){
         for(let i in dataBuffer){
             entityBlob.addEntity(dataBuffer[i]);
         }
-        let existingDataset = getMatchingEntityBlob(entityBlob);
-        if(existingDataset !== null){
-            summonChatterBox('Dataset already exists [' + existingDataset + ']', 'normal');
-            loadEntityBlob(existingDataset);
+        let existingEntityBlob = getMatchingEntityBlob(entityBlob);
+        if(existingEntityBlob !== null){
+            summonChatterBox('Dataset already exists [' + existingEntityBlob + ']', 'normal');
+            loadEntityBlob(existingEntityBlob);
         }else{
             let name = 'DRILL_' + settings.getCurrentSetting('current-dataset');
             let idx = 0;

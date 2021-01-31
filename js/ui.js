@@ -313,9 +313,13 @@ class ToggleArray{
         listDiv.classList.add('hidden');
         listDiv.appendChild(this.buildToggler('[...', openId));
         for(let i in this.data){
-            if(this.data[i] !== null && this.data[i].length > 0){
+            if(this.data[i] !== null && ('' + this.data[i]).length > 0){
                 let aryDiv = document.createElement('div');
-                aryDiv.textContent = this.data[i];
+                let tc = this.data[i];
+                if(i < (this.data.length - 1)){
+                    tc += ',';
+                }
+                aryDiv.textContent = tc;
                 listDiv.appendChild(aryDiv);
             }
         }

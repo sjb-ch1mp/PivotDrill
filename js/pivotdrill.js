@@ -388,7 +388,13 @@ class DrillQuery{
                 let filteredEntityIndices = [];
                 for(let i in entityIndices){
                     let e = entityIndices[i];
+
+                    let include = true;
+
                     for(let key in queryKeys){
+
+                        let hasKey = entityBlobs[currentDataset].keys[key].entities.includes(e);
+
                         let hasPositiveValueAtKey = this.hasValueAtKey(
                             key,
                             entityBlobs[currentDataset]['entities'][e].data,
@@ -400,15 +406,28 @@ class DrillQuery{
                             entityBlobs[currentDataset]['entities'][e].data,
                             queryKeys[key]['negative']
                         );
-                        if(!(filteredEntityIndices.includes(e)) && hasPositiveValueAtKey && !hasNegativeValueAtKey){
-                            //if the entity is not yet in the array and it should be... add it
-                            filteredEntityIndices.push(e);
-                        }else if(hasNegativeValueAtKey){
-                            //if the entity is already in the array and it shouldn't be... remove it and leave loops
-                            filteredEntityIndices.splice(filteredEntityIndices.indexOf(e), 1);
+
+                        if((hasKey && !hasPositiveValueAtKey && queryKeys[key]['positive'] !== null) ||
+                            (hasKey && hasNegativeValueAtKey) ||
+                            (queryKeys[key]['positive'] !== null && !hasKey)){ //Check for terminal conditions
+                            include = false;
                             break;
                         }
                     }
+
+                    if(include){
+                        filteredEntityIndices.push(e);
+                    }
+                    /*
+                    if(!(filteredEntityIndices.includes(e)) && hasPositiveValueAtKey && !hasNegativeValueAtKey){
+                        //if the entity is not yet in the array and it should be... add it
+                        filteredEntityIndices.push(e);
+                    }else if(hasNegativeValueAtKey){
+                        //if the entity is already in the array and it shouldn't be... remove it and leave loops
+                        filteredEntityIndices.splice(filteredEntityIndices.indexOf(e), 1);
+                        break;
+                    }
+                     */
                 }
 
 
@@ -431,7 +450,7 @@ class DrillQuery{
     }
 
     hasValueAtKey(key, data, values){
-        if(values === null){
+        if(!values){
             return false;
         }
 
@@ -510,7 +529,7 @@ class DrillTable{
                     data[keys[i]]
                 );
             }
-        }else if(data !== null && data !== undefined && data.length > 0){
+        }else if(data !== null && data !== undefined && ('' + data).length > 0){
             this.addDataToEntityBuffer(currentKey, data);
         }
     }

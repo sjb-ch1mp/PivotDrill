@@ -62,7 +62,7 @@ class EntityBlob{
         let isSame = true;
         if(Array.isArray(thisData) && Array.isArray(otherData)){
             if(thisData.length === otherData.length){
-                for(let i in thisData){
+                for(let i in thisData){console.log('passing thisData[' + i + ']');console.log(thisData[i]);console.log('passing otherData[' + i + ']');console.log(otherData[i]);
                     isSame = this.compareDataAtKeys(thisData[i], otherData[i]);
                     if(!isSame){
                         break;
@@ -80,6 +80,9 @@ class EntityBlob{
                         if(!isSame){
                             break;
                         }
+                    }else{
+                        isSame = false;
+                        break;
                     }
                 }
             }else{
@@ -153,8 +156,8 @@ function getDataAtKey(data, key){
 }
 
 function setNewRootKey(root){
-    let name = 'ROOT_' + root.toUpperCase();
-    let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);
+    let name = 'ROOT_' + root.toUpperCase();console.log(root);
+    let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);console.log(entityBlob._raw);
     let existingEntityBlob = getMatchingEntityBlob(entityBlob);
     if(existingEntityBlob !== null){
         summonChatterBox('Dataset already exists [' + existingEntityBlob + ']', 'normal');
@@ -174,8 +177,9 @@ function setNewRootKey(root){
 }
 
 function getMatchingEntityBlob(entityBlob){
-    for(let key in entityBlobs){
+    for(let key in entityBlobs){console.log('comparing to: ');console.log(entityBlobs[key]._raw);
         if(entityBlobs[key].equals(entityBlob)){
+            console.log('equal');
             return key;
         }
     }
@@ -203,7 +207,7 @@ function clearDatasets(){
 }
 
 function saveDrillTableAsDataset(){
-    if(drillQuery !== null && drillQuery.currentResults.length > 0){
+    if(drillQuery !== null && drillQuery.hasQuery() && drillQuery.currentResults.length > 0){
         for(let i in drillQuery.currentResults){
             dataBuffer.push(entityBlobs[settings.getCurrentSetting('current-dataset')].entities[drillQuery.currentResults[i]].data);
         }
@@ -216,7 +220,8 @@ function saveDrillTableAsDataset(){
             summonChatterBox('Dataset already exists [' + existingEntityBlob + ']', 'normal');
             loadEntityBlob(existingEntityBlob);
         }else{
-            let name = 'DRILL_' + settings.getCurrentSetting('current-dataset');
+            let name = prompt('Please enter a dataset name', 'DRILL_' + settings.getCurrentSetting('current-dataset'));
+            name = (name === null) ? 'DRILL_' + settings.getCurrentSetting('current-dataset') : name.replace(/\s+/g, '_').toUpperCase();
             let idx = 0;
             while(name in entityBlobs){
                 idx++;

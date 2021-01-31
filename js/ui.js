@@ -286,11 +286,57 @@ function restoreHiddenDrillTableColumns(){
 }
 
 function downloadDrillTable(){
-
+    let filepath = document.getElementById('input-data').value.split('\\');
+    let outJson = {
+        'file':filepath[filepath.length - 1],
+        'dataset':settings.getCurrentSetting('current-dataset'),
+        'drill_results':[]
+    };
+    if(drillQuery !== null && drillQuery.hasQuery() && drillQuery.currentResults.length > 0){
+        for(let i in drillQuery.currentResults){
+            let e = entityBlobs[settings.getCurrentSetting('current-dataset')].entities[drillQuery.currentResults[i]];
+            outJson['drill_results'].push(e.data);
+        }
+        downloadFile('drill_results.json', JSON.stringify(outJson));
+    }else{
+        summonChatterBox('No drill results to download', 'error');
+    }
 }
 
 function downloadPivotTables(){
+    let filepath = document.getElementById('input-data').value.split('\\');
+    let outJson = {
+        'file':filepath[filepath.length - 1],
+        'dataset':settings.getCurrentSetting('current-dataset'),
+        'pivot_tables':{}
+    };
+    let pivotTables = document.getElementById('pivot-table-container').childNodes;
+    for(let i in pivotTables){
+        if(typeof(pivotTables[i]) === 'object' && pivotTables[i].id && pivotTables[i].id.startsWith("--pivot-table-")){
+            let key = pivotTables[i].firstChild.innerText
+            let values = entityBlobs[settings.getCurrentSetting('current-dataset')].keys[key].values;
+            outJson['pivot_tables'][key] = values;
+        }
+    }
+    if(Object.keys(outJson['pivot_tables']).length > 0){
+        downloadFile('pivot_tables.json', JSON.stringify(outJson));
+    }else{
+        summonChatterBox('No pivot tables to download', 'error');
+    }
+}
 
+function downloadFile(name, data){
+    let blob = new Blob([data], {type: 'application/json'});
+    if(window.navigator.msSaveOrOpenBlob){
+        window.navigator.msSaveOrOpenBlob(blob, name);
+    }else{
+        let element = window.document.createElement('a');
+        element.href = window.URL.createObjectURL(blob);
+        element.download = name;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
 }
 
 class ToggleArray{

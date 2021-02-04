@@ -75,7 +75,15 @@ function loadData(event){
         const reader = new FileReader();
         reader.addEventListener('load', function(event){
             resetWorkspace('new_query');
-            addNewEntityBlob(fileName.replace(/\s+/g, '_').toUpperCase(), buildEntityBlob(JSON.parse(event.target.result.toString()), DataType.JSON, null));
+            try{
+                addNewEntityBlob(fileName.replace(/\s+/g, '_').toUpperCase(), buildEntityBlob(JSON.parse(event.target.result.toString()), DataType.JSON, null));
+            }catch(e){
+                summonChatterBox('Error loading "' + fileName + '"', 'error');
+                if(e.stack){
+                    console.log(e.message);
+                    console.log(e.stack);
+                }
+            }
         });
         reader.readAsText(event.target.files[0]);
     }catch(e){

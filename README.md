@@ -27,3 +27,4 @@ Samuel Brookes ([@sjb-ch1mp](https://github.com/sjb-ch1mp))
 |Date|Change Type|Applicable to Version|Description|
 |---|---|---|---|
 |2021-01-31 | VERSION | 1.0.0 | Version 1.0.0 committed. |
+|2021-02-04 | BUG | 1.0.0 | Cleaned up console.log() debug messages ([Issue #4](https://github.com/sjb-ch1mp/PivotDrill/issues/4)). Parsing of malformed JSON files now fails gracefully ([Issue #3](https://github.com/sjb-ch1mp/PivotDrill/issues/3)).|

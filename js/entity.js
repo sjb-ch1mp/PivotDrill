@@ -62,7 +62,7 @@ class EntityBlob{
         let isSame = true;
         if(Array.isArray(thisData) && Array.isArray(otherData)){
             if(thisData.length === otherData.length){
-                for(let i in thisData){console.log('passing thisData[' + i + ']');console.log(thisData[i]);console.log('passing otherData[' + i + ']');console.log(otherData[i]);
+                for(let i in thisData){
                     isSame = this.compareDataAtKeys(thisData[i], otherData[i]);
                     if(!isSame){
                         break;
@@ -156,8 +156,8 @@ function getDataAtKey(data, key){
 }
 
 function setNewRootKey(root){
-    let name = 'ROOT_' + root.toUpperCase();console.log(root);
-    let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);console.log(entityBlob._raw);
+    let name = 'ROOT_' + root.toUpperCase();
+    let entityBlob = buildEntityBlob(entityBlobs[settings.getCurrentSetting('current-dataset')]._raw, DataType.JSON, root);
     let existingEntityBlob = getMatchingEntityBlob(entityBlob);
     if(existingEntityBlob !== null){
         summonChatterBox('Dataset already exists [' + existingEntityBlob + ']', 'normal');
@@ -177,9 +177,8 @@ function setNewRootKey(root){
 }
 
 function getMatchingEntityBlob(entityBlob){
-    for(let key in entityBlobs){console.log('comparing to: ');console.log(entityBlobs[key]._raw);
+    for(let key in entityBlobs){
         if(entityBlobs[key].equals(entityBlob)){
-            console.log('equal');
             return key;
         }
     }

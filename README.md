@@ -99,138 +99,22 @@ Keys that share a common parent are grouped together beneath that parent key. By
 
 ![field_2](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_2.png)
 
-```
-{
-    "key_1":"value_1",
-    "key_2":{
-        "key_a":{
-            "key_i": "value_i",
-            "key_ii": "value_ii",
-            "key_iii": "value_iii",
-            "key_iv": ["value_iv","value_v","value_vi"],
-            "key_v": "value_vii"
-        },
-        "key_b":{
-            "key_i": "value_vii",
-            "key_ii": "value_viii",
-            "key_iii": "value_ix",
-            "key_iv": ["value_x","value_xi","value_xii"]
-        },
-        "key_c":{
-            "key_i": "value_xiii",
-            "key_ii": "value_xiv",
-            "key_iii": "value_xv",
-            "key_iv": ["value_xvi","value_xvii","value_xviii"],
-            "key_v": "value_xix"
-        },
-        "key_d":{
-            "key_i": "value_xx",
-            "key_ii": "value_xxi",
-            "key_iii": "value_xxii",
-            "key_iv": ["value_xxiii","value_xxiv","value_xxv"]
-        }
-    },
-    "key_3":[
-        "value_2",
-        "value_3",
-        "value_4",
-        "value_5"
-    ]
-}
-```
-
 **ROOT_KEY_2 dataset fields:**
 
 ![field_3](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_3.png)
-
-```
-{
-    "key_a":{
-        "key_i": "value_i",
-        "key_ii": "value_ii",
-        "key_iii": "value_iii",
-        "key_iv": ["value_iv","value_v","value_vi"],
-        "key_v": "value_vii"
-    },
-    "key_b":{
-        "key_i": "value_vii",
-        "key_ii": "value_viii",
-        "key_iii": "value_ix",
-        "key_iv": ["value_x","value_xi","value_xii"]
-    },
-    "key_c":{
-        "key_i": "value_xiii",
-        "key_ii": "value_xiv",
-        "key_iii": "value_xv",
-        "key_iv": ["value_xvi","value_xvii","value_xviii"],
-        "key_v": "value_xix"
-    },
-    "key_d":{
-        "key_i": "value_xx",
-        "key_ii": "value_xxi",
-        "key_iii": "value_xxii",
-        "key_iv": ["value_xxiii","value_xxiv","value_xxv"]
-    }
-}
-```
 
 **ROOT_KEY_A dataset fields:**
 
 ![field_4](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_4.png)
 
-```
-{
-    "key_i": "value_i",
-    "key_ii": "value_ii",
-    "key_iii": "value_iii",
-    "key_iv": ["value_iv","value_v","value_vi"],
-    "key_v": "value_vii"
-}
-```
-
 #### Merging Siblings
 As you can see above, the `ROOT_KEY_2` dataset comprises of 4 siblings which share common keys, e.g. `key_i`, `key_ii`, etc. By holding the `ALT` key on your keyboard and clicking on one of these common keys, the siblings will be 'merged' into a new dataset with the name `MERGE_<merge_key>`.
 
-Merging siblings removes the parent keys from the common keys so that they can be summarised in the `PIVOT` panel.
+Merging siblings removes the parent keys from the common keys so that they can be summarised in the `PIVOT` panel. Note that the datasets ROOT_KEY_A and MERGE_KEY_I both have the same fields, but the former contains only those values for `key_a`, while the latter contains the values for all sibling keys `key_a`, `key_b`, `key_c` and `key_d`.
 
 **MERGE_KEY_I dataset fields:**
 
 ![field_merge_1](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_merge_1.png)
-
-```
-[
-	{
-		"key_i": "value_i",
-		"key_ii": "value_ii",
-		"key_iii": "value_iii",
-		"key_iv": ["value_iv","value_v","value_vi"],
-		"key_v": "value_vii",
-		"pivotdrill_metafield_parent":"key_a"
-	},
-	{
-		"key_i": "value_vii",
-		"key_ii": "value_viii",
-		"key_iii": "value_ix",
-		"key_iv": ["value_x","value_xi","value_xii"],
-		"pivotdrill_metafield_parent":"key_b"
-	},
-	{
-		"key_i": "value_xiii",
-		"key_ii": "value_xiv",
-		"key_iii": "value_xv",
-		"key_iv": ["value_xvi","value_xvii","value_xviii"],
-		"key_v": "value_xix",
-		"pivotdrill_metafield_parent":"key_c"
-	},
-	{
-		"key_i": "value_xx",
-		"key_ii": "value_xxi",
-		"key_iii": "value_xxii",
-		"key_iv": ["value_xxiii","value_xxiv","value_xxv"],
-		"pivotdrill_metafield_parent":"key_d"
-	}
-]
-```
 
 ### PIVOT Panel
 

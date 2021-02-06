@@ -89,12 +89,14 @@ The functionality of PivotDrill will be explained by describing each panel separ
 When a new JSON file is uploaded to PivotDrill, all unique valued keys (i.e. with at least one non-null value) are 'flattened', summarized and saved as a 'dataset' in the `FIELDS` panel. Saved datasets can be accessed by expanding the `FIELDS` panel menu.
 
 **example.json after uploading to PivotDrill:**
+
 ![field_1](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_1.png)
 
 #### Parent Keys
 Keys that share a common parent are grouped together beneath that parent key. By clicking on a parent key, a new dataset is created with the name `ROOT_<parent_key>`, consisting of all unique valued keys of all children of that parent. In the example below, 3 new datasets are created by clicking the `root_key` parent, the `key_2` parent, and the `key_a` parent.
 
 **ROOT_ROOT_KEY dataset fields:**
+
 ![field_2](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_2.png)
 
 **ROOT_ROOT_KEY dataset (raw):**
@@ -139,6 +141,7 @@ Keys that share a common parent are grouped together beneath that parent key. By
 ```
 
 **ROOT_KEY_2 dataset fields:**
+
 ![field_3](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_3.png)
 
 **ROOT_KEY_2 dataset (raw):**
@@ -174,6 +177,7 @@ Keys that share a common parent are grouped together beneath that parent key. By
 ```
 
 **ROOT_KEY_A dataset fields:**
+
 ![field_4](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_4.png)
 
 **ROOT_KEY_A dataset (raw):**
@@ -193,6 +197,7 @@ As you can see above, the `ROOT_KEY_2` dataset comprises of 4 siblings which sha
 Merging siblings removes the parent keys from the common keys so that they can be summarised in the `PIVOT` panel.
 
 **MERGE_KEY_I dataset fields:**
+
 ![field_merge_1](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_merge_1.png)
 
 **MERGE_KEY_I dataset (raw):**

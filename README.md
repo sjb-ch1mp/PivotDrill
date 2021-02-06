@@ -99,7 +99,6 @@ Keys that share a common parent are grouped together beneath that parent key. By
 
 ![field_2](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_2.png)
 
-**ROOT_ROOT_KEY dataset (raw):**
 ```
 {
     "key_1":"value_1",
@@ -144,7 +143,6 @@ Keys that share a common parent are grouped together beneath that parent key. By
 
 ![field_3](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_3.png)
 
-**ROOT_KEY_2 dataset (raw):**
 ```
 {
     "key_a":{
@@ -180,7 +178,6 @@ Keys that share a common parent are grouped together beneath that parent key. By
 
 ![field_4](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_4.png)
 
-**ROOT_KEY_A dataset (raw):**
 ```
 {
     "key_i": "value_i",
@@ -200,7 +197,6 @@ Merging siblings removes the parent keys from the common keys so that they can b
 
 ![field_merge_1](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_merge_1.png)
 
-**MERGE_KEY_I dataset (raw):**
 ```
 [
 	{

@@ -13,6 +13,8 @@ Samuel Brookes ([@sjb-ch1mp](https://github.com/sjb-ch1mp))
 
 **[USER GUIDE](#user-guide)** 
 
+> _[Workspace](#workspace)_ > _[FIELDS Panel](#fields-panel)_ > _[PIVOT Panel](#pivot-panel)_ > _[DRILL Panel](#drill-panel)_
+
 **[CHANGE LOG](#change-log)**  
 
 # Summary
@@ -170,3 +172,4 @@ _...I create the dataset `MERGE_CATEGORY` by `ALT`+clicking on the `category` fi
 |---|---|---|---|
 |2021-01-31 | VERSION | 1.0.0 | Version 1.0.0 committed. |
 |2021-02-04 | BUG | 1.0.0 | Cleaned up console.log() debug messages ([Issue #4](https://github.com/sjb-ch1mp/PivotDrill/issues/4)). Parsing of malformed JSON files now fails gracefully ([Issue #3](https://github.com/sjb-ch1mp/PivotDrill/issues/3)).|
+|2021-02-06 | BUG | 1.0.0 | Fixed bug in which restoring hidden drill table columns would create duplicate toggle arrays ([Issue #5](https://github.com/sjb-ch1mp/PivotDrill/issues/5)).|

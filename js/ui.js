@@ -271,17 +271,8 @@ function hideDrillTableColumn(columnId){
 }
 
 function restoreHiddenDrillTableColumns(){
-    let drillTableContainer = document.getElementById('drill-table-container');
-    if(drillTableContainer.innerHTML.length > 0){
-        let hiddenColumns = drillTableContainer.getElementsByClassName('hidden');
-        while(hiddenColumns.length > 0){
-            for(let row in hiddenColumns){
-                if(typeof(hiddenColumns[row]) === 'object' && hiddenColumns[row].classList){
-                    hiddenColumns[row].classList.remove('hidden');
-                }
-            }
-            hiddenColumns = drillTableContainer.getElementsByClassName('hidden');
-        }
+    if(drillQuery && drillQuery.hasQuery()){
+        drillQuery.run();
     }
 }
 
@@ -381,6 +372,7 @@ class ToggleArray{
         toggler.href = "javascript:void(0)";
         toggler.classList.add('text-red');
         toggler.classList.add('nounderline');
+        toggler.classList.add('toggler');
         toggler.onclick = function(){toggleToggleArray(id)};
         return toggler;
     }

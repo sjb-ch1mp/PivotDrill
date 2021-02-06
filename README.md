@@ -40,7 +40,7 @@ Each panel also contains a menu. This can be expanded by clicking the left-hand 
 
 The functionality of PivotDrill will be explained by describing each panel separately. Throughout this guide, I will be using the following JSON file (example.json) to demonstrate how PivotDrill works. 
 
-__example.json:__
+_example.json_
 ```
 {
 	"meta_key_1":"meta_value_1",
@@ -88,22 +88,22 @@ __example.json:__
 ### FIELDS Panel
 When a new JSON file is uploaded to PivotDrill, all unique valued keys (i.e. with at least one non-null value) are 'flattened', summarized and saved as a 'dataset' in the `FIELDS` panel. Saved datasets can be accessed by expanding the `FIELDS` panel menu.
 
-**example.json after uploading to PivotDrill:**
+_example.json after uploading to PivotDrill_
 
 ![field_1](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_1.png)
 
 ##### Parent Keys
 Keys that share a common parent are grouped together beneath that parent key. By clicking on a parent key, a new dataset is created with the name `ROOT_<parent_key>`, consisting of all unique valued keys of all children of that parent. In the example below, 3 new datasets are created by clicking the `root_key` parent, the `key_2` parent, and the `key_a` parent.
 
-__ROOT_ROOT_KEY dataset fields:__
+_ROOT_ROOT_KEY dataset fields_
 
 ![field_2](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_2.png)
 
-__ROOT_KEY_2 dataset fields:__
+_ROOT_KEY_2 dataset fields_
 
 ![field_3](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_3.png)
 
-__ROOT_KEY_A dataset fields:__
+_ROOT_KEY_A dataset fields_
 
 ![field_4](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_4.png)
 
@@ -112,11 +112,35 @@ As you can see above, the `ROOT_KEY_2` dataset comprises of 4 siblings which sha
 
 Merging siblings removes the parent keys from the common keys so that they can be summarised in the `PIVOT` panel. Note that the datasets ROOT_KEY_A and MERGE_KEY_I both have the same fields, but the former contains only those values for `key_a`, while the latter contains the values for all sibling keys `key_a`, `key_b`, `key_c` and `key_d`.
 
-__MERGE_KEY_I dataset fields:__
+_MERGE_KEY_I dataset fields_
 
 ![field_merge_1](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/field_merge_1.png)
 
 ### PIVOT Panel
+Clicking on a field button in the `FIELDS` panel will add a table to the `PIVOT` panel that contains a list of all unique values for that key in that dataset. In the example below, all keys in the `MERGE_KEY_I` dataset have been added as 'pivot' tables to the `PIVOT` panel. 
+
+_All keys from the MERGE_KEY_I dataset_
+
+![pivot_1](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/pivot_1.png)
+
+Pivot tables can be removed from the `PIVOT` panel by clicking on the table header, or toggling the button in the `FIELDS` panel. 
+
+You can download all the currently visible pivot tables into a JSON file by clicking the `DOWNLOAD PIVOT TABLES` button in the `PIVOT` panel menu. 
+
+### DRILL Panel
+Clicking on a value in a pivot table will add that key=value pair to the 'drill query' in the `DRILL` panel. Holding the `ALT` key while clicking on a value in a pivot table will add that key=value pair as a NOT conditional, i.e. NOT (key=value). 
+
+In the example below, the drill query is searching through the current dataset, `MERGE_KEY_I`, for any 'entity' in which the key `key_i` is equal to `value_i`. As you can see, this condition is only true in one out of the four 'entities'.
+
+_Drill query example 1_
+
+![drill_1](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/drill_1.png)
+
+In the example below, the drill query is searching through the current dataset, `MERGE_KEY_I`, for any 'entity' in which the key `key_i` is NOT equal to `value_i`. As you can see, this condition is true for three out of the four 'entities'.
+
+_Drill query example 2_
+
+![drill_2](https://github.com/sjb-ch1mp/PivotDrill/blob/master/img/readme/drill_2.png)
 
 # Change Log
 |Date|Change Type|Applicable to Version|Description|
